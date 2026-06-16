@@ -26,76 +26,87 @@
     background: var(--bg);
     color: var(--text);
     line-height: 1.5;
+    overflow: hidden;
+    height: 100vh;
   }
-  .container { max-width:1500px; margin:0 auto; padding:16px; }
   header {
     text-align: center;
-    padding: 32px 16px 16px;
+    padding: 12px 16px 8px;
     background: linear-gradient(135deg, #eef2ff, #f8fafc);
     border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
   }
-  header h1 { font-size: 24px; font-weight: 700; color: #1e293b; }
-  header .sub { color: var(--muted); margin-top: 2px; font-size: 13px; }
-  header .updated { color: var(--amber); font-size: 12px; margin-top: 6px; }
+  header h1 { font-size: 20px; font-weight: 700; color: #1e293b; }
+  header .sub { color: var(--muted); font-size: 12px; }
+  header .updated { color: var(--amber); font-size: 11px; margin-top: 2px; }
 
-  .tabs { display:flex; gap:2px; margin:16px 0 0; justify-content:center; flex-wrap:wrap; }
+  .tabs { display:flex; gap:2px; justify-content:center; flex-shrink:0; padding:0 16px; background:var(--bg); }
   .tab {
-    padding: 8px 20px;
+    padding: 7px 18px;
     border: 1px solid var(--border);
     background: var(--surface);
     color: var(--muted);
     cursor: pointer;
     border-radius: var(--radius) var(--radius) 0 0;
     border-bottom: none;
-    font-size: 13px;
+    font-size: 12px;
     transition: all .2s;
   }
   .tab.active { background: var(--bg); color: var(--accent); border-color: var(--accent); font-weight: 600; }
   .tab:hover:not(.active) { color: var(--text); }
-  .tab-content { display:none; padding:20px; background:var(--bg); border:1px solid var(--border); border-radius:0 0 var(--radius) var(--radius); }
-  .tab-content.active { display:block; }
 
-  .stats { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
+  .main-wrap { display:flex; flex-direction:column; height:100vh; }
+  .tab-content { display:none; flex:1; overflow:hidden; }
+  .tab-content.active { display:flex; flex-direction:column; }
+
+  /* === LIST TAB: Left list + Right map === */
+  .list-layout { display:flex; flex:1; overflow:hidden; }
+  .list-left { 
+    width: 50%; min-width: 380px;
+    display:flex; flex-direction:column;
+    border-right: 1px solid var(--border);
+    background: var(--bg);
+  }
+  .list-right { flex:1; position:relative; min-width:300px; }
+  #listMap { width:100%; height:100%; }
+
+  .stats { display:flex; gap:8px; flex-wrap:wrap; padding:8px 12px 4px; flex-shrink:0; }
   .stat-card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 12px 18px;
-    min-width: 100px;
+    padding: 6px 12px;
     box-shadow: var(--shadow);
   }
-  .stat-card .num { font-size: 22px; font-weight: 700; color: var(--accent); }
-  .stat-card .label { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .stat-card .num { font-size: 18px; font-weight: 700; color: var(--accent); }
+  .stat-card .label { font-size: 10px; color: var(--muted); }
 
   .filters {
     display: flex;
-    gap: 8px;
+    gap: 6px;
     flex-wrap: wrap;
     align-items: center;
-    margin-bottom: 12px;
-    padding: 12px;
+    padding: 6px 12px;
     background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
   }
-  .filters label { font-size: 12px; color: var(--muted); }
+  .filters label { font-size: 11px; color: var(--muted); }
   .filters select, .filters input {
-    padding: 5px 10px;
+    padding: 4px 8px;
     border: 1px solid var(--border);
     border-radius: 4px;
     background: var(--surface);
     color: var(--text);
-    font-size: 12px;
-    min-width: 80px;
+    font-size: 11px;
   }
-  .filters select:focus, .filters input:focus { outline:none; border-color: var(--accent); box-shadow: 0 0 0 2px rgba(79,70,229,0.15); }
+  .filters select:focus, .filters input:focus { outline:none; border-color: var(--accent); }
   .btn {
-    padding: 6px 14px;
+    padding: 4px 10px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
     transition: all .2s;
   }
@@ -106,38 +117,41 @@
   .btn-green { background: var(--green); color: white; }
   .btn-green:hover { opacity: 0.9; }
 
-  .table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); max-height:70vh; overflow-y:auto; box-shadow: var(--shadow); }
-  table { width:100%; border-collapse:collapse; font-size: 12px; }
+  .result-count { font-size:11px; color:var(--muted); padding:4px 12px; flex-shrink:0; }
+
+  .table-wrap { flex:1; overflow-y:auto; overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; font-size: 11px; }
   th { 
     background: #f1f5f9;
-    padding: 8px 6px;
+    padding: 6px 4px;
     text-align: left;
     font-weight: 600;
     color: var(--muted);
     border-bottom: 2px solid var(--border);
     white-space: nowrap;
-    position: sticky; top: 0;
+    position: sticky; top: 0; z-index:2;
     cursor: pointer;
     user-select: none;
   }
   th:hover { color: var(--text); }
-  th .sort { margin-left: 2px; font-size: 9px; }
-  td { padding: 6px; border-bottom: 1px solid var(--border); white-space: nowrap; }
-  tr:hover { background: rgba(79,70,229,0.04); }
-  .desc-cell { max-width: 200px; white-space: normal; font-size: 11px; }
-  .link-cell a { color: var(--accent); font-size:11px; text-decoration:none; }
+  td { padding: 5px 4px; border-bottom: 1px solid var(--border); white-space: nowrap; cursor: pointer; }
+  tr:hover { background: rgba(79,70,229,0.06); }
+  tr.highlight { background: #eef2ff !important; }
+  .desc-cell { max-width: 160px; white-space: normal; font-size: 10px; overflow:hidden; text-overflow:ellipsis; }
+  .link-cell a { color: var(--accent); font-size:10px; text-decoration:none; }
   .link-cell a:hover { text-decoration: underline; }
   .badge {
     display: inline-block;
-    padding: 1px 6px;
+    padding: 1px 5px;
     border-radius: 10px;
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 600;
   }
   .badge-hot { background: #fef2f2; color: #dc2626; }
   .badge-good { background: #ecfdf5; color: #059669; }
   .badge-info { background: #eef2ff; color: #4f46e5; }
 
+  /* === ADD TAB === */
   .add-form {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -146,7 +160,7 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    margin-bottom: 16px;
+    margin: 16px;
     box-shadow: var(--shadow);
   }
   .add-form input, .add-form select {
@@ -157,16 +171,19 @@
     color: var(--text);
     font-size: 12px;
   }
-  .add-form input:focus, .add-form select:focus { outline:none; border-color: var(--accent); box-shadow: 0 0 0 2px rgba(79,70,229,0.15); }
+  .add-form input:focus, .add-form select:focus { outline:none; border-color: var(--accent); }
   .full-width { grid-column: 1 / -1; }
 
+  /* === GUIDE TAB === */
   .instructions {
     padding: 20px;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    margin-top: 16px;
+    margin: 16px;
     box-shadow: var(--shadow);
+    max-height: calc(100vh - 180px);
+    overflow-y: auto;
   }
   .instructions h3 { color: var(--accent); margin-bottom: 10px; font-size: 15px; }
   .instructions ol { padding-left: 18px; }
@@ -174,7 +191,7 @@
   .instructions a { color: var(--accent); }
   .platform-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 8px;
     margin: 12px 0;
   }
@@ -182,16 +199,30 @@
     background: var(--bg);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 14px;
+    padding: 12px;
     text-align: center;
     transition: all .2s;
     box-shadow: var(--shadow);
   }
   .platform-card:hover { border-color: var(--accent); transform: translateY(-1px); }
-  .platform-card h4 { font-size: 14px; margin-bottom: 2px; }
-  .platform-card p { font-size: 11px; color: var(--muted); }
+  .platform-card h4 { font-size: 13px; margin-bottom: 2px; }
   .platform-card a { color: var(--accent); text-decoration: none; font-size: 12px; }
 
+  .prompt-box {
+    background: var(--bg);
+    padding: 12px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--muted);
+    margin: 6px 0;
+    white-space: pre-wrap;
+    max-height: 160px;
+    overflow-y: auto;
+    line-height: 1.5;
+  }
+
+  /* === TOAST === */
   .toast {
     position: fixed;
     bottom: 20px;
@@ -209,67 +240,40 @@
   }
   .toast.show { opacity: 1; }
 
-  .empty { text-align:center; padding:30px; color:var(--muted); }
-  .result-count { font-size:12px; color:var(--muted); margin-bottom:10px; }
+  /* === MAP POPUP === */
+  .pin-popup { font-size: 12px; line-height: 1.5; }
+  .pin-popup strong { font-size: 13px; }
+  .custom-cluster { background: var(--accent); color: white; border-radius: 50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; border:2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
 
-  .prompt-box {
-    background: var(--bg);
-    padding: 12px;
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    font-size: 12px;
-    color: var(--muted);
-    margin: 6px 0;
-    white-space: pre-wrap;
-    max-height: 160px;
-    overflow-y: auto;
-    line-height: 1.5;
-  }
+  .empty { text-align:center; padding:30px; color:var(--muted); }
 
   @media (max-width:768px) {
-    .container { padding:8px; }
-    .filters { flex-direction: column; }
-    .tab { padding: 6px 12px; font-size: 12px; }
+    .list-layout { flex-direction:column; }
+    .list-left { width:100%; height:55%; min-width:0; }
+    .list-right { height:45%; min-width:0; }
+    .filters { flex-wrap:wrap; }
   }
-
-  #map { height: 70vh; width: 100%; border-radius: var(--radius); border: 1px solid var(--border); z-index: 1; }
-  .area-popup { font-size: 13px; line-height: 1.6; }
-  .area-popup strong { color: var(--accent); }
-  .area-popup .cnt { font-size: 20px; font-weight: 700; }
-  .map-legend { 
-    background: var(--surface); 
-    padding: 8px 12px; 
-    border-radius: var(--radius); 
-    border: 1px solid var(--border); 
-    font-size: 11px; 
-    box-shadow: var(--shadow);
-    line-height: 1.7;
-  }
-  .map-legend span { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
-
 </style>
 </head>
 <body>
 
+<div class="main-wrap">
+
 <header>
   <h1>JSM 가족 전세 매물 대시보드</h1>
-  <p class="sub">통학 최적: 홍제동·홍은동·연희동 | 15평+ | 옥탑·1층·반지하 제외 | 7개 플랫폼 통합</p>
-  <p class="updated">마지막 업데이트: <span id="lastUpdate">2026-06-16 17:50</span>  |  매물 <span id="totalCount">74</span>건</p>
+  <p class="sub">홍제동·홍은동·연희동 | 15평+ | 옥탑·1층·반지하 제외</p>
+  <p class="updated"><span id="lastUpdate">2026-06-16 18:15</span> · 매물 <span id="totalCount">74</span>건</p>
 </header>
 
-<div class="container">
-
 <div class="tabs">
-  <button class="tab active" onclick="switchTab('list')">📋 매물 목록</button>
-  <button class="tab" onclick="switchTab('map')">🗺️ 지도</button>
-  <button class="tab" onclick="switchTab('add')">➕ 매물 추가</button>
-  <button class="tab" onclick="switchTab('guide')">📖 가이드</button>
+  <button class="tab active" onclick="switchTab('list')">지도 + 목록</button>
+  <button class="tab" onclick="switchTab('add')">매물 추가</button>
+  <button class="tab" onclick="switchTab('guide')">가이드</button>
 </div>
 
-<!-- Tab 1: List -->
+<!-- TAB 1: List + Map -->
 <div id="tab-list" class="tab-content active">
   <div class="stats" id="stats"></div>
-  
   <div class="filters">
     <label>지역</label>
     <select id="filterArea" onchange="applyFilters()"><option value="">전체</option></select>
@@ -280,92 +284,86 @@
       <option value="1.5-2">1.5~2억</option>
       <option value="2-2.5">2~2.5억</option>
       <option value="2.5-3">2.5~3억</option>
-      <option value="3-99">3억+</option>
     </select>
-    <label>평수</label>
+    <label>평</label>
     <select id="filterPyeong" onchange="applyFilters()">
       <option value="">전체</option>
       <option value="15-18">15~18평</option>
-      <option value="18-20">18~20평</option>
-      <option value="20-99">20평+</option>
+      <option value="18-99">18평+</option>
     </select>
     <label>방</label>
     <select id="filterRooms" onchange="applyFilters()"><option value="">전체</option><option value="3">방3+</option></select>
     <label>출처</label>
     <select id="filterSource" onchange="applyFilters()"><option value="">전체</option></select>
-    <button class="btn btn-primary" onclick="applyFilters()">적용</button>
     <button class="btn btn-secondary" onclick="resetFilters()">초기화</button>
-    <button class="btn btn-green" onclick="exportCSV()">CSV 다운로드</button>
+    <button class="btn btn-green" onclick="exportCSV()">CSV</button>
   </div>
 
-  <div class="result-count" id="resultCount"></div>
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th onclick="sortBy('area')">지역 ⇅</th>
-          <th onclick="sortBy('deposit')">보증금 ⇅</th>
-          <th onclick="sortBy('pyeong')">면적 ⇅</th>
-          <th>층</th>
-          <th>구조</th>
-          <th>설명</th>
-          <th onclick="sortBy('source')">출처 ⇅</th>
-          <th>등록일</th>
-          <th onclick="sortBy('type')">유형 ⇅</th>
-          <th>링크</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody"></tbody>
-    </table>
+  <div class="list-layout">
+    <div class="list-left">
+      <div class="result-count" id="resultCount"></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th onclick="sortBy('area')">지역</th>
+              <th onclick="sortBy('deposit')">보증금</th>
+              <th onclick="sortBy('pyeong')">면적</th>
+              <th>층</th>
+              <th>구조</th>
+              <th>설명</th>
+              <th onclick="sortBy('source')">출처</th>
+              <th>등록일</th>
+              <th>링크</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="list-right">
+      <div id="listMap"></div>
+    </div>
   </div>
 </div>
 
-<!-- Tab 2: Map -->
-<div id="tab-map" class="tab-content">
-  <div class="stats" id="mapStats"></div>
-  <div class="result-count" id="mapResultCount"></div>
-  <div id="map"></div>
-</div>
-
-<!-- Tab 3: Add -->
+<!-- TAB 2: Add -->
 <div id="tab-add" class="tab-content">
   <div class="add-form">
     <select id="inpArea"><option value="">지역</option><option>홍제동</option><option>홍은동</option><option>연희동</option><option>북가좌동</option><option>남가좌동</option><option>신사동</option><option>응암동</option><option>기타</option></select>
-    <select id="inpType"><option>빌라</option><option>다가구</option><option>다세대</option><option>연립</option><option>단독</option><option>상가주택</option></select>
+    <select id="inpType"><option>빌라</option><option>다가구</option><option>다세대</option><option>연립</option><option>단독</option></select>
     <input id="inpDeposit" placeholder="보증금 (예: 2.5억)">
-    <input id="inpM2" placeholder="면적 m² (예: 58)" type="number">
+    <input id="inpM2" placeholder="면적 m²" type="number">
     <input id="inpFloor" placeholder="층 (예: 2층/4층)">
-    <input id="inpRooms" placeholder="방수 (예: 3)" type="number">
-    <input id="inpBath" placeholder="욕실수 (예: 1)" type="number">
-    <input id="inpDir" placeholder="향 (예: 남동향)">
+    <input id="inpRooms" placeholder="방수" type="number">
+    <input id="inpBath" placeholder="욕실수" type="number">
+    <input id="inpDir" placeholder="향">
     <input id="inpDesc" placeholder="설명" class="full-width">
     <input id="inpAgent" placeholder="중개사">
     <select id="inpSource"><option>네이버</option><option>직방</option><option>다방</option><option>집품</option><option>호갱노노</option><option>당근</option><option>피터팬</option><option>아파트미</option><option>기타</option></select>
-    <input id="inpDate" placeholder="등록일 (예: 2026-06-16)">
+    <input id="inpDate" placeholder="등록일">
     <input id="inpLink" placeholder="링크 URL" class="full-width">
     <button class="btn btn-primary full-width" onclick="addListing()">매물 추가</button>
   </div>
-  <div id="addResult" style="margin-top:10px;font-size:13px;"></div>
+  <div id="addResult" style="margin:0 16px;font-size:13px;"></div>
 </div>
 
-<!-- Tab 3: Guide -->
+<!-- TAB 3: Guide -->
 <div id="tab-guide" class="tab-content">
   <div class="instructions">
     <h3>사용법</h3>
     <ol>
-      <li><strong>매물 목록</strong>: 지역·가격·평수·방수·출처별 필터링. 열 제목 클릭 시 정렬.</li>
-      <li><strong>매물 추가</strong>: 가족 누구나 새 매물을 직접 입력 (localStorage에 자동 저장).</li>
-      <li><strong>CSV 다운로드</strong>: 엑셀에서 열 수 있는 CSV 파일로 전체 목록 다운로드.</li>
+      <li><strong>지도 + 목록</strong>: 왼쪽 리스트 필터링 → 오른쪽 지도에 핀 표시. 행 클릭/호버 시 핀 강조.</li>
+      <li><strong>매물 추가</strong>: 가족 누구나 입력 → localStorage 자동 저장 → 지도에 반영.</li>
+      <li><strong>CSV 다운로드</strong>: 버튼 클릭으로 엑셀에서 열 수 있는 CSV 다운로드.</li>
     </ol>
-
-    <h3 style="margin-top:16px;">AI 검색 프롬프트 (복사해서 AI에 붙여넣기)</h3>
+    <h3 style="margin-top:16px;">AI 검색 프롬프트</h3>
     <div class="prompt-box" id="promptBox">서울 서대문구 홍제동/홍은동/연희동 전세 매물 찾아줘.
 조건: 빌라·연립·다가구, 전세 2.5억 이하, 15평(50m²) 이상, 방3개+, 옥탑/1층/반지하 제외.
 검색: 네이버부동산, 직방(zigbang.com), 다방(dabangapp.com), 피터팬(peterpanz.com), 집품(zippoom.com), 호갱노노, 당근.
 결과: 지역 | 유형 | 보증금 | 면적(m²/평) | 층 | 방수 | 욕실수 | 향 | 설명 | 출처 | 링크</div>
-    <button class="btn btn-secondary" onclick="copyPrompt()">프롬프트 복사</button>
-
-    <h3 style="margin-top:16px;">플랫폼 바로가기</h3>
+    <button class="btn btn-secondary" onclick="copyPrompt()" style="margin-bottom:12px">프롬프트 복사</button>
+    <h3>플랫폼 바로가기</h3>
     <div class="platform-grid">
       <div class="platform-card"><h4>네이버 부동산</h4><a href="https://new.land.naver.com" target="_blank" rel="noreferrer">바로가기</a></div>
       <div class="platform-card"><h4>직방</h4><a href="https://www.zigbang.com" target="_blank" rel="noreferrer">바로가기</a></div>
@@ -388,6 +386,35 @@ let userListings = [];
 let displayedListings = [];
 let sortCol = 'deposit';
 let sortDir = 'asc';
+let map;
+let mapMarkers = [];
+
+// Area → center coords (approx)
+const areaCoords = {
+  '홍제동':   [37.588, 126.947],
+  '홍은동':   [37.593, 126.934],
+  '연희동':   [37.575, 126.933],
+  '남가좌동':  [37.579, 126.925],
+  '북가좌동':  [37.583, 126.915],
+  '신사동':   [37.596, 126.912],
+  '응암동':   [37.592, 126.916],
+};
+
+// Simple hash for deterministic jitter per listing
+function hashStr(s) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) { h = ((h << 5) - h) + s.charCodeAt(i); h |= 0; }
+  return Math.abs(h);
+}
+
+function listingCoord(l) {
+  const center = areaCoords[l.area] || [37.585, 126.935];
+  const seed = hashStr(l.no + l.deposit + l.pyeong);
+  // jitter within ~800m
+  const jlat = ((seed % 187) - 93) * 0.00009;
+  const jlng = ((Math.floor(seed / 187) % 173) - 86) * 0.00009;
+  return [center[0] + jlat, center[1] + jlng];
+}
 
 function parseDeposit(s) {
   if (!s || s === '-') return Infinity;
@@ -401,19 +428,17 @@ async function init() {
     const data = await resp.json();
     allListings = data.listings.filter(l => l.area !== '참고');
   } catch(e) {
-    console.warn('JSON load failed, using empty');
+    console.warn('JSON load failed');
     allListings = [];
   }
   
   const saved = localStorage.getItem('jeonse_user_listings');
   if (saved) { try { userListings = JSON.parse(saved); } catch(e) { userListings = []; } }
   
-  document.getElementById('lastUpdate').textContent = '2026-06-16 17:50';
-  
+  initMap();
   buildFilters();
   applyFilters();
   updateStats();
-  initMap();
 }
 
 function merge() { return [...allListings, ...userListings]; }
@@ -422,12 +447,10 @@ function updateStats() {
   const m = merge();
   const areas = new Set(m.map(l => l.area));
   const good = m.filter(l => { const d = parseDeposit(l.deposit); return d >= 2 && d <= 2.5 && l.pyeong >= 18; });
-  const sources = new Set(m.map(l => l.source));
   document.getElementById('stats').innerHTML = `
     <div class="stat-card"><div class="num">${m.length}</div><div class="label">전체</div></div>
     <div class="stat-card"><div class="num">${good.length}</div><div class="label">2~2.5억+18평</div></div>
     <div class="stat-card"><div class="num">${areas.size}</div><div class="label">지역</div></div>
-    <div class="stat-card"><div class="num">${sources.size}</div><div class="label">플랫폼</div></div>
     <div class="stat-card"><div class="num">${userListings.length}</div><div class="label">가족 추가</div></div>
   `;
   document.getElementById('totalCount').textContent = m.length;
@@ -466,13 +489,13 @@ function applyFilters() {
     if (sortCol === 'pyeong') return (a.pyeong - b.pyeong) * dir;
     if (sortCol === 'area') return a.area.localeCompare(b.area) * dir;
     if (sortCol === 'source') return a.source.localeCompare(b.source) * dir;
-    if (sortCol === 'type') return a.type.localeCompare(b.type) * dir;
     return 0;
   });
   
   displayedListings = m;
   renderTable();
-  document.getElementById('resultCount').textContent = `결과: ${m.length}건`;
+  renderMapPins();
+  document.getElementById('resultCount').textContent = `검색 결과 ${m.length}건`;
 }
 
 function resetFilters() {
@@ -490,11 +513,11 @@ function sortBy(col) {
 function renderTable() {
   const tbody = document.getElementById('tableBody');
   if (!displayedListings.length) {
-    tbody.innerHTML = '<tr><td colspan="10" class="empty">조건에 맞는 매물이 없습니다</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="9" class="empty">조건에 맞는 매물이 없습니다</td></tr>';
     return;
   }
   
-  tbody.innerHTML = displayedListings.map(l => {
+  tbody.innerHTML = displayedListings.map((l,i) => {
     const d = parseDeposit(l.deposit);
     const badge = d >= 2 && d <= 2.5 && l.pyeong >= 18 ? '<span class="badge badge-hot">추천</span>'
       : d >= 2 && d <= 2.5 ? '<span class="badge badge-good">적정</span>' : '';
@@ -503,21 +526,119 @@ function renderTable() {
     const structure = [rooms, bath].filter(Boolean).join(' ');
     const floorWarn = (l.floor||'').includes('1층') || (l.floor||'') === '1층' ? 'color:var(--red)' : '';
     
-    return `<tr>
+    return `<tr id="row-${i}" onmouseenter="highlightMarker(${i})" onmouseleave="unhighlightMarker(${i})" onclick="focusMarker(${i})">
       <td><strong>${l.area}</strong> ${badge}</td>
       <td>${l.deposit}</td>
-      <td>${l.pyeong}평 <span style="color:var(--muted);font-size:10px">(${l.m2}m²)</span></td>
+      <td>${l.pyeong}평 <span style="color:var(--muted);font-size:9px">(${l.m2}m²)</span></td>
       <td style="${floorWarn}">${l.floor||'-'}</td>
       <td>${structure||'-'}</td>
       <td class="desc-cell">${l.desc||'-'}</td>
       <td><span class="badge badge-info">${l.source}</span></td>
       <td>${l.date||'-'}</td>
-      <td>${l.type}</td>
-      <td class="link-cell">${l.link && l.link !== '-' ? `<a href="${l.link}" target="_blank" rel="noreferrer">링크</a>` : '-'}</td>
+      <td class="link-cell">${l.link && l.link !== '-' ? `<a href="${l.link}" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">링크</a>` : '-'}</td>
     </tr>`;
   }).join('');
 }
 
+function highlightMarker(i) {
+  document.querySelectorAll('tr').forEach(r => r.classList.remove('highlight'));
+  const row = document.getElementById('row-'+i);
+  if (row) row.classList.add('highlight');
+  if (mapMarkers[i]) {
+    mapMarkers[i].setIcon(activeIcon(i));
+    mapMarkers[i].setZIndexOffset(1000);
+  }
+}
+
+function unhighlightMarker(i) {
+  const row = document.getElementById('row-'+i);
+  if (row) row.classList.remove('highlight');
+  if (mapMarkers[i]) {
+    mapMarkers[i].setIcon(defaultIcon(i));
+    mapMarkers[i].setZIndexOffset(0);
+  }
+}
+
+function focusMarker(i) {
+  if (mapMarkers[i]) {
+    map.setView(mapMarkers[i].getLatLng(), 16);
+    mapMarkers[i].openPopup();
+  }
+}
+
+function defaultIcon(i) {
+  const l = displayedListings[i];
+  const d = parseDeposit(l.deposit);
+  const color = d >= 2 && d <= 2.5 && l.pyeong >= 18 ? '#dc2626' : d >= 2 && d <= 2.5 ? '#4f46e5' : '#64748b';
+  return L.divIcon({
+    className: '',
+    html: `<div style="background:${color};color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.3);">${l.pyeong}</div>`,
+    iconSize: [28, 28],
+    iconAnchor: [14, 14],
+    popupAnchor: [0, -14]
+  });
+}
+
+function activeIcon(i) {
+  const l = displayedListings[i];
+  const d = parseDeposit(l.deposit);
+  const color = d >= 2 && d <= 2.5 && l.pyeong >= 18 ? '#dc2626' : d >= 2 && d <= 2.5 ? '#4f46e5' : '#64748b';
+  return L.divIcon({
+    className: '',
+    html: `<div style="background:${color};color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;border:3px solid #fbbf24;box-shadow:0 2px 8px rgba(0,0,0,0.4);">${l.pyeong}</div>`,
+    iconSize: [36, 36],
+    iconAnchor: [18, 18],
+    popupAnchor: [0, -18]
+  });
+}
+
+function renderMapPins() {
+  // Clear existing markers
+  mapMarkers.forEach(mk => map.removeLayer(mk));
+  mapMarkers = [];
+
+  displayedListings.forEach((l, i) => {
+    const coord = listingCoord(l);
+    const marker = L.marker(coord, { icon: defaultIcon(i) }).addTo(map);
+    
+    const d = parseDeposit(l.deposit);
+    const rooms = l.rooms && l.rooms !== '-' ? `방${l.rooms}` : '';
+    const bath = l.bath && l.bath !== '-' ? `화${l.bath}` : '';
+    const structure = [rooms, bath].filter(Boolean).join(' ');
+    
+    marker.bindPopup(`
+      <div class="pin-popup">
+        <strong>${l.area}</strong> ${l.deposit} · ${l.pyeong}평<br>
+        ${structure} · ${l.floor||'-'} · ${l.type}<br>
+        <span style="color:var(--muted);font-size:11px">${l.desc||''}</span><br>
+        <span style="font-size:10px;color:var(--muted)">${l.source} · ${l.date||''} · ${l.agent||''}</span>
+      </div>
+    `);
+    
+    marker.on('mouseover', function() { highlightMarker(i); });
+    marker.on('mouseout', function() { unhighlightMarker(i); });
+    
+    mapMarkers.push(marker);
+  });
+
+  // Fit bounds if there are markers
+  if (mapMarkers.length > 0) {
+    const group = L.featureGroup(mapMarkers);
+    map.fitBounds(group.getBounds().pad(0.05), { maxZoom: 15 });
+  }
+}
+
+// === MAP INIT ===
+function initMap() {
+  map = L.map('listMap', { zoomControl: true }).setView([37.585, 126.935], 14);
+  
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap',
+    maxZoom: 19
+  }).addTo(map);
+}
+
+// === ADD ===
 function addListing() {
   const area = document.getElementById('inpArea').value;
   const deposit = document.getElementById('inpDeposit').value;
@@ -573,11 +694,13 @@ function copyPrompt() {
 
 function switchTab(name) {
   document.querySelectorAll('.tab,.tab-content').forEach(t => t.classList.remove('active'));
-  const idx = {list:0, map:1, add:2, guide:3}[name];
+  const idx = {list:0, add:1, guide:2}[name];
   document.querySelectorAll('.tab')[idx].classList.add('active');
   document.getElementById(`tab-${name}`).classList.add('active');
-  if (name === 'list') { buildFilters(); applyFilters(); updateStats(); }
-  if (name === 'map') { setTimeout(() => map.invalidateSize(), 100); updateMapStats(); }
+  if (name === 'list') { 
+    buildFilters(); applyFilters(); updateStats(); 
+    setTimeout(() => map.invalidateSize(), 150);
+  }
 }
 
 function showToast(msg, color) {
@@ -586,118 +709,6 @@ function showToast(msg, color) {
   toast.style.background = color === 'red' ? 'var(--red)' : 'var(--green)';
   toast.classList.add('show');
   setTimeout(() => toast.classList.remove('show'), 2000);
-}
-
-// === MAP ===
-const areaCoords = {
-  '홍제동':   {lat: 37.588, lng: 126.947, desc: '홍제역·무악재역권'},
-  '홍은동':   {lat: 37.593, lng: 126.934, desc: '녹번역·홍제역 인접'},
-  '연희동':   {lat: 37.575, lng: 126.933, desc: '연대·이대 통학권'},
-  '남가좌동':  {lat: 37.579, lng: 126.925, desc: '가좌역권'},
-  '북가좌동':  {lat: 37.583, lng: 126.915, desc: '증산역권'},
-  '신사동':   {lat: 37.596, lng: 126.912, desc: '은평구 신사동'},
-  '응암동':   {lat: 37.592, lng: 126.916, desc: '응암역권'},
-};
-
-let map;
-
-function initMap() {
-  map = L.map('map').setView([37.585, 126.935], 14);
-  
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap',
-    maxZoom: 18
-  }).addTo(map);
-
-  renderMapMarkers();
-}
-
-function renderMapMarkers() {
-  const m = merge();
-  const byArea = {};
-  m.forEach(l => {
-    if (!byArea[l.area]) byArea[l.area] = {count:0, totalPrice:0, count3rm:0, avgPyeong:0, count18p:0, listings:[]};
-    byArea[l.area].count++;
-    byArea[l.area].totalPrice += parseDeposit(l.deposit);
-    if (l.pyeong >= 18) byArea[l.area].count18p++;
-    if (parseInt(l.rooms) >= 3) byArea[l.area].count3rm++;
-    byArea[l.area].listings.push(l);
-    byArea[l.area].avgPyeong += l.pyeong;
-  });
-
-  for (const k in byArea) {
-    byArea[k].avgPyeong = Math.round(byArea[k].avgPyeong / byArea[k].count * 10) / 10;
-    byArea[k].avgPrice = Math.round(byArea[k].totalPrice / byArea[k].count * 100) / 100;
-  }
-
-  const colors = ['#4f46e5','#7c3aed','#0891b2','#d97706','#dc2626','#059669','#ca8a04'];
-  let ci = 0;
-
-  for (const [area, info] of Object.entries(byArea)) {
-    const coord = areaCoords[area] || {lat: 37.585, lng: 126.935, desc: ''};
-    const color = colors[ci % colors.length];
-    const radius = Math.max(18, Math.min(50, info.count * 2.5));
-    
-    const marker = L.circleMarker([coord.lat, coord.lng], {
-      radius: radius,
-      fillColor: color,
-      color: 'white',
-      weight: 2,
-      opacity: 1,
-      fillOpacity: 0.7
-    }).addTo(map);
-
-    marker.bindTooltip(`<strong>${area}</strong>: ${info.count}건`, {
-      permanent: true, direction: 'center',
-      className: 'area-tooltip',
-      offset: [0, 0]
-    });
-
-    marker.bindPopup(`
-      <div class="area-popup">
-        <strong>${area}</strong> <span style="color:var(--muted)">(${coord.desc})</span><br>
-        <span class="cnt">${info.count}</span>건 · 평균 <strong>${info.avgPrice}억</strong> · 평균 <strong>${info.avgPyeong}평</strong><br>
-        방3개+: ${info.count3rm}건 · 18평+: ${info.count18p}건
-      </div>
-    `);
-
-    marker.on('mouseover', function() { this.openPopup(); });
-    marker.on('click', function() { 
-      document.getElementById('filterArea').value = area; 
-      switchTab('list'); 
-      applyFilters();
-    });
-
-    ci++;
-  }
-
-  const legend = L.control({position: 'bottomright'});
-  legend.onAdd = function() {
-    const div = L.DomUtil.create('div', 'map-legend');
-    div.innerHTML = '<strong>지역별 매물</strong><br>' +
-      Object.entries(byArea).map(([k,v],i) => 
-        `<span style="background:${colors[i%colors.length]}"></span> ${k}: ${v.count}건`
-      ).join('<br>');
-    return div;
-  };
-  legend.addTo(map);
-
-  document.getElementById('mapResultCount').textContent = `${Object.keys(byArea).length}개 지역, ${m.length}건`;
-}
-
-function updateMapStats() {
-  const m = merge();
-  const byArea = {};
-  m.forEach(l => {
-    if (!byArea[l.area]) byArea[l.area] = {count:0, sumPrice:0};
-    byArea[l.area].count++;
-    byArea[l.area].sumPrice += parseDeposit(l.deposit);
-  });
-  const best = Object.entries(byArea).sort((a,b) => b[1].count - a[1].count).slice(0, 3);
-  document.getElementById('mapStats').innerHTML = `
-    <div class="stat-card"><div class="num">${Object.keys(byArea).length}</div><div class="label">지역</div></div>
-    ${best.map(([k,v]) => `<div class="stat-card"><div class="num">${v.count}건</div><div class="label">${k} 최다</div></div>`).join('')}
-  `;
 }
 
 init();
