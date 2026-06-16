@@ -6,16 +6,17 @@
 <title>JSM 가족 전세 매물 대시보드</title>
 <style>
   :root {
-    --bg: #0f1117;
-    --surface: #1a1d27;
-    --border: #2a2d3a;
-    --text: #e1e4ed;
-    --muted: #8b90a0;
-    --accent: #6366f1;
-    --green: #10b981;
-    --red: #ef4444;
-    --amber: #f59e0b;
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --border: #e2e8f0;
+    --text: #1e293b;
+    --muted: #64748b;
+    --accent: #4f46e5;
+    --green: #059669;
+    --red: #dc2626;
+    --amber: #d97706;
     --radius: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
   }
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
@@ -28,10 +29,10 @@
   header {
     text-align: center;
     padding: 32px 16px 16px;
-    background: linear-gradient(135deg, #1e1b4b, #0f1117);
+    background: linear-gradient(135deg, #eef2ff, #f8fafc);
     border-bottom: 1px solid var(--border);
   }
-  header h1 { font-size: 24px; font-weight: 700; color: white; }
+  header h1 { font-size: 24px; font-weight: 700; color: #1e293b; }
   header .sub { color: var(--muted); margin-top: 2px; font-size: 13px; }
   header .updated { color: var(--amber); font-size: 12px; margin-top: 6px; }
 
@@ -47,7 +48,7 @@
     font-size: 13px;
     transition: all .2s;
   }
-  .tab.active { background: var(--bg); color: var(--accent); border-color: var(--accent); }
+  .tab.active { background: var(--bg); color: var(--accent); border-color: var(--accent); font-weight: 600; }
   .tab:hover:not(.active) { color: var(--text); }
   .tab-content { display:none; padding:20px; background:var(--bg); border:1px solid var(--border); border-radius:0 0 var(--radius) var(--radius); }
   .tab-content.active { display:block; }
@@ -59,6 +60,7 @@
     border-radius: var(--radius);
     padding: 12px 18px;
     min-width: 100px;
+    box-shadow: var(--shadow);
   }
   .stat-card .num { font-size: 22px; font-weight: 700; color: var(--accent); }
   .stat-card .label { font-size: 11px; color: var(--muted); margin-top: 2px; }
@@ -73,18 +75,19 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
+    box-shadow: var(--shadow);
   }
   .filters label { font-size: 12px; color: var(--muted); }
   .filters select, .filters input {
     padding: 5px 10px;
     border: 1px solid var(--border);
     border-radius: 4px;
-    background: var(--bg);
+    background: var(--surface);
     color: var(--text);
     font-size: 12px;
     min-width: 80px;
   }
-  .filters select:focus, .filters input:focus { outline:none; border-color: var(--accent); }
+  .filters select:focus, .filters input:focus { outline:none; border-color: var(--accent); box-shadow: 0 0 0 2px rgba(79,70,229,0.15); }
   .btn {
     padding: 6px 14px;
     border: none;
@@ -97,19 +100,19 @@
   .btn-primary { background: var(--accent); color: white; }
   .btn-primary:hover { background: #5353d4; }
   .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
-  .btn-secondary:hover { background: var(--border); }
+  .btn-secondary:hover { background: #f1f5f9; }
   .btn-green { background: var(--green); color: white; }
   .btn-green:hover { opacity: 0.9; }
 
-  .table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); max-height:70vh; overflow-y:auto; }
+  .table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); max-height:70vh; overflow-y:auto; box-shadow: var(--shadow); }
   table { width:100%; border-collapse:collapse; font-size: 12px; }
   th { 
-    background: var(--surface);
+    background: #f1f5f9;
     padding: 8px 6px;
     text-align: left;
     font-weight: 600;
     color: var(--muted);
-    border-bottom: 1px solid var(--border);
+    border-bottom: 2px solid var(--border);
     white-space: nowrap;
     position: sticky; top: 0;
     cursor: pointer;
@@ -118,7 +121,7 @@
   th:hover { color: var(--text); }
   th .sort { margin-left: 2px; font-size: 9px; }
   td { padding: 6px; border-bottom: 1px solid var(--border); white-space: nowrap; }
-  tr:hover { background: rgba(99,102,241,0.06); }
+  tr:hover { background: rgba(79,70,229,0.04); }
   .desc-cell { max-width: 200px; white-space: normal; font-size: 11px; }
   .link-cell a { color: var(--accent); font-size:11px; text-decoration:none; }
   .link-cell a:hover { text-decoration: underline; }
@@ -129,9 +132,9 @@
     font-size: 10px;
     font-weight: 600;
   }
-  .badge-hot { background: rgba(239,68,68,0.15); color: var(--red); }
-  .badge-good { background: rgba(16,185,129,0.15); color: var(--green); }
-  .badge-info { background: rgba(99,102,241,0.15); color: var(--accent); }
+  .badge-hot { background: #fef2f2; color: #dc2626; }
+  .badge-good { background: #ecfdf5; color: #059669; }
+  .badge-info { background: #eef2ff; color: #4f46e5; }
 
   .add-form {
     display: grid;
@@ -142,16 +145,17 @@
     border: 1px solid var(--border);
     border-radius: var(--radius);
     margin-bottom: 16px;
+    box-shadow: var(--shadow);
   }
   .add-form input, .add-form select {
     padding: 7px 10px;
     border: 1px solid var(--border);
     border-radius: 4px;
-    background: var(--bg);
+    background: var(--surface);
     color: var(--text);
     font-size: 12px;
   }
-  .add-form input:focus, .add-form select:focus { outline:none; border-color: var(--accent); }
+  .add-form input:focus, .add-form select:focus { outline:none; border-color: var(--accent); box-shadow: 0 0 0 2px rgba(79,70,229,0.15); }
   .full-width { grid-column: 1 / -1; }
 
   .instructions {
@@ -160,6 +164,7 @@
     border: 1px solid var(--border);
     border-radius: var(--radius);
     margin-top: 16px;
+    box-shadow: var(--shadow);
   }
   .instructions h3 { color: var(--accent); margin-bottom: 10px; font-size: 15px; }
   .instructions ol { padding-left: 18px; }
@@ -175,11 +180,12 @@
     background: var(--bg);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 12px;
+    padding: 14px;
     text-align: center;
     transition: all .2s;
+    box-shadow: var(--shadow);
   }
-  .platform-card:hover { border-color: var(--accent); }
+  .platform-card:hover { border-color: var(--accent); transform: translateY(-1px); }
   .platform-card h4 { font-size: 14px; margin-bottom: 2px; }
   .platform-card p { font-size: 11px; color: var(--muted); }
   .platform-card a { color: var(--accent); text-decoration: none; font-size: 12px; }
@@ -230,7 +236,7 @@
 <header>
   <h1>JSM 가족 전세 매물 대시보드</h1>
   <p class="sub">통학 최적: 홍제동·홍은동·연희동 | 15평+ | 옥탑·1층·반지하 제외 | 7개 플랫폼 통합</p>
-  <p class="updated">마지막 업데이트: <span id="lastUpdate">2026-06-16 17:30</span>  |  매물 <span id="totalCount">68</span>건</p>
+  <p class="updated">마지막 업데이트: <span id="lastUpdate">2026-06-16 17:50</span>  |  매물 <span id="totalCount">74</span>건</p>
 </header>
 
 <div class="container">
@@ -376,7 +382,7 @@ async function init() {
   const saved = localStorage.getItem('jeonse_user_listings');
   if (saved) { try { userListings = JSON.parse(saved); } catch(e) { userListings = []; } }
   
-  document.getElementById('lastUpdate').textContent = '2026-06-16 17:30';
+  document.getElementById('lastUpdate').textContent = '2026-06-16 17:50';
   
   buildFilters();
   applyFilters();
