@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JSM 가족 전세 매물 대시보드</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
   :root {
     --bg: #f8fafc;
@@ -229,6 +231,22 @@
     .filters { flex-direction: column; }
     .tab { padding: 6px 12px; font-size: 12px; }
   }
+
+  #map { height: 70vh; width: 100%; border-radius: var(--radius); border: 1px solid var(--border); z-index: 1; }
+  .area-popup { font-size: 13px; line-height: 1.6; }
+  .area-popup strong { color: var(--accent); }
+  .area-popup .cnt { font-size: 20px; font-weight: 700; }
+  .map-legend { 
+    background: var(--surface); 
+    padding: 8px 12px; 
+    border-radius: var(--radius); 
+    border: 1px solid var(--border); 
+    font-size: 11px; 
+    box-shadow: var(--shadow);
+    line-height: 1.7;
+  }
+  .map-legend span { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+
 </style>
 </head>
 <body>
@@ -243,6 +261,7 @@
 
 <div class="tabs">
   <button class="tab active" onclick="switchTab('list')">📋 매물 목록</button>
+  <button class="tab" onclick="switchTab('map')">🗺️ 지도</button>
   <button class="tab" onclick="switchTab('add')">➕ 매물 추가</button>
   <button class="tab" onclick="switchTab('guide')">📖 가이드</button>
 </div>
@@ -301,7 +320,14 @@
   </div>
 </div>
 
-<!-- Tab 2: Add -->
+<!-- Tab 2: Map -->
+<div id="tab-map" class="tab-content">
+  <div class="stats" id="mapStats"></div>
+  <div class="result-count" id="mapResultCount"></div>
+  <div id="map"></div>
+</div>
+
+<!-- Tab 3: Add -->
 <div id="tab-add" class="tab-content">
   <div class="add-form">
     <select id="inpArea"><option value="">지역</option><option>홍제동</option><option>홍은동</option><option>연희동</option><option>북가좌동</option><option>남가좌동</option><option>신사동</option><option>응암동</option><option>기타</option></select>
@@ -387,6 +413,7 @@ async function init() {
   buildFilters();
   applyFilters();
   updateStats();
+  initMap();
 }
 
 function merge() { return [...allListings, ...userListings]; }
@@ -546,10 +573,11 @@ function copyPrompt() {
 
 function switchTab(name) {
   document.querySelectorAll('.tab,.tab-content').forEach(t => t.classList.remove('active'));
-  const idx = {list:0, add:1, guide:2}[name];
+  const idx = {list:0, map:1, add:2, guide:3}[name];
   document.querySelectorAll('.tab')[idx].classList.add('active');
   document.getElementById(`tab-${name}`).classList.add('active');
   if (name === 'list') { buildFilters(); applyFilters(); updateStats(); }
+  if (name === 'map') { setTimeout(() => map.invalidateSize(), 100); updateMapStats(); }
 }
 
 function showToast(msg, color) {
@@ -558,6 +586,118 @@ function showToast(msg, color) {
   toast.style.background = color === 'red' ? 'var(--red)' : 'var(--green)';
   toast.classList.add('show');
   setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+// === MAP ===
+const areaCoords = {
+  '홍제동':   {lat: 37.588, lng: 126.947, desc: '홍제역·무악재역권'},
+  '홍은동':   {lat: 37.593, lng: 126.934, desc: '녹번역·홍제역 인접'},
+  '연희동':   {lat: 37.575, lng: 126.933, desc: '연대·이대 통학권'},
+  '남가좌동':  {lat: 37.579, lng: 126.925, desc: '가좌역권'},
+  '북가좌동':  {lat: 37.583, lng: 126.915, desc: '증산역권'},
+  '신사동':   {lat: 37.596, lng: 126.912, desc: '은평구 신사동'},
+  '응암동':   {lat: 37.592, lng: 126.916, desc: '응암역권'},
+};
+
+let map;
+
+function initMap() {
+  map = L.map('map').setView([37.585, 126.935], 14);
+  
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap',
+    maxZoom: 18
+  }).addTo(map);
+
+  renderMapMarkers();
+}
+
+function renderMapMarkers() {
+  const m = merge();
+  const byArea = {};
+  m.forEach(l => {
+    if (!byArea[l.area]) byArea[l.area] = {count:0, totalPrice:0, count3rm:0, avgPyeong:0, count18p:0, listings:[]};
+    byArea[l.area].count++;
+    byArea[l.area].totalPrice += parseDeposit(l.deposit);
+    if (l.pyeong >= 18) byArea[l.area].count18p++;
+    if (parseInt(l.rooms) >= 3) byArea[l.area].count3rm++;
+    byArea[l.area].listings.push(l);
+    byArea[l.area].avgPyeong += l.pyeong;
+  });
+
+  for (const k in byArea) {
+    byArea[k].avgPyeong = Math.round(byArea[k].avgPyeong / byArea[k].count * 10) / 10;
+    byArea[k].avgPrice = Math.round(byArea[k].totalPrice / byArea[k].count * 100) / 100;
+  }
+
+  const colors = ['#4f46e5','#7c3aed','#0891b2','#d97706','#dc2626','#059669','#ca8a04'];
+  let ci = 0;
+
+  for (const [area, info] of Object.entries(byArea)) {
+    const coord = areaCoords[area] || {lat: 37.585, lng: 126.935, desc: ''};
+    const color = colors[ci % colors.length];
+    const radius = Math.max(18, Math.min(50, info.count * 2.5));
+    
+    const marker = L.circleMarker([coord.lat, coord.lng], {
+      radius: radius,
+      fillColor: color,
+      color: 'white',
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 0.7
+    }).addTo(map);
+
+    marker.bindTooltip(`<strong>${area}</strong>: ${info.count}건`, {
+      permanent: true, direction: 'center',
+      className: 'area-tooltip',
+      offset: [0, 0]
+    });
+
+    marker.bindPopup(`
+      <div class="area-popup">
+        <strong>${area}</strong> <span style="color:var(--muted)">(${coord.desc})</span><br>
+        <span class="cnt">${info.count}</span>건 · 평균 <strong>${info.avgPrice}억</strong> · 평균 <strong>${info.avgPyeong}평</strong><br>
+        방3개+: ${info.count3rm}건 · 18평+: ${info.count18p}건
+      </div>
+    `);
+
+    marker.on('mouseover', function() { this.openPopup(); });
+    marker.on('click', function() { 
+      document.getElementById('filterArea').value = area; 
+      switchTab('list'); 
+      applyFilters();
+    });
+
+    ci++;
+  }
+
+  const legend = L.control({position: 'bottomright'});
+  legend.onAdd = function() {
+    const div = L.DomUtil.create('div', 'map-legend');
+    div.innerHTML = '<strong>지역별 매물</strong><br>' +
+      Object.entries(byArea).map(([k,v],i) => 
+        `<span style="background:${colors[i%colors.length]}"></span> ${k}: ${v.count}건`
+      ).join('<br>');
+    return div;
+  };
+  legend.addTo(map);
+
+  document.getElementById('mapResultCount').textContent = `${Object.keys(byArea).length}개 지역, ${m.length}건`;
+}
+
+function updateMapStats() {
+  const m = merge();
+  const byArea = {};
+  m.forEach(l => {
+    if (!byArea[l.area]) byArea[l.area] = {count:0, sumPrice:0};
+    byArea[l.area].count++;
+    byArea[l.area].sumPrice += parseDeposit(l.deposit);
+  });
+  const best = Object.entries(byArea).sort((a,b) => b[1].count - a[1].count).slice(0, 3);
+  document.getElementById('mapStats').innerHTML = `
+    <div class="stat-card"><div class="num">${Object.keys(byArea).length}</div><div class="label">지역</div></div>
+    ${best.map(([k,v]) => `<div class="stat-card"><div class="num">${v.count}건</div><div class="label">${k} 최다</div></div>`).join('')}
+  `;
 }
 
 init();
