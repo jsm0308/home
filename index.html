@@ -292,9 +292,9 @@
 <div class="error-banner" id="errorBanner"></div>
 
 <div class="tabs">
-  <button class="tab active" onclick="switchTab('list')">지도 + 목록</button>
-  <button class="tab" onclick="switchTab('add')">매물 추가</button>
-  <button class="tab" onclick="switchTab('guide')">가이드</button>
+  <button class="tab active" onclick="window._jeonse.switchTab('list')">지도 + 목록</button>
+  <button class="tab" onclick="window._jeonse.switchTab('add')">매물 추가</button>
+  <button class="tab" onclick="window._jeonse.switchTab('guide')">가이드</button>
 </div>
 
 <!-- TAB 1: List + Map -->
@@ -302,9 +302,9 @@
   <div class="stats" id="stats"></div>
   <div class="filters">
     <label>지역</label>
-    <select id="filterArea" onchange="applyFilters()"><option value="">전체</option></select>
+    <select id="filterArea" onchange="window._jeonse.applyFilters()"><option value="">전체</option></select>
     <label>가격</label>
-    <select id="filterPrice" onchange="applyFilters()">
+    <select id="filterPrice" onchange="window._jeonse.applyFilters()">
       <option value="">전체</option>
       <option value="0-1.5">~1.5억</option>
       <option value="1.5-2">1.5~2억</option>
@@ -312,17 +312,17 @@
       <option value="2.5-3">2.5~3억</option>
     </select>
     <label>평</label>
-    <select id="filterPyeong" onchange="applyFilters()">
+    <select id="filterPyeong" onchange="window._jeonse.applyFilters()">
       <option value="">전체</option>
       <option value="15-18">15~18평</option>
       <option value="18-99">18평+</option>
     </select>
     <label>방</label>
-    <select id="filterRooms" onchange="applyFilters()"><option value="">전체</option><option value="3">방3+</option></select>
+    <select id="filterRooms" onchange="window._jeonse.applyFilters()"><option value="">전체</option><option value="3">방3+</option></select>
     <label>출처</label>
-    <select id="filterSource" onchange="applyFilters()"><option value="">전체</option></select>
-    <button class="btn btn-secondary" onclick="resetFilters()">초기화</button>
-    <button class="btn btn-green" onclick="exportCSV()">CSV</button>
+    <select id="filterSource" onchange="window._jeonse.applyFilters()"><option value="">전체</option></select>
+    <button class="btn btn-secondary" onclick="window._jeonse.resetFilters()">초기화</button>
+    <button class="btn btn-green" onclick="window._jeonse.exportCSV()">CSV</button>
     <button class="btn btn-primary" id="viewToggle" onclick="window._jeonse.toggleView()">지도 숨기기</button>
   </div>
 
@@ -333,13 +333,13 @@
         <table>
           <thead>
             <tr>
-              <th onclick="sortBy('area')">지역</th>
-              <th onclick="sortBy('deposit')">보증금</th>
-              <th onclick="sortBy('pyeong')">면적</th>
+              <th onclick="window._jeonse.sortBy('area')">지역</th>
+              <th onclick="window._jeonse.sortBy('deposit')">보증금</th>
+              <th onclick="window._jeonse.sortBy('pyeong')">면적</th>
               <th>층</th>
               <th>구조</th>
               <th>설명</th>
-              <th onclick="sortBy('source')">출처</th>
+              <th onclick="window._jeonse.sortBy('source')">출처</th>
               <th>등록일</th>
               <th>링크</th>
             </tr>
@@ -370,7 +370,7 @@
     <select id="inpSource"><option>네이버</option><option>직방</option><option>다방</option><option>집품</option><option>호갱노노</option><option>당근</option><option>피터팬</option><option>아파트미</option><option>기타</option></select>
     <input id="inpDate" placeholder="등록일">
     <input id="inpLink" placeholder="링크 URL" class="full-width">
-    <button class="btn btn-primary full-width" onclick="addListing()">매물 추가</button>
+    <button class="btn btn-primary full-width" onclick="window._jeonse.addListing()">매물 추가</button>
   </div>
   <div id="addResult" style="margin:0 16px;font-size:13px;"></div>
 </div>
@@ -389,7 +389,7 @@
 조건: 빌라·연립·다가구, 전세 2.5억 이하, 15평(50m²) 이상, 방3개+, 옥탑/1층/반지하 제외.
 검색: 네이버부동산, 직방(zigbang.com), 다방(dabangapp.com), 피터팬(peterpanz.com), 집품(zippoom.com), 호갱노노, 당근.
 결과: 지역 | 유형 | 보증금 | 면적(m²/평) | 층 | 방수 | 욕실수 | 향 | 설명 | 출처 | 링크</div>
-    <button class="btn btn-secondary" onclick="copyPrompt()" style="margin-bottom:12px">프롬프트 복사</button>
+    <button class="btn btn-secondary" onclick="window._jeonse.copyPrompt()" style="margin-bottom:12px">프롬프트 복사</button>
     <h3>플랫폼 바로가기</h3>
     <div class="platform-grid">
       <div class="platform-card"><h4>네이버 부동산</h4><a href="https://new.land.naver.com" target="_blank" rel="noreferrer">바로가기</a></div>
@@ -565,7 +565,7 @@ function resetFilters() {
   applyFilters();
 }
 
-function sortBy(col) {
+function window._jeonse.sortBy(col) {
   if (sortCol === col) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
   else { sortCol = col; sortDir = 'asc'; }
   applyFilters();
@@ -785,7 +785,14 @@ window._jeonse = {
   highlightMarker: highlightMarker,
   unhighlightMarker: unhighlightMarker,
   focusMarker: focusMarker,
-  toggleView: toggleView
+  toggleView: toggleView,
+  switchTab: switchTab,
+  applyFilters: applyFilters,
+  resetFilters: resetFilters,
+  window._jeonse.sortBy: window._jeonse.sortBy,
+  exportCSV: exportCSV,
+  copyPrompt: copyPrompt,
+  addListing: addListing
 };
 
 async function init() {
