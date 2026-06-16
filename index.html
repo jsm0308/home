@@ -56,19 +56,19 @@
   .tab:hover:not(.active) { color: var(--text); }
 
   .main-wrap { display:flex; flex-direction:column; height:100vh; }
-  .tab-content { display:none; flex:1; overflow:hidden; }
+  .tab-content { display:none; flex:1; min-height:0; overflow:hidden; }
   .tab-content.active { display:flex; flex-direction:column; }
 
   /* === LIST TAB: Left list + Right map === */
-  .list-layout { display:flex; flex:1; overflow:hidden; }
+  .list-layout { display:flex; flex:1; min-height:0; overflow:hidden; }
   .list-left { 
     width: 50%; min-width: 380px;
     display:flex; flex-direction:column;
     border-right: 1px solid var(--border);
     background: var(--bg);
   }
-  .list-right { flex:1; position:relative; min-width:300px; }
-  #listMap { width:100%; height:100%; }
+  .list-right { flex:1; position:relative; min-width:300px; min-height:0; }
+  #listMap { position:absolute; top:0; left:0; right:0; bottom:0; }
 
   .stats { display:flex; gap:8px; flex-wrap:wrap; padding:8px 12px 4px; flex-shrink:0; }
   .stat-card {
