@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JSM 가족 전세 매물 대시보드</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
   :root {
     --bg: #f8fafc;
@@ -21,13 +20,15 @@
     --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
   }
   * { margin:0; padding:0; box-sizing:border-box; }
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
   body {
     font-family: -apple-system, 'Segoe UI', 'Noto Sans KR', sans-serif;
     background: var(--bg);
     color: var(--text);
     line-height: 1.5;
-    overflow: hidden;
-    height: 100vh;
   }
   header {
     text-align: center;
@@ -55,20 +56,39 @@
   .tab.active { background: var(--bg); color: var(--accent); border-color: var(--accent); font-weight: 600; }
   .tab:hover:not(.active) { color: var(--text); }
 
-  .main-wrap { display:flex; flex-direction:column; height:100vh; }
-  .tab-content { display:none; flex:1; min-height:0; overflow:hidden; }
+  .main-wrap { display:flex; flex-direction:column; height:100%; }
+  .tab-content { display:none; flex:1 1 0; min-height:0; overflow:hidden; }
   .tab-content.active { display:flex; flex-direction:column; }
 
+  .error-banner {
+    background: #fef2f2;
+    color: var(--red);
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
+    display: none;
+  }
+  .error-banner.show { display: block; }
+
   /* === LIST TAB: Left list + Right map === */
-  .list-layout { display:flex; flex:1; min-height:0; overflow:hidden; }
+  .list-layout { display:flex; flex:1 1 0; min-height:0; overflow:hidden; }
   .list-left { 
     width: 30%; min-width: 340px;
     display:flex; flex-direction:column;
     border-right: 1px solid var(--border);
     background: var(--bg);
   }
-  .list-right { flex:1; position:relative; min-width:300px; min-height:0; }
+  .list-right { flex:1 1 0; position:relative; min-width:300px; min-height:0; }
   #listMap { position:absolute; top:0; left:0; right:0; bottom:0; }
+  #listMap.map-error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 14px;
+    background: #f1f5f9;
+  }
 
   .stats { display:flex; gap:8px; flex-wrap:wrap; padding:8px 12px 4px; flex-shrink:0; }
   .stat-card {
@@ -119,7 +139,7 @@
 
   .result-count { font-size:11px; color:var(--muted); padding:4px 12px; flex-shrink:0; }
 
-  .table-wrap { flex:1; overflow-y:auto; overflow-x:auto; }
+  .table-wrap { flex:1 1 0; min-height:0; overflow-y:auto; overflow-x:auto; }
   table { width:100%; border-collapse:collapse; font-size: 11px; }
   th { 
     background: #f1f5f9;
@@ -182,8 +202,9 @@
     border-radius: var(--radius);
     margin: 16px;
     box-shadow: var(--shadow);
-    max-height: calc(100vh - 180px);
     overflow-y: auto;
+    flex: 1 1 0;
+    min-height: 0;
   }
   .instructions h3 { color: var(--accent); margin-bottom: 10px; font-size: 15px; }
   .instructions ol { padding-left: 18px; }
@@ -243,14 +264,13 @@
   /* === MAP POPUP === */
   .pin-popup { font-size: 12px; line-height: 1.5; }
   .pin-popup strong { font-size: 13px; }
-  .custom-cluster { background: var(--accent); color: white; border-radius: 50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; border:2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
 
   .empty { text-align:center; padding:30px; color:var(--muted); }
 
   @media (max-width:768px) {
     .list-layout { flex-direction:column; }
     .list-left { width:100%; height:55%; min-width:0; }
-    .list-right { height:45%; min-width:0; }
+    .list-right { height:45%; min-width:0; flex:none; }
     .filters { flex-wrap:wrap; }
   }
 </style>
@@ -264,6 +284,8 @@
   <p class="sub">홍제동·홍은동·연희동 | 15평+ | 옥탑·1층·반지하 제외</p>
   <p class="updated"><span id="lastUpdate">2026-06-16 18:15</span> · 매물 <span id="totalCount">74</span>건</p>
 </header>
+
+<div class="error-banner" id="errorBanner"></div>
 
 <div class="tabs">
   <button class="tab active" onclick="switchTab('list')">지도 + 목록</button>
@@ -380,16 +402,20 @@
 
 <div class="toast" id="toast"></div>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
+(function() {
+'use strict';
+
 let allListings = [];
 let userListings = [];
 let displayedListings = [];
 let sortCol = 'deposit';
 let sortDir = 'asc';
-let map;
+let map = null;
 let mapMarkers = [];
+let mapReady = false;
 
-// Area → center coords (approx)
 const areaCoords = {
   '홍제동':   [37.588, 126.947],
   '홍은동':   [37.593, 126.934],
@@ -400,7 +426,6 @@ const areaCoords = {
   '응암동':   [37.592, 126.916],
 };
 
-// Simple hash for deterministic jitter per listing
 function hashStr(s) {
   let h = 0;
   for (let i = 0; i < s.length; i++) { h = ((h << 5) - h) + s.charCodeAt(i); h |= 0; }
@@ -410,7 +435,6 @@ function hashStr(s) {
 function listingCoord(l) {
   const center = areaCoords[l.area] || [37.585, 126.935];
   const seed = hashStr(l.no + l.deposit + l.pyeong);
-  // jitter within ~800m
   const jlat = ((seed % 187) - 93) * 0.00009;
   const jlng = ((Math.floor(seed / 187) % 173) - 86) * 0.00009;
   return [center[0] + jlat, center[1] + jlng];
@@ -422,84 +446,116 @@ function parseDeposit(s) {
   return m ? parseFloat(m[1]) : Infinity;
 }
 
-async function init() {
-  try {
-    const resp = await fetch('jeonse_data.json');
-    const data = await resp.json();
-    allListings = data.listings.filter(l => l.area !== '참고');
-  } catch(e) {
-    console.warn('JSON load failed');
-    allListings = [];
-  }
-  
-  const saved = localStorage.getItem('jeonse_user_listings');
-  if (saved) { try { userListings = JSON.parse(saved); } catch(e) { userListings = []; } }
-  
-  initMap();
-  buildFilters();
-  applyFilters();
-  updateStats();
+function showError(msg) {
+  const banner = document.getElementById('errorBanner');
+  banner.textContent = msg;
+  banner.classList.add('show');
 }
 
-function merge() { return [...allListings, ...userListings]; }
+function showToast(msg, color) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.style.background = color === 'red' ? 'var(--red)' : 'var(--green)';
+  toast.classList.add('show');
+  setTimeout(function() { toast.classList.remove('show'); }, 2000);
+}
+
+function merge() { return allListings.concat(userListings); }
+
+function initMap() {
+  if (typeof L === 'undefined') {
+    document.getElementById('listMap').classList.add('map-error');
+    document.getElementById('listMap').textContent = '지도 라이브러리(Leaflet)를 불러오지 못했습니다. 인터넷 연결을 확인해주세요.';
+    return false;
+  }
+
+  try {
+    map = L.map('listMap', { zoomControl: true }).setView([37.585, 126.935], 14);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap',
+      maxZoom: 19
+    }).addTo(map);
+
+    map.on('load', function() { mapReady = true; });
+
+    setTimeout(function() {
+      if (map) map.invalidateSize();
+    }, 200);
+
+    return true;
+  } catch(e) {
+    console.error('Map init failed:', e);
+    document.getElementById('listMap').classList.add('map-error');
+    document.getElementById('listMap').textContent = '지도 초기화 중 오류가 발생했습니다.';
+    return false;
+  }
+}
 
 function updateStats() {
-  const m = merge();
-  const areas = new Set(m.map(l => l.area));
-  const good = m.filter(l => { const d = parseDeposit(l.deposit); return d >= 2 && d <= 2.5 && l.pyeong >= 18; });
-  document.getElementById('stats').innerHTML = `
-    <div class="stat-card"><div class="num">${m.length}</div><div class="label">전체</div></div>
-    <div class="stat-card"><div class="num">${good.length}</div><div class="label">2~2.5억+18평</div></div>
-    <div class="stat-card"><div class="num">${areas.size}</div><div class="label">지역</div></div>
-    <div class="stat-card"><div class="num">${userListings.length}</div><div class="label">가족 추가</div></div>
-  `;
+  var m = merge();
+  var areas = {};
+  m.forEach(function(l) { areas[l.area] = true; });
+  var areaCount = Object.keys(areas).length;
+  var good = m.filter(function(l) { var d = parseDeposit(l.deposit); return d >= 2 && d <= 2.5 && l.pyeong >= 18; });
+  document.getElementById('stats').innerHTML =
+    '<div class="stat-card"><div class="num">' + m.length + '</div><div class="label">전체</div></div>' +
+    '<div class="stat-card"><div class="num">' + good.length + '</div><div class="label">2~2.5억+18평</div></div>' +
+    '<div class="stat-card"><div class="num">' + areaCount + '</div><div class="label">지역</div></div>' +
+    '<div class="stat-card"><div class="num">' + userListings.length + '</div><div class="label">가족 추가</div></div>';
   document.getElementById('totalCount').textContent = m.length;
 }
 
 function buildFilters() {
-  const m = merge();
-  const areas = [...new Set(m.map(l => l.area))].sort();
-  const sel = document.getElementById('filterArea');
+  var m = merge();
+  var areas = [];
+  var seen = {};
+  m.forEach(function(l) { if (!seen[l.area]) { seen[l.area] = true; areas.push(l.area); } });
+  areas.sort();
+  var sel = document.getElementById('filterArea');
   sel.innerHTML = '<option value="">전체</option>';
-  areas.forEach(a => sel.innerHTML += `<option value="${a}">${a}</option>`);
-  
-  const sources = [...new Set(m.map(l => l.source))].sort();
-  const sSel = document.getElementById('filterSource');
+  areas.forEach(function(a) { sel.innerHTML += '<option value="' + a + '">' + a + '</option>'; });
+
+  var sources = [];
+  var sSeen = {};
+  m.forEach(function(l) { if (!sSeen[l.source]) { sSeen[l.source] = true; sources.push(l.source); } });
+  sources.sort();
+  var sSel = document.getElementById('filterSource');
   sSel.innerHTML = '<option value="">전체</option>';
-  sources.forEach(s => sSel.innerHTML += `<option value="${s}">${s}</option>`);
+  sources.forEach(function(s) { sSel.innerHTML += '<option value="' + s + '">' + s + '</option>'; });
 }
 
 function applyFilters() {
-  const area = document.getElementById('filterArea').value;
-  const price = document.getElementById('filterPrice').value;
-  const pyeong = document.getElementById('filterPyeong').value;
-  const rooms = document.getElementById('filterRooms').value;
-  const source = document.getElementById('filterSource').value;
-  
-  let m = merge();
-  if (area) m = m.filter(l => l.area === area);
-  if (price) { const [min, max] = price.split('-').map(Number); m = m.filter(l => { const d = parseDeposit(l.deposit); return d >= min && d < max; }); }
-  if (pyeong) { const [min, max] = pyeong.split('-').map(Number); m = m.filter(l => l.pyeong >= min && l.pyeong < max); }
-  if (rooms) m = m.filter(l => parseInt(l.rooms) >= parseInt(rooms));
-  if (source) m = m.filter(l => l.source === source);
-  
-  const dir = sortDir === 'asc' ? 1 : -1;
-  m.sort((a,b) => {
+  var area = document.getElementById('filterArea').value;
+  var price = document.getElementById('filterPrice').value;
+  var pyeong = document.getElementById('filterPyeong').value;
+  var rooms = document.getElementById('filterRooms').value;
+  var source = document.getElementById('filterSource').value;
+
+  var m = merge();
+  if (area) m = m.filter(function(l) { return l.area === area; });
+  if (price) { var parts = price.split('-').map(Number); m = m.filter(function(l) { var d = parseDeposit(l.deposit); return d >= parts[0] && d < parts[1]; }); }
+  if (pyeong) { var pp = pyeong.split('-').map(Number); m = m.filter(function(l) { return l.pyeong >= pp[0] && l.pyeong < pp[1]; }); }
+  if (rooms) m = m.filter(function(l) { return parseInt(l.rooms) >= parseInt(rooms); });
+  if (source) m = m.filter(function(l) { return l.source === source; });
+
+  var dir = sortDir === 'asc' ? 1 : -1;
+  m.sort(function(a,b) {
     if (sortCol === 'deposit') return (parseDeposit(a.deposit) - parseDeposit(b.deposit)) * dir;
     if (sortCol === 'pyeong') return (a.pyeong - b.pyeong) * dir;
     if (sortCol === 'area') return a.area.localeCompare(b.area) * dir;
     if (sortCol === 'source') return a.source.localeCompare(b.source) * dir;
     return 0;
   });
-  
+
   displayedListings = m;
   renderTable();
   renderMapPins();
-  document.getElementById('resultCount').textContent = `검색 결과 ${m.length}건`;
+  document.getElementById('resultCount').textContent = '검색 결과 ' + m.length + '건';
 }
 
 function resetFilters() {
-  ['filterArea','filterPrice','filterPyeong','filterRooms','filterSource'].forEach(id => document.getElementById(id).value = '');
+  ['filterArea','filterPrice','filterPyeong','filterRooms','filterSource'].forEach(function(id) { document.getElementById(id).value = ''; });
   sortCol = 'deposit'; sortDir = 'asc';
   applyFilters();
 }
@@ -511,68 +567,42 @@ function sortBy(col) {
 }
 
 function renderTable() {
-  const tbody = document.getElementById('tableBody');
+  var tbody = document.getElementById('tableBody');
   if (!displayedListings.length) {
     tbody.innerHTML = '<tr><td colspan="9" class="empty">조건에 맞는 매물이 없습니다</td></tr>';
     return;
   }
-  
-  tbody.innerHTML = displayedListings.map((l,i) => {
-    const d = parseDeposit(l.deposit);
-    const badge = d >= 2 && d <= 2.5 && l.pyeong >= 18 ? '<span class="badge badge-hot">추천</span>'
+
+  tbody.innerHTML = displayedListings.map(function(l, i) {
+    var d = parseDeposit(l.deposit);
+    var badge = d >= 2 && d <= 2.5 && l.pyeong >= 18 ? '<span class="badge badge-hot">추천</span>'
       : d >= 2 && d <= 2.5 ? '<span class="badge badge-good">적정</span>' : '';
-    const rooms = l.rooms && l.rooms !== '-' ? `방${l.rooms}` : '';
-    const bath = l.bath && l.bath !== '-' ? `화${l.bath}` : '';
-    const structure = [rooms, bath].filter(Boolean).join(' ');
-    const floorWarn = (l.floor||'').includes('1층') || (l.floor||'') === '1층' ? 'color:var(--red)' : '';
-    
-    return `<tr id="row-${i}" onmouseenter="highlightMarker(${i})" onmouseleave="unhighlightMarker(${i})" onclick="focusMarker(${i})">
-      <td><strong>${l.area}</strong> ${badge}</td>
-      <td>${l.deposit}</td>
-      <td>${l.pyeong}평 <span style="color:var(--muted);font-size:9px">(${l.m2}m²)</span></td>
-      <td style="${floorWarn}">${l.floor||'-'}</td>
-      <td>${structure||'-'}</td>
-      <td class="desc-cell">${l.desc||'-'}</td>
-      <td><span class="badge badge-info">${l.source}</span></td>
-      <td>${l.date||'-'}</td>
-      <td class="link-cell">${l.link && l.link !== '-' ? `<a href="${l.link}" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">링크</a>` : '-'}</td>
-    </tr>`;
+    var rooms = l.rooms && l.rooms !== '-' ? '방' + l.rooms : '';
+    var bath = l.bath && l.bath !== '-' ? '화' + l.bath : '';
+    var structure = [rooms, bath].filter(Boolean).join(' ');
+    var floorWarn = (l.floor||'').indexOf('1층') === 0 ? 'color:var(--red)' : '';
+
+    return '<tr id="row-' + i + '" onmouseenter="window._jeonse.highlightMarker(' + i + ')" onmouseleave="window._jeonse.unhighlightMarker(' + i + ')" onclick="window._jeonse.focusMarker(' + i + ')">' +
+      '<td><strong>' + l.area + '</strong> ' + badge + '</td>' +
+      '<td>' + l.deposit + '</td>' +
+      '<td>' + l.pyeong + '평 <span style="color:var(--muted);font-size:9px">(' + l.m2 + 'm²)</span></td>' +
+      '<td style="' + floorWarn + '">' + (l.floor||'-') + '</td>' +
+      '<td>' + (structure||'-') + '</td>' +
+      '<td class="desc-cell">' + (l.desc||'-') + '</td>' +
+      '<td><span class="badge badge-info">' + l.source + '</span></td>' +
+      '<td>' + (l.date||'-') + '</td>' +
+      '<td class="link-cell">' + (l.link && l.link !== '-' ? '<a href="' + l.link + '" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">링크</a>' : '-') + '</td>' +
+      '</tr>';
   }).join('');
 }
 
-function highlightMarker(i) {
-  document.querySelectorAll('tr').forEach(r => r.classList.remove('highlight'));
-  const row = document.getElementById('row-'+i);
-  if (row) row.classList.add('highlight');
-  if (mapMarkers[i]) {
-    mapMarkers[i].setIcon(activeIcon(i));
-    mapMarkers[i].setZIndexOffset(1000);
-  }
-}
-
-function unhighlightMarker(i) {
-  const row = document.getElementById('row-'+i);
-  if (row) row.classList.remove('highlight');
-  if (mapMarkers[i]) {
-    mapMarkers[i].setIcon(defaultIcon(i));
-    mapMarkers[i].setZIndexOffset(0);
-  }
-}
-
-function focusMarker(i) {
-  if (mapMarkers[i]) {
-    map.setView(mapMarkers[i].getLatLng(), 16);
-    mapMarkers[i].openPopup();
-  }
-}
-
 function defaultIcon(i) {
-  const l = displayedListings[i];
-  const d = parseDeposit(l.deposit);
-  const color = d >= 2 && d <= 2.5 && l.pyeong >= 18 ? '#dc2626' : d >= 2 && d <= 2.5 ? '#4f46e5' : '#64748b';
+  var l = displayedListings[i];
+  var d = parseDeposit(l.deposit);
+  var color = d >= 2 && d <= 2.5 && l.pyeong >= 18 ? '#dc2626' : d >= 2 && d <= 2.5 ? '#4f46e5' : '#64748b';
   return L.divIcon({
     className: '',
-    html: `<div style="background:${color};color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.3);">${l.pyeong}</div>`,
+    html: '<div style="background:' + color + ';color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.3);">' + l.pyeong + '</div>',
     iconSize: [28, 28],
     iconAnchor: [14, 14],
     popupAnchor: [0, -14]
@@ -580,78 +610,101 @@ function defaultIcon(i) {
 }
 
 function activeIcon(i) {
-  const l = displayedListings[i];
-  const d = parseDeposit(l.deposit);
-  const color = d >= 2 && d <= 2.5 && l.pyeong >= 18 ? '#dc2626' : d >= 2 && d <= 2.5 ? '#4f46e5' : '#64748b';
+  var l = displayedListings[i];
+  var d = parseDeposit(l.deposit);
+  var color = d >= 2 && d <= 2.5 && l.pyeong >= 18 ? '#dc2626' : d >= 2 && d <= 2.5 ? '#4f46e5' : '#64748b';
   return L.divIcon({
     className: '',
-    html: `<div style="background:${color};color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;border:3px solid #fbbf24;box-shadow:0 2px 8px rgba(0,0,0,0.4);">${l.pyeong}</div>`,
+    html: '<div style="background:' + color + ';color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;border:3px solid #fbbf24;box-shadow:0 2px 8px rgba(0,0,0,0.4);">' + l.pyeong + '</div>',
     iconSize: [36, 36],
     iconAnchor: [18, 18],
     popupAnchor: [0, -18]
   });
 }
 
-function renderMapPins() {
-  // Clear existing markers
-  mapMarkers.forEach(mk => map.removeLayer(mk));
-  mapMarkers = [];
-
-  displayedListings.forEach((l, i) => {
-    const coord = listingCoord(l);
-    const marker = L.marker(coord, { icon: defaultIcon(i) }).addTo(map);
-    
-    const d = parseDeposit(l.deposit);
-    const rooms = l.rooms && l.rooms !== '-' ? `방${l.rooms}` : '';
-    const bath = l.bath && l.bath !== '-' ? `화${l.bath}` : '';
-    const structure = [rooms, bath].filter(Boolean).join(' ');
-    
-    marker.bindPopup(`
-      <div class="pin-popup">
-        <strong>${l.area}</strong> ${l.deposit} · ${l.pyeong}평<br>
-        ${structure} · ${l.floor||'-'} · ${l.type}<br>
-        <span style="color:var(--muted);font-size:11px">${l.desc||''}</span><br>
-        <span style="font-size:10px;color:var(--muted)">${l.source} · ${l.date||''} · ${l.agent||''}</span>
-        ${l.link && l.link !== '-' ? `<br><a href="${l.link}" target="_blank" rel="noreferrer" style="font-size:11px;color:var(--accent)">원본 링크</a>` : ''}
-      </div>
-    `);
-    
-    marker.on('mouseover', function() { highlightMarker(i); });
-    marker.on('mouseout', function() { unhighlightMarker(i); });
-    
-    mapMarkers.push(marker);
-  });
-
-  // Fit bounds if there are markers
-  if (mapMarkers.length > 0) {
-    const group = L.featureGroup(mapMarkers);
-    map.fitBounds(group.getBounds().pad(0.05), { maxZoom: 15 });
+function highlightMarker(i) {
+  document.querySelectorAll('tr').forEach(function(r) { r.classList.remove('highlight'); });
+  var row = document.getElementById('row-' + i);
+  if (row) row.classList.add('highlight');
+  if (map && mapMarkers[i]) {
+    mapMarkers[i].setIcon(activeIcon(i));
+    mapMarkers[i].setZIndexOffset(1000);
   }
 }
 
-// === MAP INIT ===
-function initMap() {
-  map = L.map('listMap', { zoomControl: true }).setView([37.585, 126.935], 14);
-  
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap',
-    maxZoom: 19
-  }).addTo(map);
+function unhighlightMarker(i) {
+  var row = document.getElementById('row-' + i);
+  if (row) row.classList.remove('highlight');
+  if (map && mapMarkers[i]) {
+    mapMarkers[i].setIcon(defaultIcon(i));
+    mapMarkers[i].setZIndexOffset(0);
+  }
 }
 
-// === ADD ===
+function focusMarker(i) {
+  if (map && mapMarkers[i]) {
+    map.setView(mapMarkers[i].getLatLng(), 16);
+    mapMarkers[i].openPopup();
+  }
+}
+
+function renderMapPins() {
+  if (!map) return;
+
+  mapMarkers.forEach(function(mk) { map.removeLayer(mk); });
+  mapMarkers = [];
+
+  displayedListings.forEach(function(l, i) {
+    try {
+      var coord = listingCoord(l);
+      var marker = L.marker(coord, { icon: defaultIcon(i) }).addTo(map);
+
+      var d = parseDeposit(l.deposit);
+      var rooms = l.rooms && l.rooms !== '-' ? '방' + l.rooms : '';
+      var bath = l.bath && l.bath !== '-' ? '화' + l.bath : '';
+      var structure = [rooms, bath].filter(Boolean).join(' ');
+
+      marker.bindPopup(
+        '<div class="pin-popup">' +
+        '<strong>' + l.area + '</strong> ' + l.deposit + ' · ' + l.pyeong + '평<br>' +
+        structure + ' · ' + (l.floor||'-') + ' · ' + l.type + '<br>' +
+        '<span style="color:var(--muted);font-size:11px">' + (l.desc||'') + '</span><br>' +
+        '<span style="font-size:10px;color:var(--muted)">' + l.source + ' · ' + (l.date||'') + ' · ' + (l.agent||'') + '</span>' +
+        (l.link && l.link !== '-' ? '<br><a href="' + l.link + '" target="_blank" rel="noreferrer" style="font-size:11px;color:var(--accent)">원본 링크</a>' : '') +
+        '</div>'
+      );
+
+      marker.on('mouseover', (function(idx) { return function() { highlightMarker(idx); }; })(i));
+      marker.on('mouseout', (function(idx) { return function() { unhighlightMarker(idx); }; })(i));
+
+      mapMarkers.push(marker);
+    } catch(e) {
+      console.warn('Marker failed for listing ' + i + ':', e);
+    }
+  });
+
+  if (mapMarkers.length > 0) {
+    try {
+      var group = L.featureGroup(mapMarkers);
+      map.fitBounds(group.getBounds().pad(0.05), { maxZoom: 15 });
+    } catch(e) {
+      console.warn('fitBounds failed:', e);
+    }
+  }
+}
+
 function addListing() {
-  const area = document.getElementById('inpArea').value;
-  const deposit = document.getElementById('inpDeposit').value;
-  const m2 = parseInt(document.getElementById('inpM2').value) || 0;
+  var area = document.getElementById('inpArea').value;
+  var deposit = document.getElementById('inpDeposit').value;
+  var m2 = parseInt(document.getElementById('inpM2').value) || 0;
   if (!area || !deposit || m2 <= 0) { showToast('지역, 보증금, 면적(m²)은 필수입니다.', 'red'); return; }
-  
-  const pyeong = Math.round(m2 / 3.306 * 10) / 10;
+
+  var pyeong = Math.round(m2 / 3.306 * 10) / 10;
   if (pyeong < 15 && !confirm('15평 미만입니다. 추가할까요?')) return;
-  
-  const listing = {
+
+  var listing = {
     no: allListings.length + userListings.length + 1,
-    area, type: document.getElementById('inpType').value, deposit, m2, pyeong,
+    area: area, type: document.getElementById('inpType').value, deposit: deposit, m2: m2, pyeong: pyeong,
     floor: document.getElementById('inpFloor').value || '-',
     rooms: document.getElementById('inpRooms').value || '-',
     bath: document.getElementById('inpBath').value || '-',
@@ -662,57 +715,100 @@ function addListing() {
     date: document.getElementById('inpDate').value || new Date().toISOString().slice(0,10),
     link: document.getElementById('inpLink').value || '-'
   };
-  
+
   userListings.push(listing);
   localStorage.setItem('jeonse_user_listings', JSON.stringify(userListings));
-  
-  ['inpArea','inpDeposit','inpM2','inpFloor','inpRooms','inpBath','inpDir','inpDesc','inpAgent','inpLink'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el.tagName === 'SELECT') el.value = '';
-    else el.value = '';
+
+  ['inpArea','inpDeposit','inpM2','inpFloor','inpRooms','inpBath','inpDir','inpDesc','inpAgent','inpLink'].forEach(function(id) {
+    document.getElementById(id).value = '';
   });
-  
-  document.getElementById('addResult').innerHTML = `<span style="color:var(--green)">✓ 추가됨: ${area} ${deposit} ${pyeong}평 (가족 추가 ${userListings.length}건)</span>`;
+
+  document.getElementById('addResult').innerHTML = '<span style="color:var(--green)">✓ 추가됨: ' + area + ' ' + deposit + ' ' + pyeong + '평 (가족 추가 ' + userListings.length + '건)</span>';
   buildFilters(); applyFilters(); updateStats(); showToast('매물 추가 완료!');
 }
 
 function exportCSV() {
-  const m = merge();
-  const header = 'No,지역,유형,보증금,면적(m²),면적(평),층,방수,욕실수,향,설명,중개사,출처,등록일,링크';
-  const rows = m.map((l,i) => `${i+1},${l.area},${l.type},${l.deposit},${l.m2},${l.pyeong},${l.floor},${l.rooms},${l.bath},${l.dir},${l.desc},${l.agent},${l.source},${l.date},${l.link}`);
-  const csv = '\uFEFF' + header + '\n' + rows.join('\n');
-  const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = `jeonse_listings_${new Date().toISOString().slice(0,10)}.csv`;
-  a.click(); URL.revokeObjectURL(url);
+  var m = merge();
+  var header = 'No,지역,유형,보증금,면적(m²),면적(평),층,방수,욕실수,향,설명,중개사,출처,등록일,링크';
+  var rows = m.map(function(l,i) { return (i+1) + ',' + l.area + ',' + l.type + ',' + l.deposit + ',' + l.m2 + ',' + l.pyeong + ',' + l.floor + ',' + l.rooms + ',' + l.bath + ',' + l.dir + ',' + l.desc + ',' + l.agent + ',' + l.source + ',' + l.date + ',' + l.link; });
+  var csv = '\uFEFF' + header + '\n' + rows.join('\n');
+  var blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = 'jeonse_listings_' + new Date().toISOString().slice(0,10) + '.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
   showToast('CSV 다운로드 완료!');
 }
 
 function copyPrompt() {
-  navigator.clipboard.writeText(document.getElementById('promptBox').textContent).then(() => showToast('프롬프트 복사!'));
+  navigator.clipboard.writeText(document.getElementById('promptBox').textContent).then(function() { showToast('프롬프트 복사!'); });
 }
 
 function switchTab(name) {
-  document.querySelectorAll('.tab,.tab-content').forEach(t => t.classList.remove('active'));
-  const idx = {list:0, add:1, guide:2}[name];
+  document.querySelectorAll('.tab,.tab-content').forEach(function(t) { t.classList.remove('active'); });
+  var idx = {list:0, add:1, guide:2}[name];
   document.querySelectorAll('.tab')[idx].classList.add('active');
-  document.getElementById(`tab-${name}`).classList.add('active');
-  if (name === 'list') { 
-    buildFilters(); applyFilters(); updateStats(); 
-    setTimeout(() => map.invalidateSize(), 150);
+  document.getElementById('tab-' + name).classList.add('active');
+  if (name === 'list') {
+    buildFilters(); applyFilters(); updateStats();
+    if (map) {
+      setTimeout(function() { map.invalidateSize(); }, 200);
+    }
   }
 }
 
-function showToast(msg, color) {
-  const toast = document.getElementById('toast');
-  toast.textContent = msg;
-  toast.style.background = color === 'red' ? 'var(--red)' : 'var(--green)';
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 2000);
+// Public API exposed for inline onclick handlers
+window._jeonse = {
+  highlightMarker: highlightMarker,
+  unhighlightMarker: unhighlightMarker,
+  focusMarker: focusMarker
+};
+
+async function init() {
+  var dataLoaded = false;
+
+  try {
+    var resp = await fetch('jeonse_data.json');
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    var data = await resp.json();
+    allListings = data.listings.filter(function(l) { return l.area !== '참고'; });
+    dataLoaded = true;
+  } catch(e) {
+    console.warn('JSON load failed:', e);
+    allListings = [];
+  }
+
+  try {
+    var saved = localStorage.getItem('jeonse_user_listings');
+    if (saved) { userListings = JSON.parse(saved); }
+  } catch(e) { userListings = []; }
+
+  var mapOk = initMap();
+  if (!mapOk) {
+    showError('지도를 불러올 수 없습니다. 인터넷 연결을 확인해주세요.');
+  }
+  if (!dataLoaded) {
+    showError('매물 데이터(jeonse_data.json)를 불러오지 못했습니다.');
+  }
+
+  buildFilters();
+  applyFilters();
+  updateStats();
+
+  document.getElementById('lastUpdate').textContent = '2026-06-16 20:00';
 }
 
-init();
+// Start when DOM is ready, with timeout fallback
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', function() { init().catch(function(e) { console.error('Init failed:', e); }); });
+} else {
+  init().catch(function(e) { console.error('Init failed:', e); });
+}
+
+})();
 </script>
 </body>
 </html>
