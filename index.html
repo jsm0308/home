@@ -81,6 +81,10 @@
   }
   .list-right { flex:1 1 0; position:relative; min-width:300px; min-height:0; }
   #listMap { position:absolute; top:0; left:0; right:0; bottom:0; }
+
+  /* List-only mode (hide map) */
+  .list-layout.list-only .list-left { width: 100%; }
+  .list-layout.list-only .list-right { display: none; }
   #listMap.map-error {
     display: flex;
     align-items: center;
@@ -319,6 +323,7 @@
     <select id="filterSource" onchange="applyFilters()"><option value="">전체</option></select>
     <button class="btn btn-secondary" onclick="resetFilters()">초기화</button>
     <button class="btn btn-green" onclick="exportCSV()">CSV</button>
+    <button class="btn btn-primary" id="viewToggle" onclick="window._jeonse.toggleView()">지도 숨기기</button>
   </div>
 
   <div class="list-layout">
@@ -760,11 +765,27 @@ function switchTab(name) {
   }
 }
 
+function toggleView() {
+  var layout = document.querySelector('.list-layout');
+  var btn = document.getElementById('viewToggle');
+  if (!layout || !btn) return;
+  if (layout.classList.contains('list-only')) {
+    layout.classList.remove('list-only');
+    btn.textContent = '지도 숨기기';
+    // Invalidate map after showing it
+    if (map) { setTimeout(function() { map.invalidateSize(); renderMapPins(); }, 100); }
+  } else {
+    layout.classList.add('list-only');
+    btn.textContent = '지도 보기';
+  }
+}
+
 // Public API exposed for inline onclick handlers
 window._jeonse = {
   highlightMarker: highlightMarker,
   unhighlightMarker: unhighlightMarker,
-  focusMarker: focusMarker
+  focusMarker: focusMarker,
+  toggleView: toggleView
 };
 
 async function init() {
