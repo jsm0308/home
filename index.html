@@ -62,7 +62,7 @@
   /* === LIST TAB: Left list + Right map === */
   .list-layout { display:flex; flex:1; min-height:0; overflow:hidden; }
   .list-left { 
-    width: 50%; min-width: 380px;
+    width: 30%; min-width: 340px;
     display:flex; flex-direction:column;
     border-right: 1px solid var(--border);
     background: var(--bg);
@@ -612,6 +612,7 @@ function renderMapPins() {
         ${structure} · ${l.floor||'-'} · ${l.type}<br>
         <span style="color:var(--muted);font-size:11px">${l.desc||''}</span><br>
         <span style="font-size:10px;color:var(--muted)">${l.source} · ${l.date||''} · ${l.agent||''}</span>
+        ${l.link && l.link !== '-' ? `<br><a href="${l.link}" target="_blank" rel="noreferrer" style="font-size:11px;color:var(--accent)">원본 링크</a>` : ''}
       </div>
     `);
     
