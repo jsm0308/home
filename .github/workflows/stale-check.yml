@@ -1,0 +1,66 @@
+name: Stale Listing Reminder
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 매일 자정 (KST 09:00)
+  workflow_dispatch:  # 수동 실행 가능
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check if data is stale
+        id: check
+        run: |
+          LAST_MOD=$(date -d "$(git log -1 --format=%cd --date=iso jeonse_data.json)" +%s 2>/dev/null || echo 0)
+          NOW=$(date +%s)
+          DAYS=$(( (NOW - LAST_MOD) / 86400 ))
+          echo "days=$DAYS" >> $GITHUB_OUTPUT
+          echo "last_update=$(git log -1 --format=%cd --date=iso jeonse_data.json 2>/dev/null || echo 'never')" >> $GITHUB_OUTPUT
+
+      - name: Create reminder issue if stale (3+ days)
+        if: steps.check.outputs.days >= 3
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const days = '${{ steps.check.outputs.days }}';
+            const lastUpdate = '${{ steps.check.outputs.last_update }}';
+
+            // Close old reminder issues
+            const oldIssues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['stale-data'],
+              state: 'open'
+            });
+            for (const issue of oldIssues.data) {
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                state: 'closed'
+              });
+            }
+
+            // Create new reminder
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `전세 매물 데이터 ${days}일째 업데이트 없음`,
+              body: `마지막 업데이트: ${lastUpdate} (${days}일 전)
+
+# 할 일
+1. Cursor IDE에서 "전세 매물 업데이트 해줘" 라고 말하기
+2. Coach가 새 매물을 크롤링해서 jeonse_data.json 갱신
+3. 자동으로 사이트에 반영됩니다
+
+# 수동 추가
+사이트 접속 → "매물 추가" 탭에서 가족이 직접 추가 가능`,
+              labels: ['stale-data']
+            });
