@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSM 가족 전세 매물 대시보드</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --border: #2a2d3a;
+    --text: #e1e4ed;
+    --muted: #8b90a0;
+    --accent: #6366f1;
+    --green: #10b981;
+    --red: #ef4444;
+    --amber: #f59e0b;
+    --radius: 8px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, 'Segoe UI', 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .container { max-width:1500px; margin:0 auto; padding:16px; }
+  header {
+    text-align: center;
+    padding: 32px 16px 16px;
+    background: linear-gradient(135deg, #1e1b4b, #0f1117);
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 { font-size: 24px; font-weight: 700; color: white; }
+  header .sub { color: var(--muted); margin-top: 2px; font-size: 13px; }
+  header .updated { color: var(--amber); font-size: 12px; margin-top: 6px; }
+
+  .tabs { display:flex; gap:2px; margin:16px 0 0; justify-content:center; flex-wrap:wrap; }
+  .tab {
+    padding: 8px 20px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    cursor: pointer;
+    border-radius: var(--radius) var(--radius) 0 0;
+    border-bottom: none;
+    font-size: 13px;
+    transition: all .2s;
+  }
+  .tab.active { background: var(--bg); color: var(--accent); border-color: var(--accent); }
+  .tab:hover:not(.active) { color: var(--text); }
+  .tab-content { display:none; padding:20px; background:var(--bg); border:1px solid var(--border); border-radius:0 0 var(--radius) var(--radius); }
+  .tab-content.active { display:block; }
+
+  .stats { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 18px;
+    min-width: 100px;
+  }
+  .stat-card .num { font-size: 22px; font-weight: 700; color: var(--accent); }
+  .stat-card .label { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  .filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 12px;
+    padding: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .filters label { font-size: 12px; color: var(--muted); }
+  .filters select, .filters input {
+    padding: 5px 10px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 12px;
+    min-width: 80px;
+  }
+  .filters select:focus, .filters input:focus { outline:none; border-color: var(--accent); }
+  .btn {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all .2s;
+  }
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-primary:hover { background: #5353d4; }
+  .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover { background: var(--border); }
+  .btn-green { background: var(--green); color: white; }
+  .btn-green:hover { opacity: 0.9; }
+
+  .table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); max-height:70vh; overflow-y:auto; }
+  table { width:100%; border-collapse:collapse; font-size: 12px; }
+  th { 
+    background: var(--surface);
+    padding: 8px 6px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    position: sticky; top: 0;
+    cursor: pointer;
+    user-select: none;
+  }
+  th:hover { color: var(--text); }
+  th .sort { margin-left: 2px; font-size: 9px; }
+  td { padding: 6px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  tr:hover { background: rgba(99,102,241,0.06); }
+  .desc-cell { max-width: 200px; white-space: normal; font-size: 11px; }
+  .link-cell a { color: var(--accent); font-size:11px; text-decoration:none; }
+  .link-cell a:hover { text-decoration: underline; }
+  .badge {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .badge-hot { background: rgba(239,68,68,0.15); color: var(--red); }
+  .badge-good { background: rgba(16,185,129,0.15); color: var(--green); }
+  .badge-info { background: rgba(99,102,241,0.15); color: var(--accent); }
+
+  .add-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 8px;
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+  }
+  .add-form input, .add-form select {
+    padding: 7px 10px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 12px;
+  }
+  .add-form input:focus, .add-form select:focus { outline:none; border-color: var(--accent); }
+  .full-width { grid-column: 1 / -1; }
+
+  .instructions {
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-top: 16px;
+  }
+  .instructions h3 { color: var(--accent); margin-bottom: 10px; font-size: 15px; }
+  .instructions ol { padding-left: 18px; }
+  .instructions li { margin-bottom: 6px; font-size: 13px; color: var(--muted); }
+  .instructions a { color: var(--accent); }
+  .platform-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 8px;
+    margin: 12px 0;
+  }
+  .platform-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px;
+    text-align: center;
+    transition: all .2s;
+  }
+  .platform-card:hover { border-color: var(--accent); }
+  .platform-card h4 { font-size: 14px; margin-bottom: 2px; }
+  .platform-card p { font-size: 11px; color: var(--muted); }
+  .platform-card a { color: var(--accent); text-decoration: none; font-size: 12px; }
+
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--green);
+    color: white;
+    padding: 10px 18px;
+    border-radius: var(--radius);
+    font-weight: 600;
+    font-size: 13px;
+    opacity: 0;
+    transition: opacity .3s;
+    z-index: 1000;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; }
+
+  .empty { text-align:center; padding:30px; color:var(--muted); }
+  .result-count { font-size:12px; color:var(--muted); margin-bottom:10px; }
+
+  .prompt-box {
+    background: var(--bg);
+    padding: 12px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--muted);
+    margin: 6px 0;
+    white-space: pre-wrap;
+    max-height: 160px;
+    overflow-y: auto;
+    line-height: 1.5;
+  }
+
+  @media (max-width:768px) {
+    .container { padding:8px; }
+    .filters { flex-direction: column; }
+    .tab { padding: 6px 12px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>JSM 가족 전세 매물 대시보드</h1>
+  <p class="sub">통학 최적: 홍제동·홍은동·연희동 | 15평+ | 옥탑·1층·반지하 제외 | 7개 플랫폼 통합</p>
+  <p class="updated">마지막 업데이트: <span id="lastUpdate">2026-06-16 17:30</span>  |  매물 <span id="totalCount">68</span>건</p>
+</header>
+
+<div class="container">
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('list')">📋 매물 목록</button>
+  <button class="tab" onclick="switchTab('add')">➕ 매물 추가</button>
+  <button class="tab" onclick="switchTab('guide')">📖 가이드</button>
+</div>
+
+<!-- Tab 1: List -->
+<div id="tab-list" class="tab-content active">
+  <div class="stats" id="stats"></div>
+  
+  <div class="filters">
+    <label>지역</label>
+    <select id="filterArea" onchange="applyFilters()"><option value="">전체</option></select>
+    <label>가격</label>
+    <select id="filterPrice" onchange="applyFilters()">
+      <option value="">전체</option>
+      <option value="0-1.5">~1.5억</option>
+      <option value="1.5-2">1.5~2억</option>
+      <option value="2-2.5">2~2.5억</option>
+      <option value="2.5-3">2.5~3억</option>
+      <option value="3-99">3억+</option>
+    </select>
+    <label>평수</label>
+    <select id="filterPyeong" onchange="applyFilters()">
+      <option value="">전체</option>
+      <option value="15-18">15~18평</option>
+      <option value="18-20">18~20평</option>
+      <option value="20-99">20평+</option>
+    </select>
+    <label>방</label>
+    <select id="filterRooms" onchange="applyFilters()"><option value="">전체</option><option value="3">방3+</option></select>
+    <label>출처</label>
+    <select id="filterSource" onchange="applyFilters()"><option value="">전체</option></select>
+    <button class="btn btn-primary" onclick="applyFilters()">적용</button>
+    <button class="btn btn-secondary" onclick="resetFilters()">초기화</button>
+    <button class="btn btn-green" onclick="exportCSV()">CSV 다운로드</button>
+  </div>
+
+  <div class="result-count" id="resultCount"></div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th onclick="sortBy('area')">지역 ⇅</th>
+          <th onclick="sortBy('deposit')">보증금 ⇅</th>
+          <th onclick="sortBy('pyeong')">면적 ⇅</th>
+          <th>층</th>
+          <th>구조</th>
+          <th>설명</th>
+          <th onclick="sortBy('source')">출처 ⇅</th>
+          <th>등록일</th>
+          <th onclick="sortBy('type')">유형 ⇅</th>
+          <th>링크</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Tab 2: Add -->
+<div id="tab-add" class="tab-content">
+  <div class="add-form">
+    <select id="inpArea"><option value="">지역</option><option>홍제동</option><option>홍은동</option><option>연희동</option><option>북가좌동</option><option>남가좌동</option><option>신사동</option><option>응암동</option><option>기타</option></select>
+    <select id="inpType"><option>빌라</option><option>다가구</option><option>다세대</option><option>연립</option><option>단독</option><option>상가주택</option></select>
+    <input id="inpDeposit" placeholder="보증금 (예: 2.5억)">
+    <input id="inpM2" placeholder="면적 m² (예: 58)" type="number">
+    <input id="inpFloor" placeholder="층 (예: 2층/4층)">
+    <input id="inpRooms" placeholder="방수 (예: 3)" type="number">
+    <input id="inpBath" placeholder="욕실수 (예: 1)" type="number">
+    <input id="inpDir" placeholder="향 (예: 남동향)">
+    <input id="inpDesc" placeholder="설명" class="full-width">
+    <input id="inpAgent" placeholder="중개사">
+    <select id="inpSource"><option>네이버</option><option>직방</option><option>다방</option><option>집품</option><option>호갱노노</option><option>당근</option><option>피터팬</option><option>아파트미</option><option>기타</option></select>
+    <input id="inpDate" placeholder="등록일 (예: 2026-06-16)">
+    <input id="inpLink" placeholder="링크 URL" class="full-width">
+    <button class="btn btn-primary full-width" onclick="addListing()">매물 추가</button>
+  </div>
+  <div id="addResult" style="margin-top:10px;font-size:13px;"></div>
+</div>
+
+<!-- Tab 3: Guide -->
+<div id="tab-guide" class="tab-content">
+  <div class="instructions">
+    <h3>사용법</h3>
+    <ol>
+      <li><strong>매물 목록</strong>: 지역·가격·평수·방수·출처별 필터링. 열 제목 클릭 시 정렬.</li>
+      <li><strong>매물 추가</strong>: 가족 누구나 새 매물을 직접 입력 (localStorage에 자동 저장).</li>
+      <li><strong>CSV 다운로드</strong>: 엑셀에서 열 수 있는 CSV 파일로 전체 목록 다운로드.</li>
+    </ol>
+
+    <h3 style="margin-top:16px;">AI 검색 프롬프트 (복사해서 AI에 붙여넣기)</h3>
+    <div class="prompt-box" id="promptBox">서울 서대문구 홍제동/홍은동/연희동 전세 매물 찾아줘.
+조건: 빌라·연립·다가구, 전세 2.5억 이하, 15평(50m²) 이상, 방3개+, 옥탑/1층/반지하 제외.
+검색: 네이버부동산, 직방(zigbang.com), 다방(dabangapp.com), 피터팬(peterpanz.com), 집품(zippoom.com), 호갱노노, 당근.
+결과: 지역 | 유형 | 보증금 | 면적(m²/평) | 층 | 방수 | 욕실수 | 향 | 설명 | 출처 | 링크</div>
+    <button class="btn btn-secondary" onclick="copyPrompt()">프롬프트 복사</button>
+
+    <h3 style="margin-top:16px;">플랫폼 바로가기</h3>
+    <div class="platform-grid">
+      <div class="platform-card"><h4>네이버 부동산</h4><a href="https://new.land.naver.com" target="_blank" rel="noreferrer">바로가기</a></div>
+      <div class="platform-card"><h4>직방</h4><a href="https://www.zigbang.com" target="_blank" rel="noreferrer">바로가기</a></div>
+      <div class="platform-card"><h4>다방</h4><a href="https://www.dabangapp.com" target="_blank" rel="noreferrer">바로가기</a></div>
+      <div class="platform-card"><h4>피터팬</h4><a href="https://www.peterpanz.com" target="_blank" rel="noreferrer">바로가기</a></div>
+      <div class="platform-card"><h4>집품</h4><a href="https://zippoom.com" target="_blank" rel="noreferrer">바로가기</a></div>
+      <div class="platform-card"><h4>호갱노노</h4><a href="https://hogangnono.com" target="_blank" rel="noreferrer">바로가기</a></div>
+      <div class="platform-card"><h4>당근</h4><a href="https://www.daangn.com/kr/realty/" target="_blank" rel="noreferrer">바로가기</a></div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let allListings = [];
+let userListings = [];
+let displayedListings = [];
+let sortCol = 'deposit';
+let sortDir = 'asc';
+
+function parseDeposit(s) {
+  if (!s || s === '-') return Infinity;
+  const m = s.match(/^([\d.]+)/);
+  return m ? parseFloat(m[1]) : Infinity;
+}
+
+async function init() {
+  try {
+    const resp = await fetch('jeonse_data.json');
+    const data = await resp.json();
+    allListings = data.listings.filter(l => l.area !== '참고');
+  } catch(e) {
+    console.warn('JSON load failed, using empty');
+    allListings = [];
+  }
+  
+  const saved = localStorage.getItem('jeonse_user_listings');
+  if (saved) { try { userListings = JSON.parse(saved); } catch(e) { userListings = []; } }
+  
+  document.getElementById('lastUpdate').textContent = '2026-06-16 17:30';
+  
+  buildFilters();
+  applyFilters();
+  updateStats();
+}
+
+function merge() { return [...allListings, ...userListings]; }
+
+function updateStats() {
+  const m = merge();
+  const areas = new Set(m.map(l => l.area));
+  const good = m.filter(l => { const d = parseDeposit(l.deposit); return d >= 2 && d <= 2.5 && l.pyeong >= 18; });
+  const sources = new Set(m.map(l => l.source));
+  document.getElementById('stats').innerHTML = `
+    <div class="stat-card"><div class="num">${m.length}</div><div class="label">전체</div></div>
+    <div class="stat-card"><div class="num">${good.length}</div><div class="label">2~2.5억+18평</div></div>
+    <div class="stat-card"><div class="num">${areas.size}</div><div class="label">지역</div></div>
+    <div class="stat-card"><div class="num">${sources.size}</div><div class="label">플랫폼</div></div>
+    <div class="stat-card"><div class="num">${userListings.length}</div><div class="label">가족 추가</div></div>
+  `;
+  document.getElementById('totalCount').textContent = m.length;
+}
+
+function buildFilters() {
+  const m = merge();
+  const areas = [...new Set(m.map(l => l.area))].sort();
+  const sel = document.getElementById('filterArea');
+  sel.innerHTML = '<option value="">전체</option>';
+  areas.forEach(a => sel.innerHTML += `<option value="${a}">${a}</option>`);
+  
+  const sources = [...new Set(m.map(l => l.source))].sort();
+  const sSel = document.getElementById('filterSource');
+  sSel.innerHTML = '<option value="">전체</option>';
+  sources.forEach(s => sSel.innerHTML += `<option value="${s}">${s}</option>`);
+}
+
+function applyFilters() {
+  const area = document.getElementById('filterArea').value;
+  const price = document.getElementById('filterPrice').value;
+  const pyeong = document.getElementById('filterPyeong').value;
+  const rooms = document.getElementById('filterRooms').value;
+  const source = document.getElementById('filterSource').value;
+  
+  let m = merge();
+  if (area) m = m.filter(l => l.area === area);
+  if (price) { const [min, max] = price.split('-').map(Number); m = m.filter(l => { const d = parseDeposit(l.deposit); return d >= min && d < max; }); }
+  if (pyeong) { const [min, max] = pyeong.split('-').map(Number); m = m.filter(l => l.pyeong >= min && l.pyeong < max); }
+  if (rooms) m = m.filter(l => parseInt(l.rooms) >= parseInt(rooms));
+  if (source) m = m.filter(l => l.source === source);
+  
+  const dir = sortDir === 'asc' ? 1 : -1;
+  m.sort((a,b) => {
+    if (sortCol === 'deposit') return (parseDeposit(a.deposit) - parseDeposit(b.deposit)) * dir;
+    if (sortCol === 'pyeong') return (a.pyeong - b.pyeong) * dir;
+    if (sortCol === 'area') return a.area.localeCompare(b.area) * dir;
+    if (sortCol === 'source') return a.source.localeCompare(b.source) * dir;
+    if (sortCol === 'type') return a.type.localeCompare(b.type) * dir;
+    return 0;
+  });
+  
+  displayedListings = m;
+  renderTable();
+  document.getElementById('resultCount').textContent = `결과: ${m.length}건`;
+}
+
+function resetFilters() {
+  ['filterArea','filterPrice','filterPyeong','filterRooms','filterSource'].forEach(id => document.getElementById(id).value = '');
+  sortCol = 'deposit'; sortDir = 'asc';
+  applyFilters();
+}
+
+function sortBy(col) {
+  if (sortCol === col) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+  else { sortCol = col; sortDir = 'asc'; }
+  applyFilters();
+}
+
+function renderTable() {
+  const tbody = document.getElementById('tableBody');
+  if (!displayedListings.length) {
+    tbody.innerHTML = '<tr><td colspan="10" class="empty">조건에 맞는 매물이 없습니다</td></tr>';
+    return;
+  }
+  
+  tbody.innerHTML = displayedListings.map(l => {
+    const d = parseDeposit(l.deposit);
+    const badge = d >= 2 && d <= 2.5 && l.pyeong >= 18 ? '<span class="badge badge-hot">추천</span>'
+      : d >= 2 && d <= 2.5 ? '<span class="badge badge-good">적정</span>' : '';
+    const rooms = l.rooms && l.rooms !== '-' ? `방${l.rooms}` : '';
+    const bath = l.bath && l.bath !== '-' ? `화${l.bath}` : '';
+    const structure = [rooms, bath].filter(Boolean).join(' ');
+    const floorWarn = (l.floor||'').includes('1층') || (l.floor||'') === '1층' ? 'color:var(--red)' : '';
+    
+    return `<tr>
+      <td><strong>${l.area}</strong> ${badge}</td>
+      <td>${l.deposit}</td>
+      <td>${l.pyeong}평 <span style="color:var(--muted);font-size:10px">(${l.m2}m²)</span></td>
+      <td style="${floorWarn}">${l.floor||'-'}</td>
+      <td>${structure||'-'}</td>
+      <td class="desc-cell">${l.desc||'-'}</td>
+      <td><span class="badge badge-info">${l.source}</span></td>
+      <td>${l.date||'-'}</td>
+      <td>${l.type}</td>
+      <td class="link-cell">${l.link && l.link !== '-' ? `<a href="${l.link}" target="_blank" rel="noreferrer">링크</a>` : '-'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function addListing() {
+  const area = document.getElementById('inpArea').value;
+  const deposit = document.getElementById('inpDeposit').value;
+  const m2 = parseInt(document.getElementById('inpM2').value) || 0;
+  if (!area || !deposit || m2 <= 0) { showToast('지역, 보증금, 면적(m²)은 필수입니다.', 'red'); return; }
+  
+  const pyeong = Math.round(m2 / 3.306 * 10) / 10;
+  if (pyeong < 15 && !confirm('15평 미만입니다. 추가할까요?')) return;
+  
+  const listing = {
+    no: allListings.length + userListings.length + 1,
+    area, type: document.getElementById('inpType').value, deposit, m2, pyeong,
+    floor: document.getElementById('inpFloor').value || '-',
+    rooms: document.getElementById('inpRooms').value || '-',
+    bath: document.getElementById('inpBath').value || '-',
+    dir: document.getElementById('inpDir').value || '-',
+    desc: document.getElementById('inpDesc').value || '-',
+    agent: document.getElementById('inpAgent').value || '',
+    source: document.getElementById('inpSource').value,
+    date: document.getElementById('inpDate').value || new Date().toISOString().slice(0,10),
+    link: document.getElementById('inpLink').value || '-'
+  };
+  
+  userListings.push(listing);
+  localStorage.setItem('jeonse_user_listings', JSON.stringify(userListings));
+  
+  ['inpArea','inpDeposit','inpM2','inpFloor','inpRooms','inpBath','inpDir','inpDesc','inpAgent','inpLink'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el.tagName === 'SELECT') el.value = '';
+    else el.value = '';
+  });
+  
+  document.getElementById('addResult').innerHTML = `<span style="color:var(--green)">✓ 추가됨: ${area} ${deposit} ${pyeong}평 (가족 추가 ${userListings.length}건)</span>`;
+  buildFilters(); applyFilters(); updateStats(); showToast('매물 추가 완료!');
+}
+
+function exportCSV() {
+  const m = merge();
+  const header = 'No,지역,유형,보증금,면적(m²),면적(평),층,방수,욕실수,향,설명,중개사,출처,등록일,링크';
+  const rows = m.map((l,i) => `${i+1},${l.area},${l.type},${l.deposit},${l.m2},${l.pyeong},${l.floor},${l.rooms},${l.bath},${l.dir},${l.desc},${l.agent},${l.source},${l.date},${l.link}`);
+  const csv = '\uFEFF' + header + '\n' + rows.join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `jeonse_listings_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click(); URL.revokeObjectURL(url);
+  showToast('CSV 다운로드 완료!');
+}
+
+function copyPrompt() {
+  navigator.clipboard.writeText(document.getElementById('promptBox').textContent).then(() => showToast('프롬프트 복사!'));
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab,.tab-content').forEach(t => t.classList.remove('active'));
+  const idx = {list:0, add:1, guide:2}[name];
+  document.querySelectorAll('.tab')[idx].classList.add('active');
+  document.getElementById(`tab-${name}`).classList.add('active');
+  if (name === 'list') { buildFilters(); applyFilters(); updateStats(); }
+}
+
+function showToast(msg, color) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.style.background = color === 'red' ? 'var(--red)' : 'var(--green)';
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+init();
+</script>
+</body>
+</html>
