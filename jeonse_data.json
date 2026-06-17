@@ -1345,6 +1345,24 @@
       "link": "https://zippoom.com/search?q=%ED%99%8D%EC%A0%9C%EB%8F%99&type=%EC%A0%84%EC%84%B8",
       "no": 74,
       "collected": "2026-06-16 16:00"
+    },
+    {
+      "no": 75,
+      "area": "홍제동",
+      "type": "다가구",
+      "deposit": "2.5억",
+      "m2": 53.25,
+      "pyeong": 16.1,
+      "floor": "2층/2층",
+      "rooms": "3",
+      "bath": "-",
+      "dir": "-",
+      "desc": "홍제역세권 올수리 후첫입주 방3 욕실단독사용, 준공1992, 즉시입주",
+      "agent": "정공인중개사사무소 02-379-1472",
+      "source": "네이버",
+      "date": "2026-06-18",
+      "link": "https://new.land.naver.com/houses?articleNo=2631630284",
+      "collected": "2026-06-18 03:01"
     }
   ]
 }
