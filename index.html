@@ -467,30 +467,31 @@ function showToast(msg, color) {
 function merge() { return allListings.concat(userListings); }
 
 function initGoogleMap() {
-  try {
-    map = new google.maps.Map(document.getElementById('listMap'), {
-      center: { lat: 37.585, lng: 126.935 },
-      zoom: 14,
-      zoomControl: true,
-      mapTypeControl: true,
-      streetViewControl: false,
-      fullscreenControl: false,
-      styles: [
-        { featureType: 'poi', stylers: [{ visibility: 'off' }] },
-        { featureType: 'transit', stylers: [{ visibility: 'off' }] }
-      ]
-    });
-
-    google.maps.event.addListenerOnce(map, 'tilesloaded', function() {
-      mapReady = true;
-    });
-
-    return true;
-  } catch(e) {
-    console.error('Google Map init failed:', e);
-    showError('Google Maps를 불러오지 못했습니다.');
+  if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
     return false;
   }
+
+  var mapDiv = document.getElementById('listMap');
+  if (!mapDiv) return false;
+
+  map = new google.maps.Map(mapDiv, {
+    center: { lat: 37.585, lng: 126.935 },
+    zoom: 14,
+    zoomControl: true,
+    mapTypeControl: true,
+    streetViewControl: false,
+    fullscreenControl: false,
+    styles: [
+      { featureType: 'poi', stylers: [{ visibility: 'off' }] },
+      { featureType: 'transit', stylers: [{ visibility: 'off' }] }
+    ]
+  });
+
+  google.maps.event.addListenerOnce(map, 'tilesloaded', function() {
+    mapReady = true;
+  });
+
+  return true;
 }
 
 function updateStats() {
@@ -843,17 +844,42 @@ async function continueInit(mapOk) {
 }
 
 function loadGoogleMaps() {
+  var done = false;
+
   window._gmapInit = function() {
-    var ok = initGoogleMap();
-    continueInit(ok);
+    if (done) return;
+    done = true;
+    try {
+      var ok = initGoogleMap();
+      continueInit(ok);
+    } catch(e) {
+      console.error('Map init error:', e);
+      showError('Google Maps 초기화 실패. API 키를 확인해주세요.');
+      continueInit(false);
+    }
   };
 
   var script = document.createElement('script');
   script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBo6zZKCYmqGJp2Y4C0vzA1ios9Gv7WrBg&callback=_gmapInit';
+
+  var timeout = setTimeout(function() {
+    if (!done) {
+      done = true;
+      showError('Google Maps API 로드 시간 초과 (10초). API 키의 리퍼러 제한에 jsm0308.github.io 가 추가되어 있는지 확인해주세요.');
+      continueInit(false);
+    }
+  }, 10000);
+
+  script.onload = function() { clearTimeout(timeout); };
   script.onerror = function() {
-    showError('Google Maps API를 불러오지 못했습니다. 인터넷 연결을 확인해주세요.');
-    continueInit(false);
+    clearTimeout(timeout);
+    if (!done) {
+      done = true;
+      showError('Google Maps API 로드 실패. 인터넷 연결을 확인해주세요.');
+      continueInit(false);
+    }
   };
+
   document.head.appendChild(script);
 }
 
