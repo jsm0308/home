@@ -1,38 +1,95 @@
-name: Stale Listing Reminder
+name: Jeonse Data Maintenance
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # 매일 자정 (KST 09:00)
-  workflow_dispatch:  # 수동 실행 가능
+    - cron: '0 0 * * *'  # 매일 자정 UTC (KST 09:00)
+  workflow_dispatch:
 
 permissions:
   issues: write
-  contents: read
+  contents: write
 
 jobs:
-  check:
+  maintain:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check if data is stale
-        id: check
+      - name: Analyze data quality
+        id: analyze
         run: |
-          LAST_MOD=$(date -d "$(git log -1 --format=%cd --date=iso jeonse_data.json)" +%s 2>/dev/null || echo 0)
-          NOW=$(date +%s)
-          DAYS=$(( (NOW - LAST_MOD) / 86400 ))
-          echo "days=$DAYS" >> $GITHUB_OUTPUT
-          echo "last_update=$(git log -1 --format=%cd --date=iso jeonse_data.json 2>/dev/null || echo 'never')" >> $GITHUB_OUTPUT
+          python3 -c "
+          import json, os
+          from datetime import datetime, timedelta
 
-      - name: Create reminder issue if stale (3+ days)
-        if: steps.check.outputs.days >= 3
+          with open('jeonse_data.json', 'r', encoding='utf-8') as f:
+              data = json.load(f)
+
+          listings = [l for l in data['listings'] if not l.get('area', '').endswith('_removed')]
+          removed = [l for l in data['listings'] if l.get('area', '').endswith('_removed')]
+          timestamp = data.get('timestamp', 'unknown')
+
+          # Count link quality
+          good_links = 0
+          search_links = 0
+          no_links = 0
+          for l in listings:
+              link = l.get('link', '')
+              if not link or link == '-':
+                  no_links += 1
+              elif 'articleNo=' in link or '/detail/' in link:
+                  good_links += 1
+              else:
+                  search_links += 1
+
+          # Count stale listings (older than 90 days)
+          stale = 0
+          cutoff = (datetime.now() - timedelta(days=90)).strftime('%Y-%m-%d')
+          for l in listings:
+              date_str = l.get('date', '')
+              if date_str and len(date_str) >= 10:
+                  if date_str[:10] < cutoff:
+                      stale += 1
+
+          print(f'total={len(listings)}')
+          print(f'removed={len(removed)}')
+          print(f'good_links={good_links}')
+          print(f'search_links={search_links}')
+          print(f'no_links={no_links}')
+          print(f'stale={stale}')
+          print(f'last_update={timestamp}')
+          " > $GITHUB_OUTPUT
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          echo "## 자동 분석 리포트 - $(date '+%Y-%m-%d')" > changelog.md
+          echo "" >> changelog.md
+          echo "**마지막 업데이트**: ${{ steps.analyze.outputs.last_update }}" >> changelog.md
+          echo "" >> changelog.md
+          echo "| 항목 | 수치 |" >> changelog.md
+          echo "|---|---|" >> changelog.md
+          echo "| 전체 매물 | ${{ steps.analyze.outputs.total }} |" >> changelog.md
+          echo "| 제거된 매물 | ${{ steps.analyze.outputs.removed }} |" >> changelog.md
+          echo "| 실제 링크 | ${{ steps.analyze.outputs.good_links }} |" >> changelog.md
+          echo "| 검색 링크 | ${{ steps.analyze.outputs.search_links }} |" >> changelog.md
+          echo "| 링크 없음 | ${{ steps.analyze.outputs.no_links }} |" >> changelog.md
+          echo "| 90일 이상 된 매물 | ${{ steps.analyze.outputs.stale }} |" >> changelog.md
+          echo "" >> changelog.md
+          echo "## 갱신 방법" >> changelog.md
+          echo "1. Cursor IDE에서 \"전세 매물 업데이트 해줘\" 명령" >> changelog.md
+          echo "2. [대시보드](https://jsm0308.github.io/home)에서 수동 추가" >> changelog.md
+          echo "3. GitHub에서 직접 jeonse_data.json 수정" >> changelog.md
+
+      - name: Create issue if data is stale
+        if: steps.analyze.outputs.stale > 0
         uses: actions/github-script@v7
         with:
           script: |
-            const days = '${{ steps.check.outputs.days }}';
-            const lastUpdate = '${{ steps.check.outputs.last_update }}';
+            const stale = '${{ steps.analyze.outputs.stale }}';
+            const lastUpdate = '${{ steps.analyze.outputs.last_update }}';
 
-            // Close old reminder issues
+            // Close old stale-data issues
             const oldIssues = await github.rest.issues.listForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -49,18 +106,13 @@ jobs:
             }
 
             // Create new reminder
+            const fs = require('fs');
+            const changelog = fs.readFileSync('changelog.md', 'utf8');
+
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `전세 매물 데이터 ${days}일째 업데이트 없음`,
-              body: `마지막 업데이트: ${lastUpdate} (${days}일 전)
-
-# 할 일
-1. Cursor IDE에서 "전세 매물 업데이트 해줘" 라고 말하기
-2. Coach가 새 매물을 크롤링해서 jeonse_data.json 갱신
-3. 자동으로 사이트에 반영됩니다
-
-# 수동 추가
-사이트 접속 → "매물 추가" 탭에서 가족이 직접 추가 가능`,
+              title: `전세 매물 데이터 점검 - ${stale}건 90일 이상 경과`,
+              body: changelog,
               labels: ['stale-data']
             });
