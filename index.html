@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JSM 가족 전세 매물 대시보드</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
   :root {
     --bg: #f8fafc;
@@ -406,6 +407,7 @@
 
 <div class="toast" id="toast"></div>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 (function() {
 'use strict';
@@ -418,6 +420,7 @@ let sortDir = 'asc';
 let map = null;
 let mapMarkers = [];
 let mapReady = false;
+let mapEngine = null; // 'google' or 'leaflet'
 let activeInfoWindow = null;
 
 const areaCoords = {
@@ -466,34 +469,181 @@ function showToast(msg, color) {
 
 function merge() { return allListings.concat(userListings); }
 
-function initGoogleMap() {
-  if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
-    return false;
-  }
+// --- MAP: dual-engine (Google Maps first, Leaflet fallback) ---
 
-  var mapDiv = document.getElementById('listMap');
-  if (!mapDiv) return false;
-
-  map = new google.maps.Map(mapDiv, {
-    center: { lat: 37.585, lng: 126.935 },
-    zoom: 14,
-    zoomControl: true,
-    mapTypeControl: true,
-    streetViewControl: false,
-    fullscreenControl: false,
-    styles: [
-      { featureType: 'poi', stylers: [{ visibility: 'off' }] },
-      { featureType: 'transit', stylers: [{ visibility: 'off' }] }
-    ]
-  });
-
-  google.maps.event.addListenerOnce(map, 'tilesloaded', function() {
-    mapReady = true;
-  });
-
-  return true;
+function initLeafletMap() {
+  if (typeof L === 'undefined') return false;
+  try {
+    map = L.map('listMap', { zoomControl: true }).setView([37.585, 126.935], 14);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://carto.com/">CARTO</a>',
+      maxZoom: 19
+    }).addTo(map);
+    map.on('load', function() { mapReady = true; });
+    setTimeout(function() { if (map) map.invalidateSize(); }, 200);
+    return true;
+  } catch(e) { return false; }
 }
 
+function initGoogleMap() {
+  if (typeof google === 'undefined' || typeof google.maps === 'undefined') return false;
+  try {
+    map = new google.maps.Map(document.getElementById('listMap'), {
+      center: { lat: 37.585, lng: 126.935 }, zoom: 14,
+      zoomControl: true, mapTypeControl: true,
+      streetViewControl: false, fullscreenControl: false,
+      styles: [
+        { featureType: 'poi', stylers: [{ visibility: 'off' }] },
+        { featureType: 'transit', stylers: [{ visibility: 'off' }] }
+      ]
+    });
+    google.maps.event.addListenerOnce(map, 'tilesloaded', function() { mapReady = true; });
+    return true;
+  } catch(e) { return false; }
+}
+
+/* ---------- shared helper ---------- */
+function listingCoord(l) {
+  var center = areaCoords[l.area] || [37.585, 126.935];
+  var seed = hashStr(l.no + l.deposit + l.pyeong);
+  var jlat = ((seed % 187) - 93) * 0.00009;
+  var jlng = ((Math.floor(seed / 187) % 173) - 86) * 0.00009;
+  return { lat: center[0] + jlat, lng: center[1] + jlng };
+}
+
+function getColor(i) {
+  var l = displayedListings[i];
+  return parseDeposit(l.deposit) >= 2 && parseDeposit(l.deposit) <= 2.5 && l.pyeong >= 18 ? '#dc2626'
+    : parseDeposit(l.deposit) >= 2 && parseDeposit(l.deposit) <= 2.5 ? '#4f46e5'
+    : '#64748b';
+}
+
+function popupHTML(l) {
+  var rooms = l.rooms && l.rooms !== '-' ? '방' + l.rooms : '';
+  var bath = l.bath && l.bath !== '-' ? '화' + l.bath : '';
+  var structure = [rooms, bath].filter(Boolean).join(' ');
+  var collected = l.collected ? '<br><span style="font-size:9px;color:#94a3b8">수집: ' + l.collected + '</span>' : '';
+  return '<div class="pin-popup">'
+    + '<strong>' + l.area + '</strong> ' + l.deposit + ' · ' + l.pyeong + '평<br>'
+    + structure + ' · ' + (l.floor||'-') + ' · ' + l.type + '<br>'
+    + '<span style="color:#64748b;font-size:11px">' + (l.desc||'') + '</span><br>'
+    + '<span style="font-size:10px;color:#94a3b8">' + l.source + (l.date ? ' · ' + l.date : '') + (l.agent ? ' · ' + l.agent : '') + '</span>'
+    + collected
+    + (l.link && l.link !== '-' ? '<br><a href="' + l.link + '" target="_blank" style="font-size:11px;color:#4f46e5">원본 링크</a>' : '')
+    + '</div>';
+}
+
+/* ---------- Leaflet engine ---------- */
+function lfDefaultIcon(i) {
+  var color = getColor(i);
+  return L.divIcon({
+    className: '', iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -14],
+    html: '<div style="background:' + color + ';color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.3);">' + displayedListings[i].pyeong + '</div>'
+  });
+}
+function lfActiveIcon(i) {
+  var color = getColor(i);
+  return L.divIcon({
+    className: '', iconSize: [36, 36], iconAnchor: [18, 18], popupAnchor: [0, -18],
+    html: '<div style="background:' + color + ';color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;border:3px solid #fbbf24;box-shadow:0 2px 8px rgba(0,0,0,0.4);">' + displayedListings[i].pyeong + '</div>'
+  });
+}
+
+/* ---------- Google Maps engine ---------- */
+function gmIcon(color, pyeong, active) {
+  var size = active ? 32 : 22, bw = active ? 3 : 2, fs = active ? 11 : 9;
+  var total = size + bw * 2;
+  var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + total + '" height="' + total + '">'
+    + '<circle cx="' + (size/2+bw) + '" cy="' + (size/2+bw) + '" r="' + (size/2) + '" fill="' + color + '" stroke="' + (active ? '#fbbf24' : 'white') + '" stroke-width="' + bw + '"/>'
+    + '<text x="' + (size/2+bw) + '" y="' + (size/2+bw+fs*0.35) + '" text-anchor="middle" fill="white" font-size="' + fs + '" font-weight="700" font-family="Arial,sans-serif">' + pyeong + '</text>'
+    + '</svg>';
+  return { url: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg), scaledSize: new google.maps.Size(total, total), anchor: new google.maps.Point(total/2, total/2) };
+}
+
+/* ---------- unified highlight / focus ---------- */
+function highlightMarker(i) {
+  document.querySelectorAll('tr').forEach(function(r) { r.classList.remove('highlight'); });
+  var row = document.getElementById('row-' + i);
+  if (row) row.classList.add('highlight');
+  if (!mapMarkers[i]) return;
+  if (mapEngine === 'leaflet') {
+    mapMarkers[i].setIcon(lfActiveIcon(i));
+    mapMarkers[i].setZIndexOffset(1000);
+  } else {
+    mapMarkers[i].setIcon(gmIcon(getColor(i), displayedListings[i].pyeong, true));
+    mapMarkers[i].setZIndex(999);
+  }
+}
+function unhighlightMarker(i) {
+  var row = document.getElementById('row-' + i);
+  if (row) row.classList.remove('highlight');
+  if (!mapMarkers[i]) return;
+  if (mapEngine === 'leaflet') {
+    mapMarkers[i].setIcon(lfDefaultIcon(i));
+    mapMarkers[i].setZIndexOffset(0);
+  } else {
+    mapMarkers[i].setIcon(gmIcon(getColor(i), displayedListings[i].pyeong, false));
+    mapMarkers[i].setZIndex(1);
+  }
+}
+function focusMarker(i) {
+  if (!map || !mapMarkers[i]) return;
+  if (mapEngine === 'leaflet') {
+    map.setView(mapMarkers[i].getLatLng(), 16);
+    mapMarkers[i].openPopup();
+  } else {
+    map.setCenter(mapMarkers[i].getPosition());
+    map.setZoom(16);
+    if (activeInfoWindow) activeInfoWindow.close();
+    activeInfoWindow = mapMarkers[i].gmInfoWindow;
+    activeInfoWindow.open(map, mapMarkers[i]);
+  }
+}
+
+/* ---------- unified render ---------- */
+function renderMapPins() {
+  if (!map) return;
+  mapMarkers.forEach(function(mk) {
+    if (mapEngine === 'leaflet') map.removeLayer(mk);
+    else mk.setMap(null);
+  });
+  mapMarkers = [];
+
+  if (mapEngine === 'leaflet') {
+    displayedListings.forEach(function(l, i) {
+      var coord = listingCoord(l);
+      var mk = L.marker([coord.lat, coord.lng], { icon: lfDefaultIcon(i) }).addTo(map);
+      mk.bindPopup(popupHTML(l));
+      mk.on('mouseover', (function(idx){ return function(){ highlightMarker(idx); };})(i));
+      mk.on('mouseout', (function(idx){ return function(){ unhighlightMarker(idx); };})(i));
+      mapMarkers.push(mk);
+    });
+    if (mapMarkers.length) {
+      var group = L.featureGroup(mapMarkers);
+      try { map.fitBounds(group.getBounds().pad(0.05), { maxZoom: 15 }); } catch(e) {}
+    }
+  } else {
+    var bounds = new google.maps.LatLngBounds();
+    displayedListings.forEach(function(l, i) {
+      var coord = listingCoord(l);
+      var pos = { lat: coord.lat, lng: coord.lng };
+      var mk = new google.maps.Marker({ position: pos, map: map, icon: gmIcon(getColor(i), l.pyeong, false), zIndex: 1 });
+      var iw = new google.maps.InfoWindow({ content: popupHTML(l) });
+      mk.gmInfoWindow = iw;
+      mk.addListener('mouseover', (function(idx){ return function(){ highlightMarker(idx); };})(i));
+      mk.addListener('mouseout', (function(idx){ return function(){ unhighlightMarker(idx); };})(i));
+      mk.addListener('click', (function(idx, w){ return function(){
+        if (activeInfoWindow) activeInfoWindow.close();
+        activeInfoWindow = w; w.open(map, mapMarkers[idx]); highlightMarker(idx);
+      };})(i, iw));
+      bounds.extend(pos);
+      mapMarkers.push(mk);
+    });
+    if (mapMarkers.length && !bounds.isEmpty()) map.fitBounds(bounds, { top: 30, right: 30, bottom: 30, left: 30, maxZoom: 15 });
+  }
+}
+
+/* ---------- UI functions ---------- */
 function updateStats() {
   var m = merge();
   var areas = {};
@@ -510,16 +660,13 @@ function updateStats() {
 
 function buildFilters() {
   var m = merge();
-  var areas = [];
-  var seen = {};
+  var areas = [], seen = {};
   m.forEach(function(l) { if (!seen[l.area]) { seen[l.area] = true; areas.push(l.area); } });
   areas.sort();
   var sel = document.getElementById('filterArea');
   sel.innerHTML = '<option value="">전체</option>';
   areas.forEach(function(a) { sel.innerHTML += '<option value="' + a + '">' + a + '</option>'; });
-
-  var sources = [];
-  var sSeen = {};
+  var sources = [], sSeen = {};
   m.forEach(function(l) { if (!sSeen[l.source]) { sSeen[l.source] = true; sources.push(l.source); } });
   sources.sort();
   var sSel = document.getElementById('filterSource');
@@ -533,14 +680,12 @@ function applyFilters() {
   var pyeong = document.getElementById('filterPyeong').value;
   var rooms = document.getElementById('filterRooms').value;
   var source = document.getElementById('filterSource').value;
-
   var m = merge();
   if (area) m = m.filter(function(l) { return l.area === area; });
   if (price) { var parts = price.split('-').map(Number); m = m.filter(function(l) { var d = parseDeposit(l.deposit); return d >= parts[0] && d < parts[1]; }); }
   if (pyeong) { var pp = pyeong.split('-').map(Number); m = m.filter(function(l) { return l.pyeong >= pp[0] && l.pyeong < pp[1]; }); }
   if (rooms) m = m.filter(function(l) { return parseInt(l.rooms) >= parseInt(rooms); });
   if (source) m = m.filter(function(l) { return l.source === source; });
-
   var dir = sortDir === 'asc' ? 1 : -1;
   m.sort(function(a,b) {
     if (sortCol === 'deposit') return (parseDeposit(a.deposit) - parseDeposit(b.deposit)) * dir;
@@ -549,7 +694,6 @@ function applyFilters() {
     if (sortCol === 'source') return a.source.localeCompare(b.source) * dir;
     return 0;
   });
-
   displayedListings = m;
   renderTable();
   renderMapPins();
@@ -574,7 +718,6 @@ function renderTable() {
     tbody.innerHTML = '<tr><td colspan="9" class="empty">조건에 맞는 매물이 없습니다</td></tr>';
     return;
   }
-
   tbody.innerHTML = displayedListings.map(function(l, i) {
     var d = parseDeposit(l.deposit);
     var badge = d >= 2 && d <= 2.5 && l.pyeong >= 18 ? '<span class="badge badge-hot">추천</span>'
@@ -583,134 +726,18 @@ function renderTable() {
     var bath = l.bath && l.bath !== '-' ? '화' + l.bath : '';
     var structure = [rooms, bath].filter(Boolean).join(' ');
     var floorWarn = (l.floor||'').indexOf('1층') === 0 ? 'color:var(--red)' : '';
-
-    return '<tr id="row-' + i + '" onmouseenter="window._jeonse.highlightMarker(' + i + ')" onmouseleave="window._jeonse.unhighlightMarker(' + i + ')" onclick="window._jeonse.focusMarker(' + i + ')">' +
-      '<td><strong>' + l.area + '</strong> ' + badge + '</td>' +
-      '<td>' + l.deposit + '</td>' +
-      '<td>' + l.pyeong + '평 <span style="color:var(--muted);font-size:9px">(' + l.m2 + 'm²)</span></td>' +
-      '<td style="' + floorWarn + '">' + (l.floor||'-') + '</td>' +
-      '<td>' + (structure||'-') + '</td>' +
-      '<td class="desc-cell">' + (l.desc||'-') + '</td>' +
-      '<td><span class="badge badge-info">' + l.source + '</span></td>' +
-      '<td>' + (l.date||'-') + '</td>' +
-      '<td class="link-cell">' + (l.link && l.link !== '-' ? '<a href="' + l.link + '" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">링크</a>' : '-') + '</td>' +
-      '</tr>';
+    return '<tr id="row-' + i + '" onmouseenter="window._jeonse.highlightMarker(' + i + ')" onmouseleave="window._jeonse.unhighlightMarker(' + i + ')" onclick="window._jeonse.focusMarker(' + i + ')">'
+      + '<td><strong>' + l.area + '</strong> ' + badge + '</td>'
+      + '<td>' + l.deposit + '</td>'
+      + '<td>' + l.pyeong + '평 <span style="color:var(--muted);font-size:9px">(' + l.m2 + 'm²)</span></td>'
+      + '<td style="' + floorWarn + '">' + (l.floor||'-') + '</td>'
+      + '<td>' + (structure||'-') + '</td>'
+      + '<td class="desc-cell">' + (l.desc||'-') + '</td>'
+      + '<td><span class="badge badge-info">' + l.source + '</span></td>'
+      + '<td>' + (l.date||'-') + '</td>'
+      + '<td class="link-cell">' + (l.link && l.link !== '-' ? '<a href="' + l.link + '" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">링크</a>' : '-') + '</td>'
+      + '</tr>';
   }).join('');
-}
-
-function markerIcon(color, pyeong, active) {
-  var size = active ? 32 : 22;
-  var bw = active ? 3 : 2;
-  var fs = active ? 11 : 9;
-  var total = size + bw * 2;
-  var cx = size / 2 + bw;
-  var cy = size / 2 + bw;
-  var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + total + '" height="' + total + '">'
-    + '<circle cx="' + cx + '" cy="' + cy + '" r="' + (size/2) + '" fill="' + color + '" stroke="' + (active ? '#fbbf24' : 'white') + '" stroke-width="' + bw + '"/>'
-    + '<text x="' + cx + '" y="' + (cy + fs * 0.35) + '" text-anchor="middle" fill="white" font-size="' + fs + '" font-weight="700" font-family="Arial,sans-serif">' + pyeong + '</text>'
-    + '</svg>';
-  return {
-    url: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg),
-    scaledSize: new google.maps.Size(total, total),
-    anchor: new google.maps.Point(total / 2, total / 2)
-  };
-}
-
-function getColor(i) {
-  var l = displayedListings[i];
-  var d = parseDeposit(l.deposit);
-  return d >= 2 && d <= 2.5 && l.pyeong >= 18 ? '#dc2626' : d >= 2 && d <= 2.5 ? '#4f46e5' : '#64748b';
-}
-
-function highlightMarker(i) {
-  document.querySelectorAll('tr').forEach(function(r) { r.classList.remove('highlight'); });
-  var row = document.getElementById('row-' + i);
-  if (row) row.classList.add('highlight');
-  if (mapMarkers[i]) {
-    mapMarkers[i].setIcon(markerIcon(getColor(i), displayedListings[i].pyeong, true));
-    mapMarkers[i].setZIndex(999);
-  }
-}
-
-function unhighlightMarker(i) {
-  var row = document.getElementById('row-' + i);
-  if (row) row.classList.remove('highlight');
-  if (mapMarkers[i]) {
-    mapMarkers[i].setIcon(markerIcon(getColor(i), displayedListings[i].pyeong, false));
-    mapMarkers[i].setZIndex(1);
-  }
-}
-
-function focusMarker(i) {
-  if (map && mapMarkers[i]) {
-    map.setCenter(mapMarkers[i].getPosition());
-    map.setZoom(16);
-    if (activeInfoWindow) activeInfoWindow.close();
-    activeInfoWindow = mapMarkers[i].infoWindow;
-    activeInfoWindow.open(map, mapMarkers[i]);
-  }
-}
-
-function renderMapPins() {
-  if (!map) return;
-
-  mapMarkers.forEach(function(mk) { mk.setMap(null); });
-  mapMarkers = [];
-
-  var bounds = new google.maps.LatLngBounds();
-
-  displayedListings.forEach(function(l, i) {
-    try {
-      var coord = listingCoord(l);
-      var pos = { lat: coord[0], lng: coord[1] };
-
-      var d = parseDeposit(l.deposit);
-      var rooms = l.rooms && l.rooms !== '-' ? '방' + l.rooms : '';
-      var bath = l.bath && l.bath !== '-' ? '화' + l.bath : '';
-      var structure = [rooms, bath].filter(Boolean).join(' ');
-      var collected = l.collected ? '<br><span style="font-size:9px;color:var(--muted)">수집: ' + l.collected + '</span>' : '';
-
-      var infoWindow = new google.maps.InfoWindow({
-        content:
-          '<div class="pin-popup">' +
-          '<strong>' + l.area + '</strong> ' + l.deposit + ' · ' + l.pyeong + '평<br>' +
-          structure + ' · ' + (l.floor||'-') + ' · ' + l.type + '<br>' +
-          '<span style="color:#64748b;font-size:11px">' + (l.desc||'') + '</span><br>' +
-          '<span style="font-size:10px;color:#94a3b8">' + l.source + (l.date ? ' · ' + l.date : '') + (l.agent ? ' · ' + l.agent : '') + '</span>' +
-          collected +
-          (l.link && l.link !== '-' ? '<br><a href="' + l.link + '" target="_blank" rel="noreferrer" style="font-size:11px;color:#4f46e5">원본 링크</a>' : '') +
-          '</div>'
-      });
-
-      var color = d >= 2 && d <= 2.5 && l.pyeong >= 18 ? '#dc2626' : d >= 2 && d <= 2.5 ? '#4f46e5' : '#64748b';
-      var marker = new google.maps.Marker({
-        position: pos,
-        map: map,
-        icon: markerIcon(color, l.pyeong, false),
-        zIndex: 1
-      });
-
-      marker.infoWindow = infoWindow;
-
-      marker.addListener('mouseover', (function(idx) { return function() { highlightMarker(idx); }; })(i));
-      marker.addListener('mouseout', (function(idx) { return function() { unhighlightMarker(idx); }; })(i));
-      marker.addListener('click', (function(idx, iw) { return function() {
-        if (activeInfoWindow) activeInfoWindow.close();
-        activeInfoWindow = iw;
-        iw.open(map, mapMarkers[idx]);
-        highlightMarker(idx);
-      }; })(i, infoWindow));
-
-      bounds.extend(pos);
-      mapMarkers.push(marker);
-    } catch(e) {
-      console.warn('Marker failed for listing ' + i + ':', e);
-    }
-  });
-
-  if (mapMarkers.length > 0 && !bounds.isEmpty()) {
-    map.fitBounds(bounds, { top: 30, right: 30, bottom: 30, left: 30, maxZoom: 15 });
-  }
 }
 
 function addListing() {
@@ -718,10 +745,8 @@ function addListing() {
   var deposit = document.getElementById('inpDeposit').value;
   var m2 = parseInt(document.getElementById('inpM2').value) || 0;
   if (!area || !deposit || m2 <= 0) { showToast('지역, 보증금, 면적(m²)은 필수입니다.', 'red'); return; }
-
   var pyeong = Math.round(m2 / 3.306 * 10) / 10;
   if (pyeong < 15 && !confirm('15평 미만입니다. 추가할까요?')) return;
-
   var listing = {
     no: allListings.length + userListings.length + 1,
     area: area, type: document.getElementById('inpType').value, deposit: deposit, m2: m2, pyeong: pyeong,
@@ -735,15 +760,10 @@ function addListing() {
     date: document.getElementById('inpDate').value || new Date().toISOString().slice(0,10),
     link: document.getElementById('inpLink').value || '-'
   };
-
   userListings.push(listing);
   localStorage.setItem('jeonse_user_listings', JSON.stringify(userListings));
-
-  ['inpArea','inpDeposit','inpM2','inpFloor','inpRooms','inpBath','inpDir','inpDesc','inpAgent','inpLink'].forEach(function(id) {
-    document.getElementById(id).value = '';
-  });
-
-  document.getElementById('addResult').innerHTML = '<span style="color:var(--green)">✓ 추가됨: ' + area + ' ' + deposit + ' ' + pyeong + '평 (가족 추가 ' + userListings.length + '건)</span>';
+  ['inpArea','inpDeposit','inpM2','inpFloor','inpRooms','inpBath','inpDir','inpDesc','inpAgent','inpLink'].forEach(function(id) { document.getElementById(id).value = ''; });
+  document.getElementById('addResult').innerHTML = '<span style="color:var(--green)">추가됨: ' + area + ' ' + deposit + ' ' + pyeong + '평</span>';
   buildFilters(); applyFilters(); updateStats(); showToast('매물 추가 완료!');
 }
 
@@ -756,9 +776,7 @@ function exportCSV() {
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
   a.href = url; a.download = 'jeonse_listings_' + new Date().toISOString().slice(0,10) + '.csv';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
   URL.revokeObjectURL(url);
   showToast('CSV 다운로드 완료!');
 }
@@ -775,7 +793,8 @@ function switchTab(name) {
   if (name === 'list') {
     buildFilters(); applyFilters(); updateStats();
     if (map) {
-      setTimeout(function() { google.maps.event.trigger(map, 'resize'); }, 200);
+      if (mapEngine === 'leaflet') setTimeout(function() { map.invalidateSize(); }, 200);
+      else setTimeout(function() { google.maps.event.trigger(map, 'resize'); }, 200);
     }
   }
 }
@@ -787,15 +806,16 @@ function toggleView() {
   if (layout.classList.contains('list-only')) {
     layout.classList.remove('list-only');
     btn.textContent = '지도 숨기기';
-    // Invalidate map after showing it
-    if (map) { setTimeout(function() { google.maps.event.trigger(map, 'resize'); renderMapPins(); }, 100); }
+    if (map) {
+      if (mapEngine === 'leaflet') setTimeout(function() { map.invalidateSize(); renderMapPins(); }, 100);
+      else setTimeout(function() { google.maps.event.trigger(map, 'resize'); renderMapPins(); }, 100);
+    }
   } else {
     layout.classList.add('list-only');
     btn.textContent = '지도 보기';
   }
 }
 
-// Public API exposed for inline onclick handlers
 window._jeonse = {
   highlightMarker: highlightMarker,
   unhighlightMarker: unhighlightMarker,
@@ -810,80 +830,49 @@ window._jeonse = {
   addListing: addListing
 };
 
-async function continueInit(mapOk) {
-  var dataLoaded = false;
-
+/* ---------- init ---------- */
+async function dataInit(mapOk) {
   try {
     var resp = await fetch('jeonse_data.json');
-    if (!resp.ok) throw new Error('HTTP ' + resp.status);
     var data = await resp.json();
     allListings = data.listings.filter(function(l) { return l.area !== '참고'; });
-    dataLoaded = true;
-  } catch(e) {
-    console.warn('JSON load failed:', e);
-    allListings = [];
-  }
-
+  } catch(e) { allListings = []; }
   try {
     var saved = localStorage.getItem('jeonse_user_listings');
-    if (saved) { userListings = JSON.parse(saved); }
+    if (saved) userListings = JSON.parse(saved);
   } catch(e) { userListings = []; }
 
-  if (!mapOk) {
-    showError('Google Maps를 불러올 수 없습니다. 인터넷 연결을 확인해주세요.');
-  }
-  if (!dataLoaded) {
-    showError('매물 데이터(jeonse_data.json)를 불러오지 못했습니다.');
-  }
+  if (!mapOk) showError('지도를 불러오지 못했습니다. 인터넷 연결을 확인해주세요.');
+  buildFilters(); applyFilters(); updateStats();
+  document.getElementById('lastUpdate').textContent = '2026-06-17 22:00';
+}
 
-  buildFilters();
-  applyFilters();
-  updateStats();
-
-  document.getElementById('lastUpdate').textContent = '2026-06-17 18:00';
+function tryLeafletFallback() {
+  if (map || typeof L === 'undefined') return false;
+  var ok = initLeafletMap();
+  if (ok) { mapEngine = 'leaflet'; dataInit(true); }
+  else { showError('지도(Leaflet) 로드 실패. 인터넷 연결을 확인해주세요.'); dataInit(false); }
+  return ok;
 }
 
 function loadGoogleMaps() {
-  var done = false;
-
   window._gmapInit = function() {
-    if (done) return;
-    done = true;
-    try {
-      var ok = initGoogleMap();
-      continueInit(ok);
-    } catch(e) {
-      console.error('Map init error:', e);
-      showError('Google Maps 초기화 실패. API 키를 확인해주세요.');
-      continueInit(false);
-    }
+    var ok = initGoogleMap();
+    if (ok) { mapEngine = 'google'; dataInit(true); }
+    else tryLeafletFallback();
   };
-
-  var script = document.createElement('script');
-  script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBo6zZKCYmqGJp2Y4C0vzA1ios9Gv7WrBg&callback=_gmapInit';
-
-  var timeout = setTimeout(function() {
-    if (!done) {
-      done = true;
-      showError('Google Maps API 로드 시간 초과 (10초). API 키의 리퍼러 제한에 jsm0308.github.io 가 추가되어 있는지 확인해주세요.');
-      continueInit(false);
+  var s = document.createElement('script');
+  s.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBo6zZKCYmqGJp2Y4C0vzA1ios9Gv7WrBg&callback=_gmapInit';
+  s.onerror = function() { tryLeafletFallback(); };
+  // timeout: if Google Maps tile loading hangs (referrer blocked), fall back
+  setTimeout(function() {
+    if (!mapReady && mapEngine === 'google') {
+      tryLeafletFallback();
     }
-  }, 10000);
-
-  script.onload = function() { clearTimeout(timeout); };
-  script.onerror = function() {
-    clearTimeout(timeout);
-    if (!done) {
-      done = true;
-      showError('Google Maps API 로드 실패. 인터넷 연결을 확인해주세요.');
-      continueInit(false);
-    }
-  };
-
-  document.head.appendChild(script);
+  }, 5000);
+  document.head.appendChild(s);
 }
 
-// Start when DOM is ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', loadGoogleMaps);
 } else {
