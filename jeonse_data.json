@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-16",
+  "timestamp": "2026-06-17",
   "version": "1.1",
   "stats": {
     "total": 74,
@@ -29,7 +29,8 @@
       "agent": "",
       "source": "집품",
       "date": "2026-03-21",
-      "link": "https://zippoom.com"
+      "link": "https://zippoom.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 2,
@@ -46,7 +47,8 @@
       "agent": "",
       "source": "아파트미",
       "date": "2026-06-06",
-      "link": "https://apt2.me"
+      "link": "https://apt2.me",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 3,
@@ -63,7 +65,8 @@
       "agent": "",
       "source": "집품",
       "date": "2024-11-26",
-      "link": "https://zippoom.com"
+      "link": "https://zippoom.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 4,
@@ -80,7 +83,8 @@
       "agent": "",
       "source": "집품",
       "date": "2026-02-19",
-      "link": "https://zippoom.com"
+      "link": "https://zippoom.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 5,
@@ -97,7 +101,8 @@
       "agent": "",
       "source": "집품",
       "date": "2025-12-03",
-      "link": "https://zippoom.com"
+      "link": "https://zippoom.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 6,
@@ -114,7 +119,8 @@
       "agent": "",
       "source": "집품",
       "date": "2026-04-07",
-      "link": "https://zippoom.com"
+      "link": "https://zippoom.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 7,
@@ -131,7 +137,8 @@
       "agent": "",
       "source": "집품",
       "date": "2026-04-02",
-      "link": "https://zippoom.com"
+      "link": "https://zippoom.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 8,
@@ -148,7 +155,8 @@
       "agent": "",
       "source": "집품",
       "date": "2026-06-01",
-      "link": "https://zippoom.com"
+      "link": "https://zippoom.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 9,
@@ -165,7 +173,8 @@
       "agent": "",
       "source": "네이버",
       "date": "2026-06-16",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 10,
@@ -182,7 +191,8 @@
       "agent": "",
       "source": "집품",
       "date": "2026-06-01",
-      "link": "https://zippoom.com"
+      "link": "https://zippoom.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 11,
@@ -199,7 +209,8 @@
       "agent": "",
       "source": "네이버",
       "date": "2026-06-16",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 12,
@@ -216,7 +227,8 @@
       "agent": "",
       "source": "네이버",
       "date": "2026-06-16",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 13,
@@ -233,7 +245,8 @@
       "agent": "",
       "source": "네이버",
       "date": "2026-06-16",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 14,
@@ -250,7 +263,8 @@
       "agent": "",
       "source": "네이버",
       "date": "2026-06-16",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 15,
@@ -267,7 +281,8 @@
       "agent": "",
       "source": "네이버",
       "date": "2026-06-16",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 16,
@@ -284,7 +299,8 @@
       "agent": "",
       "source": "집품",
       "date": "2024-05-24",
-      "link": "https://zippoom.com"
+      "link": "https://zippoom.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 17,
@@ -301,7 +317,8 @@
       "agent": "",
       "source": "네이버",
       "date": "2026-06-16",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 18,
@@ -318,7 +335,8 @@
       "agent": "",
       "source": "집품",
       "date": "2026-04-10",
-      "link": "https://zippoom.com"
+      "link": "https://zippoom.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 19,
@@ -335,7 +353,8 @@
       "agent": "",
       "source": "집품",
       "date": "2026-06-01",
-      "link": "https://zippoom.com"
+      "link": "https://zippoom.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 20,
@@ -352,7 +371,8 @@
       "agent": "",
       "source": "집품",
       "date": "2024-03-30",
-      "link": "https://zippoom.com"
+      "link": "https://zippoom.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 21,
@@ -369,7 +389,8 @@
       "agent": "",
       "source": "네이버",
       "date": "2026-06-16",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 22,
@@ -386,7 +407,8 @@
       "agent": "",
       "source": "네이버",
       "date": "2026-06-16",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 23,
@@ -403,7 +425,8 @@
       "agent": "",
       "source": "네이버",
       "date": "2026-06-16",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 24,
@@ -420,7 +443,8 @@
       "agent": "",
       "source": "집품",
       "date": "2026-06-01",
-      "link": "https://zippoom.com"
+      "link": "https://zippoom.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 25,
@@ -437,7 +461,8 @@
       "agent": "",
       "source": "집품",
       "date": "2026-06-01",
-      "link": "https://zippoom.com"
+      "link": "https://zippoom.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 26,
@@ -454,7 +479,8 @@
       "agent": "",
       "source": "네이버",
       "date": "2026-06-16",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 27,
@@ -471,7 +497,8 @@
       "agent": "",
       "source": "네이버",
       "date": "2026-06-16",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 28,
@@ -488,7 +515,8 @@
       "agent": "",
       "source": "네이버",
       "date": "2026-06-16",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 29,
@@ -505,7 +533,8 @@
       "agent": "",
       "source": "네이버",
       "date": "2026-06-16",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 30,
@@ -522,7 +551,8 @@
       "agent": "하나공인중개사",
       "source": "네이버",
       "date": "2026-06-04",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 31,
@@ -539,7 +569,8 @@
       "agent": "",
       "source": "집품",
       "date": "2023-12-03",
-      "link": "https://zippoom.com"
+      "link": "https://zippoom.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 32,
@@ -556,7 +587,8 @@
       "agent": "",
       "source": "집품",
       "date": "2026-02-13",
-      "link": "https://zippoom.com"
+      "link": "https://zippoom.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 33,
@@ -573,7 +605,8 @@
       "agent": "",
       "source": "네이버",
       "date": "2026-06-16",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 34,
@@ -590,7 +623,8 @@
       "agent": "",
       "source": "집품",
       "date": "2026-04-10",
-      "link": "https://zippoom.com"
+      "link": "https://zippoom.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 35,
@@ -607,7 +641,8 @@
       "agent": "",
       "source": "네이버",
       "date": "2026-06-16",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 36,
@@ -624,7 +659,8 @@
       "agent": "",
       "source": "네이버",
       "date": "2026-06-16",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 37,
@@ -641,7 +677,8 @@
       "agent": "",
       "source": "네이버",
       "date": "2026-06-16",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 38,
@@ -658,7 +695,8 @@
       "agent": "",
       "source": "네이버",
       "date": "2026-06-16",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 39,
@@ -675,7 +713,8 @@
       "agent": "",
       "source": "네이버",
       "date": "2026-06-16",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 40,
@@ -692,7 +731,8 @@
       "agent": "",
       "source": "네이버",
       "date": "2026-06-16",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 41,
@@ -709,7 +749,8 @@
       "agent": "새서울부동산",
       "source": "네이버",
       "date": "2026-06-08",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 42,
@@ -726,7 +767,8 @@
       "agent": "",
       "source": "네이버",
       "date": "2026-06-16",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 43,
@@ -743,7 +785,8 @@
       "agent": "",
       "source": "당근",
       "date": "2026-06-01",
-      "link": "https://www.daangn.com"
+      "link": "https://www.daangn.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 44,
@@ -760,7 +803,8 @@
       "agent": "",
       "source": "집품",
       "date": "2024-01-10",
-      "link": "https://zippoom.com"
+      "link": "https://zippoom.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 45,
@@ -777,7 +821,8 @@
       "agent": "",
       "source": "집품",
       "date": "2024-07-13",
-      "link": "https://zippoom.com"
+      "link": "https://zippoom.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 46,
@@ -794,7 +839,8 @@
       "agent": "",
       "source": "네이버",
       "date": "2026-06-16",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 47,
@@ -811,7 +857,8 @@
       "agent": "",
       "source": "네이버",
       "date": "2026-06-16",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 48,
@@ -828,7 +875,8 @@
       "agent": "만복공인중개사",
       "source": "네이버",
       "date": "2026-06-04",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 49,
@@ -845,7 +893,8 @@
       "agent": "동아공인중개사",
       "source": "네이버",
       "date": "2026-05-19",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 50,
@@ -862,7 +911,8 @@
       "agent": "",
       "source": "네이버",
       "date": "2026-06-08",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 51,
@@ -879,7 +929,8 @@
       "agent": "부동산뱅크",
       "source": "네이버",
       "date": "2026-06-12",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 52,
@@ -896,7 +947,8 @@
       "agent": "",
       "source": "네이버",
       "date": "2026-06-11",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 53,
@@ -913,7 +965,8 @@
       "agent": "부동산뉴스",
       "source": "네이버",
       "date": "2026-06-11",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 54,
@@ -930,7 +983,8 @@
       "agent": "탑공인중개사",
       "source": "네이버",
       "date": "2026-06-10",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 55,
@@ -947,7 +1001,8 @@
       "agent": "이편한세상",
       "source": "네이버",
       "date": "2026-06-01",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "no": 56,
@@ -964,7 +1019,8 @@
       "agent": "",
       "source": "집품",
       "date": "2026-03-02",
-      "link": "https://zippoom.com"
+      "link": "https://zippoom.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 57,
@@ -981,7 +1037,8 @@
       "agent": "",
       "source": "당근",
       "date": "2026-06-01",
-      "link": "https://www.daangn.com"
+      "link": "https://www.daangn.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 58,
@@ -998,7 +1055,8 @@
       "agent": "",
       "source": "집품",
       "date": "2026-06-16",
-      "link": "https://zippoom.com"
+      "link": "https://zippoom.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 59,
@@ -1015,7 +1073,8 @@
       "agent": "",
       "source": "집품",
       "date": "2026-06-16",
-      "link": "https://zippoom.com"
+      "link": "https://zippoom.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 60,
@@ -1032,7 +1091,8 @@
       "agent": "",
       "source": "호갱노노",
       "date": "2025-04-27",
-      "link": "https://hogangnono.com"
+      "link": "https://hogangnono.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 61,
@@ -1049,7 +1109,8 @@
       "agent": "",
       "source": "집품",
       "date": "2022-07-14",
-      "link": "https://zippoom.com"
+      "link": "https://zippoom.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 62,
@@ -1066,7 +1127,8 @@
       "agent": "",
       "source": "호갱노노",
       "date": "2025-03-26",
-      "link": "https://hogangnono.com"
+      "link": "https://hogangnono.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 63,
@@ -1083,7 +1145,8 @@
       "agent": "",
       "source": "호갱노노",
       "date": "2025-05-20",
-      "link": "https://hogangnono.com"
+      "link": "https://hogangnono.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 64,
@@ -1100,7 +1163,8 @@
       "agent": "",
       "source": "집품",
       "date": "2024-12-01",
-      "link": "https://zippoom.com"
+      "link": "https://zippoom.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 65,
@@ -1117,7 +1181,8 @@
       "agent": "",
       "source": "호갱노노",
       "date": "2025-06-14",
-      "link": "https://hogangnono.com"
+      "link": "https://hogangnono.com",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 66,
@@ -1134,7 +1199,8 @@
       "agent": "",
       "source": "아파트미",
       "date": "2026-06-03",
-      "link": "https://apt2.me"
+      "link": "https://apt2.me",
+      "collected": "2026-06-16 16:00"
     },
     {
       "no": 67,
@@ -1151,7 +1217,8 @@
       "agent": "남가좌부동산",
       "source": "네이버",
       "date": "2026-06-15",
-      "link": "https://new.land.naver.com"
+      "link": "https://new.land.naver.com",
+      "collected": "2026-06-14 14:00"
     },
     {
       "area": "홍제동",
@@ -1168,7 +1235,8 @@
       "source": "네이버",
       "date": "2026-06-16",
       "link": "https://new.land.naver.com",
-      "no": 68
+      "no": 68,
+      "collected": "2026-06-14 14:00"
     },
     {
       "area": "홍제동",
@@ -1185,7 +1253,8 @@
       "source": "네이버",
       "date": "2026-06-16",
       "link": "https://new.land.naver.com",
-      "no": 69
+      "no": 69,
+      "collected": "2026-06-14 14:00"
     },
     {
       "area": "남가좌동",
@@ -1202,7 +1271,8 @@
       "source": "집품",
       "date": "2026-03",
       "link": "https://zippoom.com",
-      "no": 70
+      "no": 70,
+      "collected": "2026-06-16 16:00"
     },
     {
       "area": "북가좌동",
@@ -1219,7 +1289,8 @@
       "source": "당근",
       "date": "2026-06",
       "link": "https://www.daangn.com/kr/realty/?in=북가좌제2동-220&tradeType=borrow",
-      "no": 71
+      "no": 71,
+      "collected": "2026-06-16 16:00"
     },
     {
       "area": "연희동",
@@ -1236,7 +1307,8 @@
       "source": "당근",
       "date": "2026-06",
       "link": "https://www.daangn.com/kr/realty/?in=연희동-211&tradeType=borrow",
-      "no": 72
+      "no": 72,
+      "collected": "2026-06-16 16:00"
     },
     {
       "area": "홍은동",
@@ -1253,7 +1325,8 @@
       "source": "집품",
       "date": "2025-11",
       "link": "https://zippoom.com/부동산/서울-서대문구-홍은동-현대빌라/hp7x33",
-      "no": 73
+      "no": 73,
+      "collected": "2026-06-16 16:00"
     },
     {
       "area": "홍제동",
@@ -1270,7 +1343,8 @@
       "source": "집품",
       "date": "2026-03",
       "link": "https://zippoom.com",
-      "no": 74
+      "no": 74,
+      "collected": "2026-06-16 16:00"
     }
   ]
 }
