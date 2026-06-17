@@ -2,7 +2,7 @@
   "timestamp": "2026-06-16",
   "version": "1.1",
   "stats": {
-    "total": 68,
+    "total": 74,
     "areas": [
       "홍제동",
       "홍은동",
@@ -1271,57 +1271,6 @@
       "date": "2026-03",
       "link": "https://zippoom.com",
       "no": 74
-    },
-    {
-      "no": 68,
-      "area": "참고",
-      "type": "검색플랫폼",
-      "deposit": "-",
-      "m2": 0,
-      "pyeong": 0,
-      "floor": "직방→빌라·투룸+→전세",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "-",
-      "desc": "직방 웹 https://www.zigbang.com",
-      "agent": "",
-      "source": "직방",
-      "date": "-",
-      "link": "https://www.zigbang.com"
-    },
-    {
-      "no": 69,
-      "area": "참고",
-      "type": "검색플랫폼",
-      "deposit": "-",
-      "m2": 0,
-      "pyeong": 0,
-      "floor": "다방→주택/빌라→전세",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "-",
-      "desc": "다방 웹 https://www.dabangapp.com",
-      "agent": "",
-      "source": "다방",
-      "date": "-",
-      "link": "https://www.dabangapp.com"
-    },
-    {
-      "no": 70,
-      "area": "참고",
-      "type": "검색플랫폼",
-      "deposit": "-",
-      "m2": 0,
-      "pyeong": 0,
-      "floor": "빌라·주택→서대문구→전세",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "-",
-      "desc": "피터팬 웹 https://www.peterpanz.com",
-      "agent": "",
-      "source": "피터팬",
-      "date": "-",
-      "link": "https://www.peterpanz.com"
     }
   ]
 }
