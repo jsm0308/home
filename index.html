@@ -151,7 +151,7 @@
 
 <header>
   <h1>JSM 가족 전세 매물 대시보드</h1>
-  <div class="sub">서대문구/은평구 · 빌라 · 전세 2.5억 이하 · 18평 전후</div>
+  <div class="sub">서대문구/은평구 · 빌라 · 전세 2.5억 이하 · 18평 전후 · 7개 지역 · <span id="headerCount">76</span>건</div>
   <div class="updated" id="lastUpdate">불러오는 중...</div>
 </header>
 
@@ -499,6 +499,7 @@ function updateStats() {
     '<div class="stat-card"><div class="num">'+areaCount+'</div><div class="label">지역</div></div>'+
     '<div class="stat-card"><div class="num">'+userListings.length+'</div><div class="label">가족 추가</div></div>'+
     '<div class="stat-card"><div class="num">'+Object.keys(favorites).length+'</div><div class="label">즐겨찾기</div></div>';
+  document.getElementById('headerCount').textContent=m.length;
   document.getElementById('totalCount').textContent=m.length;
 }
 function buildFilters() {
