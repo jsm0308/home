@@ -96,11 +96,17 @@ def read_csv_to_listings(csv_path: str) -> list[dict]:
 
     with open(csv_path, encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
+        columns = reader.fieldnames or []
+        has_trade_type = any(c for c in columns if c and ('tradeType' in c or 'trade_type' in c or '거래' in c))
+
+    with open(csv_path, encoding="utf-8-sig") as f:
+        reader = csv.DictReader(f)
         for row in reader:
             # --- Filter: trade type must be B1 (jeonse) ---
-            trade = row.get("tradeType", row.get("trade_type", row.get("거래유형", "")))
-            if "B1" not in str(trade) and "전세" not in str(trade):
-                continue
+            if has_trade_type:
+                trade = row.get("tradeType", row.get("trade_type", row.get("거래유형", "")))
+                if "B1" not in str(trade) and "전세" not in str(trade):
+                    continue
 
             # --- Filter: deposit <= 2.5억 ---
             deposit_raw = row.get("deposit", row.get("보증금", row.get("price", "")))
@@ -117,6 +123,9 @@ def read_csv_to_listings(csv_path: str) -> list[dict]:
             # --- Area ---
             address = row.get("address", row.get("주소", row.get("roadAddress", row.get("도로명주소", ""))))
             dong = extract_dong(str(address))
+            if not dong:
+                # Fallback: use _source_dong from direct crawl
+                dong = row.get("_source_dong", "")
             if not dong:
                 continue
 
