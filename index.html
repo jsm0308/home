@@ -274,7 +274,7 @@
     <div><label>향</label><input id="inpDir" placeholder="예: 남향"></div>
     <div><label>설명</label><input id="inpDesc" placeholder="특징"></div>
     <div><label>중개사</label><input id="inpAgent" placeholder="중개사명"></div>
-    <div><label>출처</label><select id="inpSource"><option>네이버</option><option>직방</option><option>다방</option><option>피터팬</option><option>집품</option><option>호갱노노</option><option>아파트미</option><option>당근</option><option>기타</option></select></div>
+    <div><label>출처</label><select id="inpSource"><option>네이버</option><option>당근</option><option>피터팬</option><option>기타</option></select></div>
     <div><label>등록일</label><input id="inpDate" type="date"></div>
     <div><label>링크</label><input id="inpLink" placeholder="매물 URL"></div>
     <button onclick="window._jeonse.addListing()">매물 추가</button>
@@ -285,23 +285,19 @@
 <!-- TAB: GUIDE -->
 <div class="tab-content" id="tab-guide">
   <div class="guide-section">
-    <h3>사용법</h3>
-    <p>1. 상단 필터로 지역, 가격, 평형 선택 후 검색<br>2. 행 클릭 시 해당 위치로 지도 이동<br>3. "링크 전체 열기"로 최대 10개 매물을 한 번에 새 탭에서 확인<br>4. 별표 클릭으로 관심 매물 저장 (브라우저에 저장됨)<br>5. 메모 칸에 타이핑하면 자동 저장<br>6. "매물 추가" 탭에서 PDF 업로드 → 자동 텍스트 추출 → 확인 후 추가<br>7. 또는 수동으로 입력도 가능</p>
-    <h3>AI 검색 프롬프트 (복사해서 Cursor에 붙여넣기)</h3>
+    <h3>v1 워크플로우</h3>
+    <p><strong>자동</strong>: 네이버 부동산 (naverland-scrapper) → 주 1회 CSV 수집 → convert_naverland.py → jeonse_data.json 자동 갱신<br>
+    <strong>수동</strong>: 당근·피터팬에서 발견한 매물 → 상세 텍스트 복사 → "매물 추가" 탭 붙여넣기 → 확인 후 추가<br>
+    1. 상단 필터로 지역, 가격, 평형 선택 후 검색<br>2. 행 클릭 시 해당 위치로 지도 이동<br>3. "링크 전체 열기"로 최대 10개 매물을 한 번에 새 탭에서 확인<br>4. 별표 클릭으로 관심 매물 저장 (브라우저에 저장됨)<br>5. 메모 칸에 타이핑하면 자동 저장<br>6. "매물 추가" 탭에서 매물 정보 붙여넣기 → 자동 입력 → 확인 후 추가</p>
+    <h3>AI 업데이트 프롬프트 (복사해서 Cursor에 붙여넣기)</h3>
     <pre class="code-block" id="promptBox" onclick="window._jeonse.copyPrompt()" style="cursor:pointer">전세 매물 업데이트 해줘.
-    지역: 서대문구 홍제동, 홍은동, 연희동, 남가좌동, 북가좌동 / 은평구 신사동, 응암동
-    조건: 빌라, 전세 2.5억 이하, 18평 전후, 옥탑·1층·반지하 제외
-    C:\Users\Gram\Desktop\전세\jeonse_data.json 업데이트하고
-    GitHub Pages에도 반영해줘.</pre>
-    <h3>플랫폼 바로가기</h3>
+    naverland-scrapper 돌리고 convert_naverland.py로 jeonse_data.json 갱신하고
+    GitHub Pages에도 push해줘.</pre>
+    <h3>플랫폼 바로가기 (v1 - 3개 집중)</h3>
     <div class="platform-grid">
-      <div class="platform-card"><h4>네이버 부동산</h4><a href="https://new.land.naver.com/villas" target="_blank" rel="noreferrer">바로가기</a></div>
-      <div class="platform-card"><h4>직방</h4><a href="https://www.zigbang.com/search" target="_blank" rel="noreferrer">바로가기</a></div>
-      <div class="platform-card"><h4>다방</h4><a href="https://www.dabangapp.com/search" target="_blank" rel="noreferrer">바로가기</a></div>
-      <div class="platform-card"><h4>피터팬</h4><a href="https://www.peterpanz.com/villa" target="_blank" rel="noreferrer">바로가기</a></div>
-      <div class="platform-card"><h4>집품</h4><a href="https://zippoom.com" target="_blank" rel="noreferrer">바로가기</a></div>
-      <div class="platform-card"><h4>호갱노노</h4><a href="https://hogangnono.com" target="_blank" rel="noreferrer">바로가기</a></div>
-      <div class="platform-card"><h4>당근</h4><a href="https://www.daangn.com/kr/realty/" target="_blank" rel="noreferrer">바로가기</a></div>
+      <div class="platform-card" style="border-left:3px solid var(--accent)"><h4>네이버 부동산 ★</h4><p style="font-size:9px;color:var(--muted)">자동 수집 (90% 커버)</p><a href="https://new.land.naver.com/villas" target="_blank" rel="noreferrer">바로가기</a></div>
+      <div class="platform-card"><h4>당근</h4><p style="font-size:9px;color:var(--muted)">수동 붙여넣기</p><a href="https://www.daangn.com/kr/realty/" target="_blank" rel="noreferrer">바로가기</a></div>
+      <div class="platform-card"><h4>피터팬</h4><p style="font-size:9px;color:var(--muted)">수동 붙여넣기</p><a href="https://www.peterpanz.com/villa" target="_blank" rel="noreferrer">바로가기</a></div>
     </div>
   </div>
 </div>
@@ -671,10 +667,7 @@ function autoFillFromText(text) {
     document.getElementById('inpLink').value = urlMatch[0];
     // Detect platform from URL
     if (urlMatch[0].indexOf('naver.com') >= 0) document.getElementById('inpSource').value = '네이버';
-    else if (urlMatch[0].indexOf('zigbang.com') >= 0) document.getElementById('inpSource').value = '직방';
-    else if (urlMatch[0].indexOf('dabangapp.com') >= 0) document.getElementById('inpSource').value = '다방';
     else if (urlMatch[0].indexOf('peterpanz.com') >= 0) document.getElementById('inpSource').value = '피터팬';
-    else if (urlMatch[0].indexOf('zippoom.com') >= 0) document.getElementById('inpSource').value = '집품';
     else if (urlMatch[0].indexOf('daangn.com') >= 0) document.getElementById('inpSource').value = '당근';
     // Extract articleNo from URL
     var anoMatch = urlMatch[0].match(/articles\/(\d+)/) || urlMatch[0].match(/articleNo[=:](\d+)/);
