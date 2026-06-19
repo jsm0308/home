@@ -264,7 +264,7 @@
       <div class="paste-label">또는 매물 정보 붙여넣기 (URL 또는 상세 텍스트)</div>
       <textarea id="pasteInput" placeholder="매물 링크를 붙여넣거나, 상세 정보 전체를 복사해서 붙여넣으세요.&#10;예: https://realty.daangn.com/articles/12345&#10;또는 당근/네이버/직방 매물 상세 텍스트 전체" oninput="window._jeonse.onPasteChange()" onpaste="setTimeout(function(){window._jeonse.onPasteChange()},100)"></textarea>
     </div>
-    <div><label>지역 (필수)</label><select id="inpArea"><option value="">선택</option><option>홍제동</option><option>홍은동</option><option>연희동</option><option>남가좌동</option><option>북가좌동</option><option>신사동</option><option>응암동</option></select></div>
+    <div><label>지역 (필수)</label><input id="inpArea" list="areaList" placeholder="예: 홍제동, 대치동" autocomplete="off"><datalist id="areaList"><option>홍제동</option><option>홍은동</option><option>연희동</option><option>남가좌동</option><option>북가좌동</option><option>신사동</option><option>응암동</option></datalist></div>
     <div><label>보증금 (필수)</label><input id="inpDeposit" placeholder="예: 1.8억"></div>
     <div><label>면적 m² (필수)</label><input id="inpM2" type="number" placeholder="예: 59"></div>
     <div><label>유형</label><select id="inpType"><option>빌라</option><option>다가구</option><option>다세대</option><option>연립</option><option>단독</option></select></div>
@@ -681,21 +681,23 @@ function autoFillFromText(text) {
     if (anoMatch) document.getElementById('inpDesc').value = '매물번호: ' + anoMatch[1];
   }
 
-  // --- Area detection (more flexible) ---
-  var allAreas = ['홍제동','홍은동','연희동','남가좌동','북가좌동','신사동','응암동'];
-  // Also detect dong from address pattern: "서울시 서대문구 홍제동" or "(대치동)"
-  var addrMatch = text.match(/(\S+동)\b/g);
+  // --- Area detection: ANY dong ---
   var foundArea = null;
-  for (var ai = 0; ai < allAreas.length; ai++) {
-    if (text.indexOf(allAreas[ai]) >= 0) { foundArea = allAreas[ai]; break; }
+  // Priority 1: "서울특별시 XX구 XX동" or "경기도 XX시 XX동" pattern
+  var fullAddr = text.match(/(?:서울|경기|인천|부산|대구|광주|대전|울산|세종|강원|충청|전라|경상|제주)\S*?\s+(\S+구)\s+(\S+동)/);
+  if (fullAddr) {
+    foundArea = fullAddr[2].replace(/[()]/g,'');
   }
-  if (!foundArea && addrMatch) {
-    for (var adi = 0; adi < addrMatch.length; adi++) {
-      var dong = addrMatch[adi].replace(/[()]/g,'');
-      for (var aj = 0; aj < allAreas.length; aj++) {
-        if (dong === allAreas[aj]) { foundArea = allAreas[aj]; break; }
-      }
-    }
+  // Priority 2: standalone (XX동) pattern
+  if (!foundArea) {
+    var dongMatch = text.match(/\((\S+동)\)/);
+    if (!dongMatch) dongMatch = text.match(/(\S+동)[\s,\n]/);
+    if (dongMatch) foundArea = dongMatch[1];
+  }
+  // Priority 3: any word ending in 동
+  if (!foundArea) {
+    var anyDong = text.match(/(\S{1,4}동)(?!\S)/);
+    if (anyDong) foundArea = anyDong[1];
   }
   if (foundArea) document.getElementById('inpArea').value = foundArea;
 
