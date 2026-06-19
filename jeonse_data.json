@@ -2,7 +2,7 @@
   "timestamp": "2026-06-19",
   "version": "1.2",
   "stats": {
-    "total": 100,
+    "total": 102,
     "areas": [
       "남가좌동",
       "북가좌동",
@@ -1813,6 +1813,42 @@
       "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2633231404",
       "collected": "2026-06-19 22:35",
       "no": 100
+    },
+    {
+      "area": "신사동",
+      "type": "빌라",
+      "deposit": "",
+      "m2": 80,
+      "pyeong": 24.2,
+      "floor": "3층/3층",
+      "rooms": "-",
+      "bath": "-",
+      "dir": "남향",
+      "desc": "빌라",
+      "agent": "",
+      "source": "네이버",
+      "date": "",
+      "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2632325396",
+      "collected": "2026-06-19 22:38",
+      "no": 101
+    },
+    {
+      "area": "신사동",
+      "type": "빌라",
+      "deposit": "",
+      "m2": 65,
+      "pyeong": 19.7,
+      "floor": "2층/2층",
+      "rooms": "-",
+      "bath": "-",
+      "dir": "남향",
+      "desc": "연립",
+      "agent": "",
+      "source": "네이버",
+      "date": "",
+      "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2632132361",
+      "collected": "2026-06-19 22:38",
+      "no": 102
     }
   ]
 }
