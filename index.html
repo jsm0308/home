@@ -719,8 +719,9 @@ function autoFillFromText(text) {
   if (!m2Match) m2Match = text.match(/(\d+)\s*(?:㎡|m²|m2)/);
   if (m2Match) document.getElementById('inpM2').value = parseFloat(m2Match[1]);
 
-  // --- Floor: handles "2층 / 3층" and "2층" ---
-  var floorMatch = text.match(/(?:층)[\s:]*(\d+)\s*\/\s*(\d+)/);
+  // --- Floor: handles "2층 / 3층", "층 2 / 3", and "2층" ---
+  var floorMatch = text.match(/(\d+)\s*층\s*\/\s*(\d+)/);
+  if (!floorMatch) floorMatch = text.match(/(?:층)[\s]+(\d+)\s*\/\s*(\d+)/);
   if (!floorMatch) floorMatch = text.match(/(\d+)\s*층/);
   if (floorMatch) {
     if (floorMatch[2]) document.getElementById('inpFloor').value = floorMatch[1] + '층/' + floorMatch[2] + '층';
@@ -745,10 +746,29 @@ function autoFillFromText(text) {
       document.getElementById('inpType').value = setType; break;
     }
   }
+  // Fallback: "건축물 용도" line (multi-line text with newlines)
+  if (document.getElementById('inpType').value === '') {
+    var dutyMatch = text.match(/건축물\s*용도[\s\S]*?(\S+)/);
+    if (dutyMatch) {
+      var duty = dutyMatch[1].trim();
+      for (var tk = 0; tk < types.length; tk++) {
+        if (duty.indexOf(types[tk]) >= 0) {
+          var dutyType = types[tk] === '공동주택' ? '빌라' : types[tk] === '아파트' ? '연립' : types[tk];
+          document.getElementById('inpType').value = dutyType; break;
+        }
+      }
+    }
+  }
 
   // --- 사용승인일 → date ---
   var dateMatch = text.match(/(?:사용승인일|준공).*?(\d{4})\s*년/);
   if (dateMatch) document.getElementById('inpDesc').value = (document.getElementById('inpDesc').value + ' 준공' + dateMatch[1]).trim();
+
+  // --- 매물번호 from pasted text (only if not already set from URL) ---
+  if (document.getElementById('inpDesc').value.indexOf('매물번호') < 0) {
+    var textAno = text.match(/매물번호[\s:]*(\d+)/);
+    if (textAno) document.getElementById('inpDesc').value = ('매물번호: ' + textAno[1] + ' ' + document.getElementById('inpDesc').value).trim();
+  }
 
   showToast('텍스트에서 정보를 추출했습니다. 확인 후 추가하세요.');
 }
