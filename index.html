@@ -125,6 +125,17 @@
   .dropzone input { display:none; }
   .ocr-result { grid-column:1/-1; background:#f8fafc; border:1px solid var(--border); border-radius:var(--radius); padding:10px; font-size:11px; color:var(--muted); max-height:120px; overflow-y:auto; white-space:pre-wrap; word-break:break-all; }
   .ocr-status { font-size:10px; color:var(--green); margin-left:4px; }
+  .paste-zone {
+    grid-column:1/-1; margin-top:-4px; margin-bottom:6px;
+  }
+  .paste-zone textarea {
+    width:100%; height:60px; padding:8px 10px; border:1px solid var(--border);
+    border-radius:var(--radius); font-size:11px; resize:vertical;
+    background:var(--surface); color:var(--text);
+    transition:border-color .2s;
+  }
+  .paste-zone textarea:focus { border-color:var(--accent); outline:none; }
+  .paste-zone .paste-label { font-size:10px; color:var(--muted); margin-bottom:3px; }
 
   /* Guide tab */
   .guide-section { flex:1; overflow-y:auto; padding:20px 24px; }
@@ -248,6 +259,10 @@
       </div>
       <div id="ocrText" style="margin-top:4px"></div>
       <div id="ocrStatus" class="ocr-status"></div>
+    </div>
+    <div class="paste-zone">
+      <div class="paste-label">또는 매물 정보 붙여넣기 (URL 또는 상세 텍스트)</div>
+      <textarea id="pasteInput" placeholder="매물 링크를 붙여넣거나, 상세 정보 전체를 복사해서 붙여넣으세요.&#10;예: https://realty.daangn.com/articles/12345&#10;또는 당근/네이버/직방 매물 상세 텍스트 전체" oninput="window._jeonse.onPasteChange()" onpaste="setTimeout(function(){window._jeonse.onPasteChange()},100)"></textarea>
     </div>
     <div><label>지역 (필수)</label><select id="inpArea"><option value="">선택</option><option>홍제동</option><option>홍은동</option><option>연희동</option><option>남가좌동</option><option>북가좌동</option><option>신사동</option><option>응암동</option></select></div>
     <div><label>보증금 (필수)</label><input id="inpDeposit" placeholder="예: 1.8억"></div>
@@ -650,42 +665,98 @@ function extractPdfText(pdf) {
 }
 
 function autoFillFromText(text) {
-  var areas = ['홍제동', '홍은동', '연희동', '남가좌동', '북가좌동', '신사동', '응암동'];
-  for (var i = 0; i < areas.length; i++) {
-    if (text.indexOf(areas[i]) >= 0) { document.getElementById('inpArea').value = areas[i]; break; }
+  // --- URL detection ---
+  var urlMatch = text.match(/(https?:\/\/[^\s]+)/);
+  if (urlMatch) {
+    document.getElementById('inpLink').value = urlMatch[0];
+    // Detect platform from URL
+    if (urlMatch[0].indexOf('naver.com') >= 0) document.getElementById('inpSource').value = '네이버';
+    else if (urlMatch[0].indexOf('zigbang.com') >= 0) document.getElementById('inpSource').value = '직방';
+    else if (urlMatch[0].indexOf('dabangapp.com') >= 0) document.getElementById('inpSource').value = '다방';
+    else if (urlMatch[0].indexOf('peterpanz.com') >= 0) document.getElementById('inpSource').value = '피터팬';
+    else if (urlMatch[0].indexOf('zippoom.com') >= 0) document.getElementById('inpSource').value = '집품';
+    else if (urlMatch[0].indexOf('daangn.com') >= 0) document.getElementById('inpSource').value = '당근';
+    // Extract articleNo from URL
+    var anoMatch = urlMatch[0].match(/articles\/(\d+)/) || urlMatch[0].match(/articleNo[=:](\d+)/);
+    if (anoMatch) document.getElementById('inpDesc').value = '매물번호: ' + anoMatch[1];
   }
-  var depMatch = text.match(/(?:보증금|전세금|전세)[\s:]*([\d,.]+)\s*(?:만원|만\s*원|만)/);
+
+  // --- Area detection (more flexible) ---
+  var allAreas = ['홍제동','홍은동','연희동','남가좌동','북가좌동','신사동','응암동'];
+  // Also detect dong from address pattern: "서울시 서대문구 홍제동" or "(대치동)"
+  var addrMatch = text.match(/(\S+동)\b/g);
+  var foundArea = null;
+  for (var ai = 0; ai < allAreas.length; ai++) {
+    if (text.indexOf(allAreas[ai]) >= 0) { foundArea = allAreas[ai]; break; }
+  }
+  if (!foundArea && addrMatch) {
+    for (var adi = 0; adi < addrMatch.length; adi++) {
+      var dong = addrMatch[adi].replace(/[()]/g,'');
+      for (var aj = 0; aj < allAreas.length; aj++) {
+        if (dong === allAreas[aj]) { foundArea = allAreas[aj]; break; }
+      }
+    }
+  }
+  if (foundArea) document.getElementById('inpArea').value = foundArea;
+
+  // --- Deposit: handles "전세가", "보증금", "전세", pure "N억" ---
+  var depMatch = text.match(/(?:전세가|보증금|전세금|전세)[\s:]*([\d,]+)\s*(?:만원|만\s*원|만)/);
   if (!depMatch) depMatch = text.match(/([\d.]+)억\s*([\d,]*)\s*(?:만원|만\s*원|만)?/);
   if (!depMatch) depMatch = text.match(/전세\s*([\d.]+)억/);
   if (depMatch) {
     if (depMatch[0].indexOf('억') >= 0) {
       var eok = parseFloat(depMatch[1].replace(/,/g, ''));
       var man = parseInt((depMatch[2]||'0').replace(/,/g, ''));
-      document.getElementById('inpDeposit').value = eok + '.' + (man/100) + '억';
+      document.getElementById('inpDeposit').value = (eok + man/10000).toFixed(1).replace(/\.0$/,'') + '억';
     } else {
       document.getElementById('inpDeposit').value = parseInt(depMatch[1].replace(/,/g,'')) + '만원';
     }
   }
-  var m2Match = text.match(/(?:면적|공급면적|전용면적)\s*:?\s*([\d.]+)\s*(?:㎡|m²|m2)/);
-  if (!m2Match) m2Match = text.match(/([\d.]+)\s*(?:㎡|m²|m2)/);
+
+  // --- Area: 전용면적 preferred, then 공급면적, then generic ---
+  var m2Match = text.match(/(?:전용면적|공급면적)[\s:]*(\d+)\s*(?:㎡|m²|m2)/);
+  if (!m2Match) m2Match = text.match(/(?:면적)[\s:]*(\d+)\s*(?:㎡|m²|m2)/);
+  if (!m2Match) m2Match = text.match(/(\d+)\s*(?:㎡|m²|m2)/);
   if (m2Match) document.getElementById('inpM2').value = parseFloat(m2Match[1]);
-  var floorMatch = text.match(/(?:해당층|층)[\s:]*(\d+)\s*\/\s*(\d+)/);
+
+  // --- Floor: handles "2층 / 3층" and "2층" ---
+  var floorMatch = text.match(/(?:층)[\s:]*(\d+)\s*\/\s*(\d+)/);
   if (!floorMatch) floorMatch = text.match(/(\d+)\s*층/);
   if (floorMatch) {
     if (floorMatch[2]) document.getElementById('inpFloor').value = floorMatch[1] + '층/' + floorMatch[2] + '층';
     else document.getElementById('inpFloor').value = floorMatch[1] + '층';
   }
-  var roomMatch = text.match(/방\s*(\d+)/);
+
+  // --- Rooms/Bath: "방 3개 / 욕실 1개" ---
+  var roomMatch = text.match(/방\s*(\d+)\s*(?:개)?(?:\s*\/\s*욕실|\s*욕실)?/);
   if (roomMatch) document.getElementById('inpRooms').value = roomMatch[1];
-  var bathMatch = text.match(/욕실\s*(\d+)/);
+  var bathMatch = text.match(/욕실\s*(\d+)\s*(?:개)?/);
   if (bathMatch) document.getElementById('inpBath').value = bathMatch[1];
-  for (var j = 0; j < ['빌라','다가구','다세대','연립','주택'].length; j++) {
-    if (text.indexOf(['빌라','다가구','다세대','연립','주택'][j]) >= 0) {
-      document.getElementById('inpType').value = ['빌라','다가구','다세대','연립','주택'][j]; break;
+
+  // --- Direction: 남향/북향/동향/서향 etc ---
+  var dirMatch = text.match(/([남북동서]향|남서향|남동향|북서향|북동향)/);
+  if (dirMatch) document.getElementById('inpDir').value = dirMatch[1];
+
+  // --- Type ---
+  var types = ['빌라','다가구','다세대','연립','주택','공동주택','아파트','오피스텔'];
+  for (var tj = 0; tj < types.length; tj++) {
+    if (text.indexOf(types[tj]) >= 0) {
+      var setType = types[tj] === '공동주택' ? '빌라' : types[tj] === '아파트' ? '연립' : types[tj];
+      document.getElementById('inpType').value = setType; break;
     }
   }
-  document.getElementById('ocrStatus').textContent = '자동 입력 완료. 확인 후 "매물 추가" 클릭하세요.';
-  showToast('PDF에서 정보를 추출했습니다. 확인 후 추가하세요.');
+
+  // --- 사용승인일 → date ---
+  var dateMatch = text.match(/(?:사용승인일|준공).*?(\d{4})\s*년/);
+  if (dateMatch) document.getElementById('inpDesc').value = (document.getElementById('inpDesc').value + ' 준공' + dateMatch[1]).trim();
+
+  showToast('텍스트에서 정보를 추출했습니다. 확인 후 추가하세요.');
+}
+
+function onPasteChange() {
+  var text = document.getElementById('pasteInput').value.trim();
+  if (text.length < 10) return;
+  autoFillFromText(text);
 }
 
 function clearOcr() {
@@ -774,7 +845,7 @@ window._jeonse={
   sortBy:sortBy,exportCSV:exportCSV,copyPrompt:copyPrompt,addListing:addListing,
   toggleFavorite:toggleFavorite,saveNote:saveNote,trackLinkClick:trackLinkClick,
   batchOpenLinks:batchOpenLinks,openDirections:openDirections,
-  handlePdfUpload:handlePdfUpload,clearOcr:clearOcr
+  handlePdfUpload:handlePdfUpload,clearOcr:clearOcr,onPasteChange:onPasteChange
 };
 
 // --- init ---
