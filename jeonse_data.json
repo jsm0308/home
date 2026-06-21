@@ -2,7 +2,7 @@
   "timestamp": "2026-06-19",
   "version": "1.2",
   "stats": {
-    "total": 102,
+    "total": 66,
     "areas": [
       "남가좌동",
       "북가좌동",
@@ -11,7 +11,8 @@
       "응암동",
       "홍은동",
       "홍제동"
-    ]
+    ],
+    "note": "m2 <= 60 only (청년 버팀목 만25세미만 단독세대주 전용면적 제한)"
   },
   "listings": [
     {
@@ -106,24 +107,6 @@
     },
     {
       "no": 6,
-      "area": "북가좌동",
-      "type": "빌라",
-      "deposit": "1.6억",
-      "m2": 63,
-      "pyeong": 19.1,
-      "floor": "2층",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "-",
-      "desc": "거북골로21길 19평 전세",
-      "agent": "",
-      "source": "집품",
-      "date": "2026-04-07",
-      "link": "https://zippoom.com/search?q=%EB%B6%81%EA%B0%80%EC%A2%8C%EB%8F%99&type=%EC%A0%84%EC%84%B8",
-      "collected": "2026-06-16 16:00"
-    },
-    {
-      "no": 7,
       "area": "신사동",
       "type": "빌라",
       "deposit": "1.6억",
@@ -141,7 +124,7 @@
       "collected": "2026-06-16 16:00"
     },
     {
-      "no": 8,
+      "no": 7,
       "area": "신사동",
       "type": "빌라",
       "deposit": "1.6억",
@@ -159,7 +142,7 @@
       "collected": "2026-06-16 16:00"
     },
     {
-      "no": 9,
+      "no": 8,
       "area": "홍제동",
       "type": "빌라",
       "deposit": "1.7억",
@@ -177,25 +160,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 10,
-      "area": "신사동",
-      "type": "빌라",
-      "deposit": "1.9억",
-      "m2": 65,
-      "pyeong": 19.7,
-      "floor": "2층",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "-",
-      "desc": "증산로23길 19.8평",
-      "agent": "",
-      "source": "집품",
-      "date": "2026-06-01",
-      "link": "https://zippoom.com/search?q=%EC%8B%A0%EC%82%AC%EB%8F%99&type=%EC%A0%84%EC%84%B8",
-      "collected": "2026-06-16 16:00"
-    },
-    {
-      "no": 11,
+      "no": 9,
       "area": "홍제동",
       "type": "빌라",
       "deposit": "1.9억",
@@ -213,7 +178,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 12,
+      "no": 10,
       "area": "홍제동",
       "type": "빌라",
       "deposit": "1.9억",
@@ -231,7 +196,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 13,
+      "no": 11,
       "area": "홍제동",
       "type": "빌라",
       "deposit": "2억",
@@ -249,7 +214,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 14,
+      "no": 12,
       "area": "홍제동",
       "type": "빌라",
       "deposit": "2억",
@@ -267,7 +232,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 15,
+      "no": 13,
       "area": "홍제동",
       "type": "연립",
       "deposit": "2억",
@@ -285,7 +250,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 16,
+      "no": 14,
       "area": "연희동",
       "type": "빌라",
       "deposit": "2억",
@@ -303,7 +268,7 @@
       "collected": "2026-06-16 16:00"
     },
     {
-      "no": 17,
+      "no": 15,
       "area": "홍제동",
       "type": "빌라",
       "deposit": "2억",
@@ -321,61 +286,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 18,
-      "area": "북가좌동",
-      "type": "빌라",
-      "deposit": "2.1억",
-      "m2": 85,
-      "pyeong": 25.7,
-      "floor": "2층",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "-",
-      "desc": "에코빌3차 25.7평 전세",
-      "agent": "",
-      "source": "집품",
-      "date": "2026-04-10",
-      "link": "https://zippoom.com/search?q=%EB%B6%81%EA%B0%80%EC%A2%8C%EB%8F%99&type=%EC%A0%84%EC%84%B8",
-      "collected": "2026-06-16 16:00"
-    },
-    {
-      "no": 19,
-      "area": "신사동",
-      "type": "빌라",
-      "deposit": "2.1억",
-      "m2": 81,
-      "pyeong": 24.5,
-      "floor": "2층",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "-",
-      "desc": "증산로21가길 24.6평",
-      "agent": "",
-      "source": "집품",
-      "date": "2026-06-01",
-      "link": "https://zippoom.com/search?q=%EC%8B%A0%EC%82%AC%EB%8F%99&type=%EC%A0%84%EC%84%B8",
-      "collected": "2026-06-16 16:00"
-    },
-    {
-      "no": 20,
-      "area": "신사동",
-      "type": "빌라",
-      "deposit": "2.1억",
-      "m2": 75,
-      "pyeong": 22.7,
-      "floor": "5층",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "-",
-      "desc": "민성빌라 22평 5층",
-      "agent": "",
-      "source": "집품",
-      "date": "2024-03-30",
-      "link": "https://zippoom.com/search?q=%EC%8B%A0%EC%82%AC%EB%8F%99&type=%EC%A0%84%EC%84%B8",
-      "collected": "2026-06-16 16:00"
-    },
-    {
-      "no": 21,
+      "no": 16,
       "area": "홍제동",
       "type": "빌라",
       "deposit": "2.1억",
@@ -393,7 +304,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 22,
+      "no": 17,
       "area": "홍제동",
       "type": "빌라",
       "deposit": "2.1억",
@@ -411,7 +322,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 23,
+      "no": 18,
       "area": "홍은동",
       "type": "빌라",
       "deposit": "2.1억",
@@ -429,7 +340,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 24,
+      "no": 19,
       "area": "홍은동",
       "type": "빌라",
       "deposit": "2.1억",
@@ -447,7 +358,7 @@
       "collected": "2026-06-16 16:00"
     },
     {
-      "no": 25,
+      "no": 20,
       "area": "연희동",
       "type": "빌라",
       "deposit": "2.1억",
@@ -465,7 +376,7 @@
       "collected": "2026-06-16 16:00"
     },
     {
-      "no": 26,
+      "no": 21,
       "area": "홍제동",
       "type": "빌라",
       "deposit": "2.1억",
@@ -483,25 +394,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 27,
-      "area": "홍제동",
-      "type": "빌라",
-      "deposit": "2.2억",
-      "m2": 62,
-      "pyeong": 18.8,
-      "floor": "3층/5층",
-      "rooms": "3",
-      "bath": "1",
-      "dir": "남향",
-      "desc": "전세 2.2억 방3 화1 19평",
-      "agent": "",
-      "source": "네이버",
-      "date": "2026-06-16",
-      "link": "https://new.land.naver.com/houses?ms=%ED%99%8D%EC%A0%9C%EB%8F%99&a=VL&b=B1&e=RETAIL&f=17600&g=28600",
-      "collected": "2026-06-14 14:00"
-    },
-    {
-      "no": 28,
+      "no": 22,
       "area": "홍제동",
       "type": "다가구",
       "deposit": "2.2억",
@@ -519,7 +412,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 29,
+      "no": 23,
       "area": "연희동",
       "type": "빌라",
       "deposit": "2.2억",
@@ -537,7 +430,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 30,
+      "no": 24,
       "area": "홍제동",
       "type": "빌라",
       "deposit": "2.2억",
@@ -555,61 +448,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 31,
-      "area": "홍제동",
-      "type": "빌라",
-      "deposit": "2.25억",
-      "m2": 64,
-      "pyeong": 19.4,
-      "floor": "3층/3층",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "-",
-      "desc": "사랑채빌라 19평 전세 3층",
-      "agent": "",
-      "source": "집품",
-      "date": "2023-12-03",
-      "link": "https://zippoom.com/%EB%B6%80%EB%8F%99%EC%82%B0/%EC%84%9C%EC%9A%B8-%EC%84%9C%EB%8C%80%EB%AC%B8%EA%B5%AC-%ED%99%8D%EC%A0%9C%EB%8F%99-%EC%82%AC%EB%9E%91%EC%B1%84%EB%B9%8C%EB%9D%BC/ji2xc5",
-      "collected": "2026-06-18 01:30"
-    },
-    {
-      "no": 32,
-      "area": "홍제동",
-      "type": "빌라",
-      "deposit": "2.3억",
-      "m2": 63,
-      "pyeong": 19.1,
-      "floor": "중층",
-      "rooms": "3",
-      "bath": "1",
-      "dir": "-",
-      "desc": "굿모닝빌 19평 전세 세무서10길",
-      "agent": "",
-      "source": "집품",
-      "date": "2026-02-13",
-      "link": "https://zippoom.com/search?q=%ED%99%8D%EC%A0%9C%EB%8F%99&type=%EC%A0%84%EC%84%B8",
-      "collected": "2026-06-16 16:00"
-    },
-    {
-      "no": 33,
-      "area": "홍은동",
-      "type": "빌라",
-      "deposit": "2.3억",
-      "m2": 61,
-      "pyeong": 18.5,
-      "floor": "3층/4층",
-      "rooms": "3",
-      "bath": "1",
-      "dir": "남향",
-      "desc": "전세 2.3억 18평 홍은동",
-      "agent": "",
-      "source": "네이버",
-      "date": "2026-06-16",
-      "link": "https://new.land.naver.com/houses?ms=%ED%99%8D%EC%9D%80%EB%8F%99&a=VL&b=B1&e=RETAIL&f=18400&g=29899",
-      "collected": "2026-06-14 14:00"
-    },
-    {
-      "no": 34,
+      "no": 25,
       "area": "북가좌동",
       "type": "빌라",
       "deposit": "2.3억",
@@ -627,7 +466,7 @@
       "collected": "2026-06-16 16:00"
     },
     {
-      "no": 35,
+      "no": 26,
       "area": "홍제동",
       "type": "빌라",
       "deposit": "2.3억",
@@ -645,7 +484,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 36,
+      "no": 27,
       "area": "홍제동",
       "type": "빌라",
       "deposit": "2.3억",
@@ -663,7 +502,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 37,
+      "no": 28,
       "area": "홍제동",
       "type": "다가구",
       "deposit": "2.3억",
@@ -681,7 +520,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 38,
+      "no": 29,
       "area": "홍제동",
       "type": "빌라",
       "deposit": "2.3억",
@@ -699,25 +538,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 39,
-      "area": "홍제동",
-      "type": "다가구",
-      "deposit": "2.4억",
-      "m2": 61,
-      "pyeong": 18.5,
-      "floor": "2층/3층",
-      "rooms": "3",
-      "bath": "1",
-      "dir": "남향",
-      "desc": "전세 2.4억 18평 올수리",
-      "agent": "",
-      "source": "네이버",
-      "date": "2026-06-16",
-      "link": "https://new.land.naver.com/houses?ms=%ED%99%8D%EC%A0%9C%EB%8F%99&a=VL&b=B1&e=RETAIL&f=19200&g=31200",
-      "collected": "2026-06-14 14:00"
-    },
-    {
-      "no": 40,
+      "no": 30,
       "area": "홍제동",
       "type": "빌라",
       "deposit": "2.4억",
@@ -735,7 +556,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 41,
+      "no": 31,
       "area": "홍제동",
       "type": "빌라",
       "deposit": "2.4억",
@@ -753,7 +574,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 42,
+      "no": 32,
       "area": "연희동",
       "type": "빌라",
       "deposit": "2.4억",
@@ -771,7 +592,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 43,
+      "no": 33,
       "area": "남가좌동",
       "type": "빌라",
       "deposit": "2.4억",
@@ -789,61 +610,7 @@
       "collected": "2026-06-16 16:00"
     },
     {
-      "no": 44,
-      "area": "홍제동",
-      "type": "빌라",
-      "deposit": "2.5억",
-      "m2": 82,
-      "pyeong": 24.8,
-      "floor": "4층",
-      "rooms": "3",
-      "bath": "2",
-      "dir": "-",
-      "desc": "홍제진명빌라 24평 전세 4층",
-      "agent": "",
-      "source": "집품",
-      "date": "2024-01-10",
-      "link": "https://zippoom.com/search?q=%ED%99%8D%EC%A0%9C%EB%8F%99&type=%EC%A0%84%EC%84%B8",
-      "collected": "2026-06-16 16:00"
-    },
-    {
-      "no": 45,
-      "area": "남가좌동",
-      "type": "빌라",
-      "deposit": "2.5억",
-      "m2": 76,
-      "pyeong": 23.0,
-      "floor": "2층",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "-",
-      "desc": "황제빌라 23평 전세 2층",
-      "agent": "",
-      "source": "집품",
-      "date": "2024-07-13",
-      "link": "https://zippoom.com/search?q=%EB%82%A8%EA%B0%80%EC%A2%8C%EB%8F%99&type=%EC%A0%84%EC%84%B8",
-      "collected": "2026-06-16 16:00"
-    },
-    {
-      "no": 46,
-      "area": "홍제동",
-      "type": "빌라",
-      "deposit": "2.5억",
-      "m2": 62,
-      "pyeong": 18.8,
-      "floor": "2층/4층",
-      "rooms": "3",
-      "bath": "2",
-      "dir": "남동향",
-      "desc": "전세 2.5억 방3 화2 19평",
-      "agent": "",
-      "source": "네이버",
-      "date": "2026-06-16",
-      "link": "https://new.land.naver.com/houses?ms=%ED%99%8D%EC%A0%9C%EB%8F%99&a=VL&b=B1&e=RETAIL&f=20000&g=32500",
-      "collected": "2026-06-14 14:00"
-    },
-    {
-      "no": 47,
+      "no": 34,
       "area": "홍은동",
       "type": "다가구",
       "deposit": "2.5억",
@@ -861,7 +628,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 48,
+      "no": 35,
       "area": "홍제동",
       "type": "빌라",
       "deposit": "2.5억",
@@ -879,7 +646,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 49,
+      "no": 36,
       "area": "홍제동",
       "type": "다세대",
       "deposit": "2.5억",
@@ -897,7 +664,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 50,
+      "no": 37,
       "area": "홍제동",
       "type": "빌라",
       "deposit": "2.5억",
@@ -915,7 +682,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 51,
+      "no": 38,
       "area": "홍제동",
       "type": "다가구",
       "deposit": "2.5억",
@@ -933,7 +700,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 52,
+      "no": 39,
       "area": "홍제동",
       "type": "다가구",
       "deposit": "2.5억",
@@ -951,7 +718,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 53,
+      "no": 40,
       "area": "홍제동",
       "type": "다가구",
       "deposit": "2.5억",
@@ -969,7 +736,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 54,
+      "no": 41,
       "area": "홍제동",
       "type": "단독",
       "deposit": "2.5억",
@@ -987,7 +754,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 55,
+      "no": 42,
       "area": "홍제동",
       "type": "상가주택",
       "deposit": "2.5억",
@@ -1005,7 +772,7 @@
       "collected": "2026-06-14 14:00"
     },
     {
-      "no": 56,
+      "no": 43,
       "area": "연희동",
       "type": "빌라",
       "deposit": "2.5억",
@@ -1023,7 +790,7 @@
       "collected": "2026-06-16 16:00"
     },
     {
-      "no": 57,
+      "no": 44,
       "area": "응암동",
       "type": "빌라",
       "deposit": "2.5억",
@@ -1041,7 +808,7 @@
       "collected": "2026-06-16 16:00"
     },
     {
-      "no": 58,
+      "no": 45,
       "area": "홍은동",
       "type": "빌라",
       "deposit": "2.5억",
@@ -1059,7 +826,7 @@
       "collected": "2026-06-16 16:00"
     },
     {
-      "no": 59,
+      "no": 46,
       "area": "홍은동",
       "type": "빌라",
       "deposit": "2.5억",
@@ -1077,115 +844,7 @@
       "collected": "2026-06-16 16:00"
     },
     {
-      "no": 60,
-      "area": "홍은동",
-      "type": "빌라",
-      "deposit": "2.67억",
-      "m2": 62,
-      "pyeong": 18.8,
-      "floor": "2층",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "-",
-      "desc": "삼성빌라 18평 2층",
-      "agent": "",
-      "source": "호갱노노",
-      "date": "2025-04-27",
-      "link": "https://hogangnono.com/search?q=%ED%99%8D%EC%9D%80%EB%8F%99",
-      "collected": "2026-06-16 16:00"
-    },
-    {
-      "no": 61,
-      "area": "남가좌동",
-      "type": "빌라",
-      "deposit": "2.8억",
-      "m2": 69,
-      "pyeong": 20.9,
-      "floor": "2층",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "-",
-      "desc": "황금빌라 20평 전세",
-      "agent": "",
-      "source": "집품",
-      "date": "2022-07-14",
-      "link": "https://zippoom.com/search?q=%EB%82%A8%EA%B0%80%EC%A2%8C%EB%8F%99&type=%EC%A0%84%EC%84%B8",
-      "collected": "2026-06-16 16:00"
-    },
-    {
-      "no": 62,
-      "area": "홍은동",
-      "type": "빌라",
-      "deposit": "2.8억",
-      "m2": 62,
-      "pyeong": 18.8,
-      "floor": "2층",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "-",
-      "desc": "삼성빌라 18평 2층",
-      "agent": "",
-      "source": "호갱노노",
-      "date": "2025-03-26",
-      "link": "https://hogangnono.com/search?q=%ED%99%8D%EC%9D%80%EB%8F%99",
-      "collected": "2026-06-16 16:00"
-    },
-    {
-      "no": 63,
-      "area": "홍은동",
-      "type": "빌라",
-      "deposit": "2.94억",
-      "m2": 62,
-      "pyeong": 18.8,
-      "floor": "3층",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "-",
-      "desc": "삼성빌라 18평 3층",
-      "agent": "",
-      "source": "호갱노노",
-      "date": "2025-05-20",
-      "link": "https://hogangnono.com/search?q=%ED%99%8D%EC%9D%80%EB%8F%99",
-      "collected": "2026-06-16 16:00"
-    },
-    {
-      "no": 64,
-      "area": "연희동",
-      "type": "빌라",
-      "deposit": "3억",
-      "m2": 81,
-      "pyeong": 24.5,
-      "floor": "3층",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "-",
-      "desc": "대호빌라 24평 전세 3층",
-      "agent": "",
-      "source": "집품",
-      "date": "2024-12-01",
-      "link": "https://zippoom.com/search?q=%EC%97%B0%ED%9D%AC%EB%8F%99&type=%EC%A0%84%EC%84%B8",
-      "collected": "2026-06-16 16:00"
-    },
-    {
-      "no": 65,
-      "area": "홍은동",
-      "type": "빌라",
-      "deposit": "3.05억",
-      "m2": 62,
-      "pyeong": 18.8,
-      "floor": "3층",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "-",
-      "desc": "삼성빌라 18평 3층",
-      "agent": "",
-      "source": "호갱노노",
-      "date": "2025-06-14",
-      "link": "https://hogangnono.com/search?q=%ED%99%8D%EC%9D%80%EB%8F%99",
-      "collected": "2026-06-16 16:00"
-    },
-    {
-      "no": 66,
+      "no": 47,
       "area": "연희동",
       "type": "빌라",
       "deposit": "3.1억",
@@ -1203,24 +862,6 @@
       "collected": "2026-06-16 16:00"
     },
     {
-      "no": 67,
-      "area": "홍제동",
-      "type": "단독",
-      "deposit": "3.7억",
-      "m2": 92,
-      "pyeong": 27.8,
-      "floor": "3층/3층",
-      "rooms": "3",
-      "bath": "-",
-      "dir": "남서향",
-      "desc": "올수리된 큰집 바로볼수있음",
-      "agent": "남가좌부동산",
-      "source": "네이버",
-      "date": "2026-06-15",
-      "link": "https://new.land.naver.com/houses?ms=%ED%99%8D%EC%A0%9C%EB%8F%99&a=VL&b=B1&e=RETAIL&f=29600&g=48100",
-      "collected": "2026-06-14 14:00"
-    },
-    {
       "area": "홍제동",
       "type": "빌라",
       "deposit": "2.0억",
@@ -1235,7 +876,7 @@
       "source": "네이버",
       "date": "2026-06-16",
       "link": "https://new.land.naver.com/houses?ms=%ED%99%8D%EC%A0%9C%EB%8F%99&a=VL&b=B1&e=RETAIL&f=16000&g=26000",
-      "no": 68,
+      "no": 48,
       "collected": "2026-06-14 14:00"
     },
     {
@@ -1253,7 +894,7 @@
       "source": "네이버",
       "date": "2026-06-16",
       "link": "https://new.land.naver.com/houses?ms=%ED%99%8D%EC%A0%9C%EB%8F%99&a=VL&b=B1&e=RETAIL&f=16000&g=26000",
-      "no": 69,
+      "no": 49,
       "collected": "2026-06-14 14:00"
     },
     {
@@ -1271,7 +912,7 @@
       "source": "집품",
       "date": "2026-03",
       "link": "https://zippoom.com/search?q=%EB%82%A8%EA%B0%80%EC%A2%8C%EB%8F%99&type=%EC%A0%84%EC%84%B8",
-      "no": 70,
+      "no": 50,
       "collected": "2026-06-16 16:00"
     },
     {
@@ -1289,7 +930,7 @@
       "source": "당근",
       "date": "2026-06",
       "link": "https://www.daangn.com/kr/realty/?in=%EB%B6%81%EA%B0%80%EC%A2%8C%EB%8F%99&tradeType=borrow",
-      "no": 71,
+      "no": 51,
       "collected": "2026-06-16 16:00"
     },
     {
@@ -1307,26 +948,8 @@
       "source": "당근",
       "date": "2026-06",
       "link": "https://www.daangn.com/kr/realty/?in=%EC%97%B0%ED%9D%AC%EB%8F%99&tradeType=borrow",
-      "no": 72,
+      "no": 52,
       "collected": "2026-06-16 16:00"
-    },
-    {
-      "area": "홍은동",
-      "type": "빌라",
-      "deposit": "2.3억",
-      "m2": 84.63,
-      "pyeong": 25.6,
-      "floor": "4층/4층",
-      "rooms": "3",
-      "bath": "1",
-      "dir": "-",
-      "desc": "현대빌라 전세 2.3억, 84.63m²(25평), 연희로39길",
-      "agent": "",
-      "source": "집품",
-      "date": "2025-11",
-      "link": "https://zippoom.com/%EB%B6%80%EB%8F%99%EC%82%B0/%EC%84%9C%EC%9A%B8-%EC%84%9C%EB%8C%80%EB%AC%B8%EA%B5%AC-%ED%99%8D%EC%9D%80%EB%8F%99-%ED%98%84%EB%8C%80%EB%B9%8C%EB%9D%BC/hp7x33",
-      "no": 73,
-      "collected": "2026-06-18 01:30"
     },
     {
       "area": "홍제동",
@@ -1343,11 +966,11 @@
       "source": "집품",
       "date": "2026-03",
       "link": "https://zippoom.com/search?q=%ED%99%8D%EC%A0%9C%EB%8F%99&type=%EC%A0%84%EC%84%B8",
-      "no": 74,
+      "no": 53,
       "collected": "2026-06-16 16:00"
     },
     {
-      "no": 75,
+      "no": 54,
       "area": "홍제동",
       "type": "다가구",
       "deposit": "2.5억",
@@ -1365,7 +988,7 @@
       "collected": "2026-06-18 03:01"
     },
     {
-      "no": 76,
+      "no": 55,
       "area": "홍제동",
       "type": "다가구",
       "deposit": "2.5억",
@@ -1381,42 +1004,6 @@
       "date": "2026-06-18",
       "link": "https://new.land.naver.com/houses?articleNo=2631630284",
       "collected": "2026-06-18 03:01"
-    },
-    {
-      "area": "홍제동",
-      "type": "빌라",
-      "deposit": "",
-      "m2": 109,
-      "pyeong": 33.0,
-      "floor": "6층/7층",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "남향",
-      "desc": "빌라",
-      "agent": "",
-      "source": "네이버",
-      "date": "",
-      "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2633165574",
-      "collected": "2026-06-19 22:35",
-      "no": 77
-    },
-    {
-      "area": "홍제동",
-      "type": "빌라",
-      "deposit": "",
-      "m2": 81,
-      "pyeong": 24.5,
-      "floor": "2층/3층",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "남동향",
-      "desc": "빌라",
-      "agent": "",
-      "source": "네이버",
-      "date": "",
-      "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2633083627",
-      "collected": "2026-06-19 22:35",
-      "no": 78
     },
     {
       "area": "홍제동",
@@ -1434,7 +1021,7 @@
       "date": "",
       "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2630987734",
       "collected": "2026-06-19 22:35",
-      "no": 79
+      "no": 56
     },
     {
       "area": "홍제동",
@@ -1452,25 +1039,7 @@
       "date": "",
       "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2632789366",
       "collected": "2026-06-19 22:35",
-      "no": 80
-    },
-    {
-      "area": "홍제동",
-      "type": "빌라",
-      "deposit": "",
-      "m2": 103,
-      "pyeong": 31.2,
-      "floor": "6층/7층",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "남동향",
-      "desc": "1동",
-      "agent": "",
-      "source": "네이버",
-      "date": "",
-      "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2632787786",
-      "collected": "2026-06-19 22:35",
-      "no": 81
+      "no": 57
     },
     {
       "area": "홍제동",
@@ -1488,7 +1057,7 @@
       "date": "",
       "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2632766951",
       "collected": "2026-06-19 22:35",
-      "no": 82
+      "no": 58
     },
     {
       "area": "홍제동",
@@ -1506,7 +1075,7 @@
       "date": "",
       "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2630046413",
       "collected": "2026-06-19 22:35",
-      "no": 83
+      "no": 59
     },
     {
       "area": "홍제동",
@@ -1524,7 +1093,7 @@
       "date": "",
       "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2630116066",
       "collected": "2026-06-19 22:35",
-      "no": 84
+      "no": 60
     },
     {
       "area": "홍은동",
@@ -1542,25 +1111,7 @@
       "date": "",
       "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2632753317",
       "collected": "2026-06-19 22:35",
-      "no": 85
-    },
-    {
-      "area": "홍은동",
-      "type": "빌라",
-      "deposit": "",
-      "m2": 69,
-      "pyeong": 20.9,
-      "floor": "1층/2층",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "남향",
-      "desc": "빌라",
-      "agent": "",
-      "source": "네이버",
-      "date": "",
-      "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2630981566",
-      "collected": "2026-06-19 22:35",
-      "no": 86
+      "no": 61
     },
     {
       "area": "홍은동",
@@ -1578,151 +1129,7 @@
       "date": "",
       "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2630522968",
       "collected": "2026-06-19 22:35",
-      "no": 87
-    },
-    {
-      "area": "연희동",
-      "type": "빌라",
-      "deposit": "",
-      "m2": 243,
-      "pyeong": 73.5,
-      "floor": "4층/5층",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "남동향",
-      "desc": "빌라",
-      "agent": "",
-      "source": "네이버",
-      "date": "",
-      "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2633183153",
-      "collected": "2026-06-19 22:35",
-      "no": 88
-    },
-    {
-      "area": "연희동",
-      "type": "빌라",
-      "deposit": "",
-      "m2": 243,
-      "pyeong": 73.5,
-      "floor": "2층/5층",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "남향",
-      "desc": "리원하우스(REWONHOUSE)동",
-      "agent": "",
-      "source": "네이버",
-      "date": "",
-      "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2633203426",
-      "collected": "2026-06-19 22:35",
-      "no": 89
-    },
-    {
-      "area": "연희동",
-      "type": "빌라",
-      "deposit": "",
-      "m2": 243,
-      "pyeong": 73.5,
-      "floor": "중층/5층",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "남향",
-      "desc": "연립",
-      "agent": "",
-      "source": "네이버",
-      "date": "",
-      "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2632878405",
-      "collected": "2026-06-19 22:35",
-      "no": 90
-    },
-    {
-      "area": "연희동",
-      "type": "빌라",
-      "deposit": "",
-      "m2": 71,
-      "pyeong": 21.5,
-      "floor": "중층/2층",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "남서향",
-      "desc": "빌라",
-      "agent": "",
-      "source": "네이버",
-      "date": "",
-      "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2632725458",
-      "collected": "2026-06-19 22:35",
-      "no": 91
-    },
-    {
-      "area": "남가좌동",
-      "type": "빌라",
-      "deposit": "",
-      "m2": 243,
-      "pyeong": 73.5,
-      "floor": "4층/5층",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "남동향",
-      "desc": "빌라",
-      "agent": "",
-      "source": "네이버",
-      "date": "",
-      "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2633183153",
-      "collected": "2026-06-19 22:35",
-      "no": 92
-    },
-    {
-      "area": "남가좌동",
-      "type": "빌라",
-      "deposit": "",
-      "m2": 243,
-      "pyeong": 73.5,
-      "floor": "2층/5층",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "남향",
-      "desc": "리원하우스(REWONHOUSE)동",
-      "agent": "",
-      "source": "네이버",
-      "date": "",
-      "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2633203426",
-      "collected": "2026-06-19 22:35",
-      "no": 93
-    },
-    {
-      "area": "남가좌동",
-      "type": "빌라",
-      "deposit": "",
-      "m2": 243,
-      "pyeong": 73.5,
-      "floor": "중층/5층",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "남향",
-      "desc": "연립",
-      "agent": "",
-      "source": "네이버",
-      "date": "",
-      "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2632878405",
-      "collected": "2026-06-19 22:35",
-      "no": 94
-    },
-    {
-      "area": "남가좌동",
-      "type": "빌라",
-      "deposit": "",
-      "m2": 71,
-      "pyeong": 21.5,
-      "floor": "중층/2층",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "남서향",
-      "desc": "빌라",
-      "agent": "",
-      "source": "네이버",
-      "date": "",
-      "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2632725458",
-      "collected": "2026-06-19 22:35",
-      "no": 95
+      "no": 62
     },
     {
       "area": "북가좌동",
@@ -1740,7 +1147,7 @@
       "date": "",
       "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2631139031",
       "collected": "2026-06-19 22:35",
-      "no": 96
+      "no": 63
     },
     {
       "area": "북가좌동",
@@ -1758,25 +1165,7 @@
       "date": "",
       "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2630365780",
       "collected": "2026-06-19 22:35",
-      "no": 97
-    },
-    {
-      "area": "북가좌동",
-      "type": "빌라",
-      "deposit": "",
-      "m2": 71,
-      "pyeong": 21.5,
-      "floor": "3층/5층",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "남서향",
-      "desc": "빌라",
-      "agent": "",
-      "source": "네이버",
-      "date": "",
-      "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2629331858",
-      "collected": "2026-06-19 22:35",
-      "no": 98
+      "no": 64
     },
     {
       "area": "응암동",
@@ -1794,7 +1183,7 @@
       "date": "",
       "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2632562656",
       "collected": "2026-06-19 22:35",
-      "no": 99
+      "no": 65
     },
     {
       "area": "응암동",
@@ -1812,43 +1201,7 @@
       "date": "",
       "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2633231404",
       "collected": "2026-06-19 22:35",
-      "no": 100
-    },
-    {
-      "area": "신사동",
-      "type": "빌라",
-      "deposit": "",
-      "m2": 80,
-      "pyeong": 24.2,
-      "floor": "3층/3층",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "남향",
-      "desc": "빌라",
-      "agent": "",
-      "source": "네이버",
-      "date": "",
-      "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2632325396",
-      "collected": "2026-06-19 22:38",
-      "no": 101
-    },
-    {
-      "area": "신사동",
-      "type": "빌라",
-      "deposit": "",
-      "m2": 65,
-      "pyeong": 19.7,
-      "floor": "2층/2층",
-      "rooms": "-",
-      "bath": "-",
-      "dir": "남향",
-      "desc": "연립",
-      "agent": "",
-      "source": "네이버",
-      "date": "",
-      "link": "https://new.land.naver.com/houses?ms=&a=VL&b=B1&e=RETAIL&articleNo=2632132361",
-      "collected": "2026-06-19 22:38",
-      "no": 102
+      "no": 66
     }
   ]
 }
