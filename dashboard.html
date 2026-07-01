@@ -3,681 +3,529 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JSM Personal Dashboard</title>
+<title>JSM Command Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #fafafa;
-  --bg-card: #ffffff;
-  --bg-hover: #f5f5f5;
+  --base: #FCFCFA;
+  --surface: #FFFFFF;
+  --border: #E8E8E6;
   --text: #171717;
-  --text-secondary: #525252;
-  --text-muted: #8a8a8a;
-  --border: #e5e5e5;
-  --primary: #3b82f6;
-  --primary-light: #eff6ff;
-  --success: #059669;
-  --warning: #d97706;
-  --danger: #dc2626;
+  --text-secondary: #5F5F5F;
+  --text-tertiary: #9E9E9E;
+  --foundation: #3B3B98;
+  --foundation-light: #EEEDF8;
+  --foundation-subtle: #F7F6FC;
+  --operations: #2D936C;
+  --operations-light: #EDF7F2;
+  --data: #E76F51;
+  --data-light: #FDF0EC;
+  --code-bg: #F4F4F3;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
   --radius: 10px;
   --radius-sm: 6px;
+  --radius-xs: 4px;
 }
-* { margin: 0; padding: 0; box-sizing: border-box; }
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 15px; }
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
-  background: var(--bg);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--base);
   color: var(--text);
-  line-height: 1.6;
-  font-size: 14px;
+  line-height: 1.55;
+  display: flex;
+  min-height: 100vh;
 }
-.container { max-width: 1000px; margin: 0 auto; padding: 20px 16px; }
-header {
-  background: var(--bg-card);
-  border-bottom: 1px solid var(--border);
-  padding: 14px 0;
+.sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
   position: sticky;
   top: 0;
-  z-index: 20;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0;
+  z-index: 10;
 }
-.header-inner {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 0 16px;
+.sidebar-brand {
+  padding: 0 20px 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+.sidebar-brand h1 { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; }
+.sidebar-brand .brand-sub { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; font-family: 'JetBrains Mono', monospace; }
+.sidebar-section { padding: 0 20px; margin-bottom: 16px; }
+.sidebar-section-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-tertiary);
+  margin-bottom: 8px;
+  padding: 0 4px;
+}
+.sidebar-nav-item {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-}
-.header-inner h1 { font-size: 18px; font-weight: 700; }
-.header-inner .date { font-size: 12px; color: var(--text-muted); }
-.status-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
-.status-dot.ok { background: var(--success); }
-.status-dot.warn { background: var(--warning); }
-
-/* Tabs */
-nav.tabs {
-  display: flex;
-  gap: 0;
-  background: var(--bg-card);
-  border-radius: var(--radius);
-  padding: 4px;
-  margin-bottom: 20px;
-  border: 1px solid var(--border);
-  overflow-x: auto;
-}
-nav.tabs button {
-  flex: 1 0 auto;
+  gap: 10px;
   padding: 8px 12px;
-  border: none;
-  background: transparent;
-  font-size: 13px;
+  margin-bottom: 2px;
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
   font-weight: 500;
   color: var(--text-secondary);
   cursor: pointer;
-  border-radius: var(--radius-sm);
-  transition: all 0.15s;
+  transition: all 0.12s;
+  text-decoration: none;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
   font-family: inherit;
-  white-space: nowrap;
 }
-nav.tabs button:hover { color: var(--text); background: var(--bg-hover); }
-nav.tabs button.active { color: var(--primary); background: var(--primary-light); font-weight: 600; }
+.sidebar-nav-item:hover { background: var(--code-bg); color: var(--text); }
+.sidebar-nav-item.active { background: var(--foundation-light); color: var(--foundation); font-weight: 600; }
+.sidebar-nav-item.ops.active { background: var(--operations-light); color: var(--operations); }
+.sidebar-nav-item .nav-icon { font-size: 16px; width: 22px; text-align: center; flex-shrink: 0; }
+.sidebar-nav-item .nav-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--foundation); flex-shrink: 0;
+}
+.sidebar-nav-item.ops .nav-dot { background: var(--operations); }
 
-/* Card */
-.card {
-  background: var(--bg-card);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  padding: 18px 20px;
-  margin-bottom: 14px;
+.main {
+  flex: 1;
+  padding: 28px 32px;
+  max-width: 1100px;
+  min-width: 0;
 }
-.card h2 { font-size: 16px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-.card h3 { font-size: 14px; font-weight: 600; margin: 12px 0 6px; }
-
-/* Badge */
-.badge {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-size: 11px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-.badge.ok { background: #ecfdf5; color: var(--success); }
-.badge.warn { background: #fffbeb; color: var(--warning); }
-.badge.info { background: var(--primary-light); color: var(--primary); }
-.badge.gray { background: #f3f4f6; color: var(--text-secondary); }
-.badge.red { background: #fef2f2; color: var(--danger); }
-
-/* Stats grid */
-.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 16px; }
-.stat-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 14px;
-  text-align: center;
-}
-.stat-card .value { font-size: 22px; font-weight: 700; }
-.stat-card .label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-
-/* Policy */
-.policy-item {
-  padding: 12px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  margin-bottom: 8px;
-}
-.policy-item .source { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-.policy-item a { color: var(--primary); text-decoration: none; font-size: 12px; }
-.policy-item a:hover { text-decoration: underline; }
-
-/* Table */
-.simple-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.simple-table th, .simple-table td { padding: 7px 10px; text-align: left; border-bottom: 1px solid var(--border); }
-.simple-table th { font-weight: 600; color: var(--text-muted); font-size: 11px; text-transform: uppercase; }
-
-.empty-state { text-align: center; padding: 28px 20px; color: var(--text-muted); font-size: 13px; }
-.empty-state .icon { font-size: 28px; margin-bottom: 6px; opacity: 0.3; }
-
-/* === RULE CARDS === */
-.rule-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 10px; }
-.rule-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 14px 16px;
-  cursor: pointer;
-  transition: border-color 0.15s, box-shadow 0.15s;
-  position: relative;
-}
-.rule-card:hover { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
-.rule-card .rc-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
-.rule-card .rc-title { font-size: 14px; font-weight: 600; line-height: 1.3; }
-.rule-card .rc-summary { font-size: 12px; color: var(--text-secondary); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 8px; }
-.rule-card .rc-meta { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
-.rule-card .rc-file { font-size: 11px; color: var(--text-muted); }
-
-/* Expanded rule detail */
-.rule-detail-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.3);
-  z-index: 100;
-  align-items: center;
-  justify-content: center;
-}
-.rule-detail-overlay.open { display: flex; }
-.rule-detail {
-  background: var(--bg-card);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  width: 90%;
-  max-width: 700px;
-  max-height: 85vh;
-  overflow-y: auto;
-  padding: 24px;
-  position: relative;
-}
-.rule-detail .rd-close {
-  position: absolute;
-  top: 12px;
-  right: 16px;
-  width: 32px;
-  height: 32px;
-  border: 1px solid var(--border);
-  border-radius: 50%;
-  background: var(--bg-card);
-  font-size: 18px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-muted);
-}
-.rule-detail .rd-close:hover { background: var(--bg-hover); }
-.rule-detail h3 { font-size: 18px; margin-bottom: 4px; }
-.rule-detail .rd-section { margin-top: 14px; padding: 12px; background: #fafafa; border-radius: var(--radius-sm); }
-.rule-detail .rd-section h4 { font-size: 13px; font-weight: 600; margin-bottom: 4px; color: var(--primary); }
-.rule-detail .rd-section p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
-
-/* === DOMAIN FILTER === */
-.filter-bar {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  margin-bottom: 12px;
-  align-items: center;
-}
-.filter-bar .filter-btn {
-  padding: 4px 10px;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  background: var(--bg-card);
-  font-size: 12px;
-  cursor: pointer;
-  font-family: inherit;
-  color: var(--text-secondary);
-  transition: all 0.15s;
-}
-.filter-bar .filter-btn:hover { border-color: var(--primary); color: var(--primary); }
-.filter-bar .filter-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
-.filter-bar .filter-label { font-size: 12px; color: var(--text-muted); margin-right: 4px; }
-
-/* === WIKI BROWSER === */
-/* === SOONSAL BRIEFING === */
-.briefing-day {
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  margin-bottom: 10px;
-  overflow: hidden;
-}
-.briefing-day .bd-header {
-  padding: 8px 12px;
-  background: #f9fafb;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
+.main-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 24px;
 }
-.briefing-day .bd-header:hover { background: #f3f4f6; }
-.briefing-day .bd-body {
-  display: none;
-  padding: 12px;
-  font-size: 13px;
-  line-height: 1.7;
-  color: var(--text-secondary);
-  border-top: 1px solid var(--border);
-}
-.briefing-day .bd-body.open { display: block; }
-.briefing-day .bd-type { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
-.briefing-day .bd-section { margin-bottom: 10px; }
-.briefing-day .bd-section h4 { font-size: 12px; color: var(--primary); margin-bottom: 2px; }
-.briefing-day .bd-markets { font-size: 12px; color: var(--text-muted); padding: 6px 8px; background: #fafafa; border-radius: 4px; margin-top: 6px; }
-.briefing-tabs { display: flex; gap: 4px; margin-bottom: 8px; }
-.briefing-tabs button { padding: 4px 10px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-card); font-size: 11px; cursor: pointer; font-family: inherit; }
-.briefing-tabs button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.main-header h2 { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+.main-header .header-date { font-size: 12px; color: var(--text-tertiary); }
 
-/* Market ticker */
-.market-ticker { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 8px; margin-bottom: 12px; }
-.market-ticker .ticker-item { padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); display: flex; justify-content: space-between; align-items: baseline; }
-.ticker-item .ticker-name { font-size: 11px; color: var(--text-muted); }
-.ticker-item .ticker-price { font-size: 15px; font-weight: 700; }
-.ticker-item .ticker-date { font-size: 10px; color: var(--text-muted); }
-
-.wiki-search {
-  width: 100%;
-  padding: 8px 12px;
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+.card {
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  font-size: 13px;
-  font-family: inherit;
-  margin-bottom: 12px;
-  outline: none;
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
 }
-.wiki-search:focus { border-color: var(--primary); }
-.wiki-group { margin-bottom: 16px; }
-.wiki-group h3 { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
-.wiki-item {
-  padding: 8px 0;
-  border-bottom: 1px solid #f0f0f0;
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
+.card.accent-foundation { border-left: 3px solid var(--foundation); }
+.card.accent-operations { border-left: 3px solid var(--operations); }
+.card.accent-data { border-left: 3px solid var(--data); }
+.card h3 { font-size: 14px; font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.card h3 .card-badge {
+  font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 10px;
+  letter-spacing: 0.3px;
 }
-.wiki-item:last-child { border-bottom: none; }
-.wiki-item .wi-title { font-size: 13px; font-weight: 500; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.wiki-item .wi-summary { font-size: 12px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 2; }
-.wiki-item .wi-meta { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+.card-badge.foundation { background: var(--foundation-light); color: var(--foundation); }
+.card-badge.operations { background: var(--operations-light); color: var(--operations); }
 
-/* === ARCHITECTURE === */
-.arch-axis { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-bottom: 16px; }
-.arch-card {
-  background: var(--bg-card);
+.stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 16px; }
+.stat {
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 16px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
 }
-.arch-card h3 { font-size: 15px; margin-bottom: 6px; }
-.arch-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
-.arch-card .arch-icon { font-size: 24px; margin-bottom: 6px; }
-.arch-flow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin: 16px 0;
-  flex-wrap: wrap;
-  font-size: 13px;
-}
-.arch-flow .node {
-  padding: 8px 14px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--bg-card);
-  font-weight: 500;
-}
-.arch-flow .arrow { color: var(--text-muted); font-size: 18px; }
+.stat .stat-value { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; font-family: 'JetBrains Mono', monospace; }
+.stat .stat-label { font-size: 11px; color: var(--text-tertiary); margin-top: 3px; }
+.stat.accent .stat-value { color: var(--foundation); }
 
-/* Responsive */
-@media (max-width: 640px) {
-  .container { padding: 8px; }
-  .stats-grid { grid-template-columns: repeat(2, 1fr); }
-  .rule-grid { grid-template-columns: 1fr; }
-  .arch-axis { grid-template-columns: 1fr; }
-  nav.tabs button { font-size: 11px; padding: 6px 8px; }
-  .wiki-item { flex-direction: column; gap: 2px; }
-  .wiki-item .wi-summary { flex: none; }
+.pulse { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 5px; }
+.pulse.ok { background: var(--operations); animation: pulse-anim 2s infinite; }
+@keyframes pulse-anim { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+.badge {
+  display: inline-block; padding: 2px 8px; border-radius: 10px;
+  font-size: 10.5px; font-weight: 600; white-space: nowrap; letter-spacing: 0.2px;
+}
+.badge.foundation { background: var(--foundation-light); color: var(--foundation); }
+.badge.operations { background: var(--operations-light); color: var(--operations); }
+.badge.data { background: var(--data-light); color: var(--data); }
+.badge.muted { background: var(--code-bg); color: var(--text-secondary); }
+
+.policy-item {
+  padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 6px;
+  border-left: 3px solid var(--operations);
+}
+.policy-item .pi-source { font-size: 10.5px; color: var(--text-tertiary); margin-top: 2px; }
+.policy-item a { color: var(--foundation); text-decoration: none; font-size: 12px; font-weight: 500; }
+.policy-item a:hover { text-decoration: underline; }
+
+.briefing-day { border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 8px; overflow: hidden; }
+.briefing-day .bd-header {
+  padding: 10px 14px; background: var(--code-bg); font-size: 13px; font-weight: 600;
+  cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+  transition: background 0.12s;
+}
+.briefing-day .bd-header:hover { background: #ECECEA; }
+.briefing-day .bd-body { display: none; padding: 14px; font-size: 13px; line-height: 1.65; color: var(--text-secondary); border-top: 1px solid var(--border); }
+.briefing-day .bd-body.open { display: block; }
+.bd-section { margin-bottom: 10px; }
+.bd-section h4 { font-size: 12px; color: var(--foundation); font-weight: 600; margin-bottom: 2px; }
+.bd-markets { font-size: 11.5px; color: var(--text-tertiary); padding: 8px 10px; background: var(--code-bg); border-radius: var(--radius-xs); margin-top: 6px; line-height: 1.6; }
+
+.ticker-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 8px; margin-bottom: 16px; }
+.ticker-item { padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius); display: flex; flex-direction: column; box-shadow: var(--shadow-sm); }
+.ticker-item .ticker-name { font-size: 10.5px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+.ticker-item .ticker-price { font-size: 20px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+.ticker-item .ticker-date { font-size: 10px; color: var(--text-tertiary); margin-top: 2px; }
+
+.simple-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.simple-table th, .simple-table td { padding: 7px 10px; text-align: left; border-bottom: 1px solid var(--border); }
+.simple-table th { font-weight: 600; color: var(--text-tertiary); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+.rule-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
+.rule-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 14px 16px; cursor: pointer; transition: all 0.15s; box-shadow: var(--shadow-sm);
+}
+.rule-card:hover { border-color: var(--foundation); box-shadow: var(--shadow-md); }
+.rule-card .rc-title { font-size: 13.5px; font-weight: 600; margin-bottom: 4px; }
+.rule-card .rc-summary { font-size: 12px; color: var(--text-secondary); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 8px; }
+.rule-card .rc-meta { display: flex; gap: 4px; flex-wrap: wrap; }
+
+.filter-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
+.filter-bar .fbtn {
+  padding: 4px 10px; border: 1px solid var(--border); border-radius: 14px;
+  background: var(--surface); font-size: 11.5px; cursor: pointer; font-family: inherit; color: var(--text-secondary);
+  transition: all 0.12s;
+}
+.filter-bar .fbtn:hover { border-color: var(--foundation); color: var(--foundation); }
+.filter-bar .fbtn.active { background: var(--foundation); color: #fff; border-color: var(--foundation); }
+.filter-bar .flabel { font-size: 11px; color: var(--text-tertiary); margin-right: 4px; }
+
+.wiki-search {
+  width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+  font-size: 13px; font-family: inherit; margin-bottom: 12px; outline: none; background: var(--surface);
+}
+.wiki-search:focus { border-color: var(--foundation); }
+.wiki-group { margin-bottom: 14px; }
+.wiki-group h3 { font-size: 11px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.wiki-item { padding: 7px 0; border-bottom: 1px solid #F0F0EE; display: flex; align-items: baseline; gap: 8px; font-size: 12.5px; }
+.wiki-item:last-child { border-bottom: none; }
+.wiki-item .wi-title { font-weight: 500; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wiki-item .wi-summary { color: var(--text-tertiary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 2.5; }
+.wiki-item .wi-meta { font-size: 10.5px; color: var(--text-tertiary); white-space: nowrap; }
+
+.modal-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.25);
+  z-index: 100; align-items: center; justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border);
+  width: 90%; max-width: 680px; max-height: 85vh; overflow-y: auto; padding: 24px; position: relative;
+}
+.modal-close {
+  position: absolute; top: 12px; right: 16px; width: 28px; height: 28px;
+  border: 1px solid var(--border); border-radius: 50%; background: var(--surface);
+  font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-tertiary);
+}
+.modal-close:hover { background: var(--code-bg); }
+.modal-section { margin-top: 12px; padding: 12px; background: var(--code-bg); border-radius: var(--radius-sm); }
+.modal-section h4 { font-size: 12px; font-weight: 600; color: var(--foundation); margin-bottom: 3px; }
+.modal-section p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+.arch-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.arch-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 18px; box-shadow: var(--shadow-sm);
+}
+.arch-card.foundation { border-top: 3px solid var(--foundation); }
+.arch-card.operations { border-top: 3px solid var(--operations); }
+.arch-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.2px; }
+.arch-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.65; }
+
+.maint-item { padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; gap: 12px; }
+.maint-item:last-child { border-bottom: none; }
+.maint-item .maint-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; background: var(--data); }
+.maint-item .maint-label { font-size: 13px; font-weight: 600; min-width: 130px; }
+.maint-item .maint-desc { font-size: 13px; color: var(--text-secondary); }
+
+.flow-row { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 12px 0; }
+.flow-node { padding: 8px 16px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); font-size: 13px; font-weight: 500; box-shadow: var(--shadow-sm); }
+.flow-arrow { color: var(--text-tertiary); font-size: 16px; }
+
+.empty-state { text-align: center; padding: 28px; color: var(--text-tertiary); font-size: 13px; }
+.empty-state .eicon { font-size: 24px; margin-bottom: 6px; opacity: 0.3; }
+
+.overview-hero { margin-bottom: 20px; }
+.overview-hero p { font-size: 14px; color: var(--text-secondary); max-width: 600px; line-height: 1.65; }
+
+@media (max-width: 768px) {
+  body { flex-direction: column; }
+  .sidebar { width: 100%; min-width: 0; height: auto; position: static; flex-direction: row; flex-wrap: wrap; padding: 12px 16px; gap: 8px; }
+  .sidebar-brand { display: none; }
+  .sidebar-section { padding: 0; margin: 0; display: flex; gap: 4px; flex-wrap: wrap; }
+  .sidebar-section-label { display: none; }
+  .sidebar-nav-item { width: auto; font-size: 12px; padding: 5px 10px; }
+  .main { padding: 16px; }
+  .stat-row { grid-template-columns: repeat(2, 1fr); }
+  .cards-grid { grid-template-columns: 1fr; }
+  .ticker-grid { grid-template-columns: repeat(2, 1fr); }
 }
 </style>
 </head>
 <body>
-<header>
-  <div class="header-inner">
-    <h1><span class="status-dot ok"></span>JSM Dashboard</h1>
-    <span class="date" id="currentDate"></span>
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <h1>JSM Command</h1>
+    <div class="brand-sub">personal agent system v3</div>
   </div>
-</header>
-
-<div class="container">
-  <nav class="tabs">
-    <button class="active" onclick="switchTab('routine')">루틴</button>
-    <button onclick="switchTab('economy')">경제</button>
-    <button onclick="switchTab('system')">시스템</button>
-    <button onclick="switchTab('architecture')">아키텍처</button>
-    <button onclick="switchTab('wiki')">위키</button>
-    <button onclick="switchTab('rules')">규칙</button>
-  </nav>
-
-  <!-- ===== ROUTINE ===== -->
-  <div id="tab-routine">
-    <div class="stats-grid">
-      <div class="stat-card"><div class="value">12</div><div class="label">Active 루틴</div></div>
-      <div class="stat-card"><div class="value" id="stat-lastScan">--</div><div class="label">마지막 정책 스캔</div></div>
-      <div class="stat-card"><div class="value" id="stat-promptScore">--</div><div class="label">프롬프트 점수</div></div>
-      <div class="stat-card"><div class="value">₩150만</div><div class="label">포트폴리오</div></div>
-    </div>
-    <div class="card"><h2>청년 정책 + 경희대 <span class="badge info">매주 일요일</span></h2><div id="policyList"></div></div>
-    <div class="card"><h2>데일리 투자 브리핑 <span class="badge info">매일</span></h2><div id="dailyBriefing"></div></div>
-    <div class="card"><h2>주간 투자 보고서 <span class="badge info">매주 일요일</span></h2><div id="weeklyReport"></div></div>
-    <div class="card"><h2>주간 프롬프트 리뷰 <span class="badge info">매주 일요일</span></h2><div id="promptReview"></div></div>
-    <div class="card"><h2>순살 브리핑 최근 <span class="badge info">7일치</span></h2><div id="soonsalList"></div></div>
+  <div class="sidebar-section">
+    <button class="sidebar-nav-item active" onclick="navigate('overview')" data-nav="overview">
+      <span class="nav-icon">&#9679;</span> Overview
+    </button>
   </div>
-
-  <!-- ===== ECONOMY ===== -->
-  <div id="tab-economy" style="display:none">
-    <div class="market-ticker" id="marketTicker"></div>
-    <div class="card"><h2>포트폴리오</h2><div id="portfolioSnapshot"></div></div>
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">Foundation</div>
+    <button class="sidebar-nav-item" onclick="navigate('architecture')" data-nav="architecture">
+      <span class="nav-dot"></span> Architecture
+    </button>
+    <button class="sidebar-nav-item" onclick="navigate('wiki')" data-nav="wiki">
+      <span class="nav-dot"></span> Wiki Browser
+    </button>
+    <button class="sidebar-nav-item" onclick="navigate('rules')" data-nav="rules">
+      <span class="nav-dot"></span> Rules Reference
+    </button>
   </div>
-
-  <!-- ===== SYSTEM ===== -->
-  <div id="tab-system" style="display:none">
-    <div class="stats-grid">
-      <div class="stat-card"><div class="value">~340</div><div class="label">Wiki Pages</div></div>
-      <div class="stat-card"><div class="value">9</div><div class="label">Skills</div></div>
-      <div class="stat-card"><div class="value">15</div><div class="label">항상 켜진 규칙</div></div>
-      <div class="stat-card"><div class="value"><span class="badge ok">Healthy</span></div><div class="label">상태</div></div>
-    </div>
-    <div class="card"><h2>스킬 인벤토리</h2><div id="skillInventory"></div></div>
-    <div class="card"><h2>자가 점검</h2><div id="auditResult"></div></div>
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">Operations</div>
+    <button class="sidebar-nav-item ops" onclick="navigate('routines')" data-nav="routines">
+      <span class="nav-dot" style="background:var(--operations)"></span> Routines & Briefings
+    </button>
+    <button class="sidebar-nav-item ops" onclick="navigate('economy')" data-nav="economy">
+      <span class="nav-dot" style="background:var(--operations)"></span> Investment
+    </button>
+    <button class="sidebar-nav-item ops" onclick="navigate('system')" data-nav="system">
+      <span class="nav-dot" style="background:var(--operations)"></span> System Health
+    </button>
   </div>
+</aside>
 
-  <!-- ===== ARCHITECTURE ===== -->
-  <div id="tab-architecture" style="display:none">
-    <div class="arch-axis">
-      <div class="arch-card">
-        <div class="arch-icon">&#128214;</div>
-        <h3>위키 (Wiki)</h3>
-        <p>Obsidian vault <code>2_Wiki/</code>, flat directory, ~340 pages. 장기 지식 저장소. 개념, 결정, 인사이트, 프로젝트 명세. prose relation으로 페이지 간 연결. wiki-verify.mdc 10-step 자동 품질 검사.</p>
-      </div>
-      <div class="arch-card">
-        <div class="arch-icon">&#127760;</div>
-        <h3>웹사이트 (Dashboard)</h3>
-        <p><code>jsm0308.github.io/home/dashboard.html</code>. 루틴 실행 결과를 한눈에 확인하는 대시보드. 루틴, 경제, 시스템, 아키텍처, 위키, 규칙 6개 탭. <code>update_dashboard.py</code>로 데이터 갱신, GitHub Pages로 자동 배포.</p>
-      </div>
-      <div class="arch-card">
-        <div class="arch-icon">&#9881;</div>
-        <h3>시스템 (Rules + Scripts)</h3>
-        <p><code>.cursor/rules/</code> 26개 .mdc 파일로 Coach 행동 규칙 정의. <code>scripts/</code> 자동화 스크립트 (데이터 수집, 보고서 생성, 이메일 발송). DeepSeek v4 Pro가 규칙을 읽고 판단.</p>
-      </div>
-    </div>
+<main class="main" id="mainContent"></main>
 
-    <div class="card">
-      <h2>데이터 흐름</h2>
-      <div class="arch-flow">
-        <span class="node">You (요청)</span>
-        <span class="arrow">→</span>
-        <span class="node">Coach (DeepSeek)</span>
-        <span class="arrow">→</span>
-        <span class="node">WebSearch + Scripts</span>
-      </div>
-      <div class="arch-flow" style="margin-top:4px">
-        <span class="node" style="font-size:12px">Wiki (영구 저장)</span>
-        <span class="node" style="font-size:12px">Dashboard (웹)</span>
-        <span class="node" style="font-size:12px">Email (알림)</span>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>주간 유지보수 (매주 일요일)</h2>
-      <div style="display:grid; gap:8px; font-size:13px">
-        <div><strong>Rule Pruning</strong>: 항상 켜진 규칙 15개가 7개 초과인지 확인. 안 쓰는 규칙 끄기 제안.</div>
-        <div><strong>Adversarial Audit</strong>: 위키 frontmatter, 깨진 wikilink, orphan 페이지 샘플링 점검.</div>
-        <div><strong>Skill Inventory</strong>: 9개 스킬 버전 + 작동 상태 갱신.</div>
-        <div><strong>Prompt Journal</strong>: 지난주 프롬프트 분석, 점수 매기기, 개선 제안.</div>
-        <div><strong>Domain Cleanup</strong>: 만료된 데드라인, 오래된 결정 정리 제안.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== WIKI ===== -->
-  <div id="tab-wiki" style="display:none">
-    <input type="text" class="wiki-search" id="wikiSearch" placeholder="위키 페이지 검색 (제목, 요약)..." oninput="filterWiki()">
-    <div class="filter-bar" id="wikiFilters"></div>
-    <div id="wikiContainer"></div>
-  </div>
-
-  <!-- ===== RULES ===== -->
-  <div id="tab-rules" style="display:none">
-    <div class="filter-bar" id="ruleFilters">
-      <span class="filter-label">도메인:</span>
-    </div>
-    <div class="rule-grid" id="ruleGrid"></div>
-  </div>
-</div>
-
-<!-- Rule detail overlay -->
-<div class="rule-detail-overlay" id="ruleOverlay" onclick="if(event.target===this)closeRuleDetail()">
-  <div class="rule-detail" id="ruleDetail"></div>
+<div class="modal-overlay" id="ruleModalOverlay" onclick="if(event.target===this)closeRuleModal()">
+  <div class="modal" id="ruleModal"></div>
 </div>
 
 <script>
-// === State ===
-let allRules = [];
-let allWiki = [];
-let activeWikiDomain = 'All';
+let currentView = 'overview';
+let cachedRules = null;
+let cachedWiki = null;
+let cachedInvestment = null;
+let cachedSoonsal = null;
+let cachedPolicy = null;
+let cachedHealth = null;
 let activeRuleDomain = 'All';
+let activeWikiDomain = 'All';
 
-// === Tab Switching ===
-const TAB_IDS = ['routine','economy','system','architecture','wiki','rules'];
-function switchTab(name) {
-  TAB_IDS.forEach(id => document.getElementById('tab-'+id).style.display = (id===name)?'block':'none');
-  document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
-  document.querySelector(`nav.tabs button[onclick="switchTab('${name}')"]`).classList.add('active');
+function navigate(view) {
+  currentView = view;
+  document.querySelectorAll('.sidebar-nav-item').forEach(b => b.classList.remove('active'));
+  const btn = document.querySelector(`[data-nav="${view}"]`);
+  if (btn) { btn.classList.add('active'); if (btn.classList.contains('ops')) btn.classList.add('ops'); }
+  renderView(view);
 }
 
-document.getElementById('currentDate').textContent = new Date().toLocaleDateString('ko-KR', {year:'numeric',month:'long',day:'numeric',weekday:'short'});
-
-async function loadJSON(path) {
-  try { const r = await fetch(path); if(!r.ok) throw new Error('HTTP '+r.status); return await r.json(); }
-  catch(e) { console.error(path, e); return null; }
-}
-
-// === POLICY ===
-async function renderPolicy() {
-  const d = await loadJSON('data/policy-scan.json');
-  const el = document.getElementById('policyList');
-  if(!d||!d.youthPolicies?.length&&!d.kyungheeBenefits?.length) { el.innerHTML='<div class="empty-state"><div class="icon">--</div>일요일에 첫 스캔 예정</div>'; return; }
-  document.getElementById('stat-lastScan').textContent = d.lastScan||'--';
-  let h='';
-  if(d.youthPolicies?.length){h+='<h3>정부 청년 정책</h3>';d.youthPolicies.forEach(p=>{h+=`<div class="policy-item"><strong>${p.title}</strong><div class="source">${p.source} ${p.deadline?'| 마감:'+p.deadline:''}</div><p style="margin-top:4px;font-size:13px;color:var(--text-secondary)">${p.summary}</p>${p.link?`<a href="${p.link}" target="_blank">바로가기</a>`:''}</div>`;});}
-  if(d.kyungheeBenefits?.length){h+='<h3 style="margin-top:12px">경희대</h3>';d.kyungheeBenefits.forEach(p=>{h+=`<div class="policy-item"><strong>${p.title}</strong><div class="source">${p.source} ${p.deadline?'| 마감:'+p.deadline:''}</div><p style="margin-top:4px;font-size:13px;color:var(--text-secondary)">${p.summary}</p>${p.link?`<a href="${p.link}" target="_blank">바로가기</a>`:''}</div>`;});}
-  el.innerHTML=h;
-}
-
-// === INVESTMENT ===
-async function renderInvestment() {
-  const d = await loadJSON('data/investment.json'); if(!d) return;
-  const di=d.investmentDaily;
-  document.getElementById('dailyBriefing').innerHTML=di&&di.summary&&di.summary.indexOf('아직')===-1?`<p style="font-size:13px;color:var(--text-secondary)">${di.summary}</p><p style="font-size:12px;color:var(--text-muted);margin-top:4px">${di.date}</p>`:'<div class="empty-state"><div class="icon">--</div>데이트리 투자 브리핑 대기 중</div>';
-  const wi=d.investmentWeekly;
-  document.getElementById('weeklyReport').innerHTML=wi&&wi.summary&&wi.summary.indexOf('아직')===-1?`<p style="font-size:13px;color:var(--text-secondary)">${wi.summary}</p><p style="font-size:12px;color:var(--text-muted);margin-top:4px">${wi.date}</p>`:'<div class="empty-state"><div class="icon">--</div>주간 보고서 대기 중</div>';
-  const pf=d.portfolio;
-  document.getElementById('portfolioSnapshot').innerHTML=pf?`<p style="font-size:14px;margin-bottom:8px">총액: <strong>₩${pf.totalValue.toLocaleString()}</strong>${pf.needsRebalance?' <span class="badge warn">리밸런싱 필요</span>':''}</p><table class="simple-table"><thead><tr><th>자산</th><th>금액</th><th>목표</th><th>Drift</th></tr></thead><tbody>${pf.allocations.map(a=>`<tr><td>${a.asset}</td><td>₩${a.amount.toLocaleString()}</td><td>${a.target}</td><td>${a.drift}%</td></tr>`).join('')}</tbody></table>`:'<div class="empty-state"><div class="icon">--</div>데이터 없음</div>';
-
-  // Real market data
-  const m = d.markets || {};
-  const ticker = document.getElementById('marketTicker');
-  if(m.btc?.price) {
-    const btcKr = (m.btc.price/10000).toFixed(0) + '만원';
-    const spx = m.sp500?.price ? m.sp500.price.toLocaleString() : '--';
-    const kospi = m.kospi?.price ? m.kospi.price.toLocaleString() : '--';
-    const nasdaq = m.nasdaq?.price ? m.nasdaq.price.toLocaleString() : '--';
-    ticker.innerHTML = `
-      <div class="ticker-item"><span class="ticker-name">BTC (KRW)</span><span class="ticker-price">${btcKr}</span><span class="ticker-date">${(m.btc.date||'').slice(0,10)}</span></div>
-      <div class="ticker-item"><span class="ticker-name">S&P 500</span><span class="ticker-price">${spx}</span><span class="ticker-date">${(m.sp500?.date||'').slice(0,10)}</span></div>
-      <div class="ticker-item"><span class="ticker-name">KOSPI</span><span class="ticker-price">${kospi}</span><span class="ticker-date">${(m.kospi?.date||'').slice(0,10)}</span></div>
-      <div class="ticker-item"><span class="ticker-name">NASDAQ</span><span class="ticker-price">${nasdaq}</span><span class="ticker-date">${(m.nasdaq?.date||'').slice(0,10)}</span></div>`;
+function renderView(view) {
+  const m = document.getElementById('mainContent');
+  switch (view) {
+    case 'overview': renderOverview(m); break;
+    case 'architecture': renderArchitecture(m); break;
+    case 'wiki': renderWikiView(m); break;
+    case 'rules': renderRulesView(m); break;
+    case 'routines': renderRoutinesView(m); break;
+    case 'economy': renderEconomyView(m); break;
+    case 'system': renderSystemView(m); break;
   }
 }
 
-// === SYSTEM ===
-async function renderSystem() {
-  const d = await loadJSON('data/system-health.json'); if(!d) return;
-  const pj=d.promptJournal;
-  document.getElementById('promptReview').innerHTML=pj&&pj.totalSessions>0?`<p>${pj.weekOf} · ${pj.totalSessions}세션, ${pj.totalPrompts}프롬프트</p><p style="font-size:13px;color:var(--text-secondary);margin-top:4px">평균 점수: <strong>${pj.avgScore}</strong></p><p style="font-size:13px;color:var(--text-secondary)">Focus: ${pj.focus}</p>`:`<div class="empty-state"><div class="icon">--</div>${pj?.focus||'아직 분석되지 않음'}</div>`;
-  const sys=d.systemHealth;
-  if(sys?.skills) document.getElementById('skillInventory').innerHTML=`<table class="simple-table"><thead><tr><th>스킬</th><th>버전</th><th>상태</th><th>마지막 테스트</th></tr></thead><tbody>${sys.skills.map(s=>`<tr><td><strong>${s.name}</strong></td><td>${s.version}</td><td><span class="badge ${s.status==='active'?'ok':'warn'}">${s.status}</span></td><td>${s.lastTested}</td></tr>`).join('')}</tbody></table>`;
-  document.getElementById('auditResult').innerHTML=sys?.lastAudit?`<p>마지막 점검: ${sys.lastAudit}</p><p>Orphan: ${sys.orphanPages}, Broken links: ${sys.brokenLinks}</p><p>Rules: always ${sys.alwaysOnRules} (target ${sys.targetMax})</p>`:'<div class="empty-state"><div class="icon">--</div>일요일 첫 점검 예정</div>';
-}
-
-// === RULES ===
-async function renderRules() {
-  allRules = await loadJSON('data/rules.json') || [];
-  buildRuleFilters();
-  renderRuleGrid();
-}
-
-function buildRuleFilters() {
-  const domains = new Set();
-  allRules.forEach(r => (r.domain||[]).forEach(d => domains.add(d)));
-  const bar = document.getElementById('ruleFilters');
-  let html = '<span class="filter-label">도메인:</span>';
-  html += `<button class="filter-btn active" onclick="filterRules('All')">전체 (${allRules.length})</button>`;
-  [...domains].sort().forEach(d => {
-    const count = allRules.filter(r => (r.domain||[]).includes(d)).length;
-    html += `<button class="filter-btn" onclick="filterRules('${d}')">${d} (${count})</button>`;
-  });
-  bar.innerHTML = html;
-}
-
-function filterRules(domain) {
-  activeRuleDomain = domain;
-  document.querySelectorAll('#ruleFilters .filter-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector(`#ruleFilters .filter-btn[onclick="filterRules('${domain}')"]`).classList.add('active');
-  renderRuleGrid();
-}
-
-function renderRuleGrid() {
-  const filtered = activeRuleDomain === 'All' ? allRules : allRules.filter(r => (r.domain||[]).includes(activeRuleDomain));
-  const grid = document.getElementById('ruleGrid');
-  grid.innerHTML = filtered.map((r, i) => {
-    const badges = r.alwaysApply ? '<span class="badge info">always</span>' : '<span class="badge ok">on-demand</span>';
-    const domainBadges = (r.domain||[]).slice(0,3).map(d => `<span class="badge gray">${d}</span>`).join(' ');
-    return `<div class="rule-card" onclick="openRuleDetail(${i})">
-      <div class="rc-header"><span class="rc-title">${esc(r.title)}</span></div>
-      <div class="rc-summary">${esc(r.summary||'')}</div>
-      <div class="rc-meta">${badges} ${domainBadges} <span class="rc-file">${esc(r.file)}</span></div>
+function renderOverview(main) {
+  const mk = cachedInvestment?.markets || {};
+  let tickers = '';
+  if (mk.btc?.price) {
+    tickers = `<div class="ticker-grid">
+      <div class="ticker-item"><span class="ticker-name">BTC (KRW)</span><span class="ticker-price">${(mk.btc.price/10000).toFixed(0)}<span style="font-size:11px;font-weight:400">만원</span></span><span class="ticker-date">${(mk.btc.date||'').slice(0,10)}</span></div>
+      <div class="ticker-item"><span class="ticker-name">S&P 500</span><span class="ticker-price">${mk.sp500?.price?.toLocaleString()||'--'}</span><span class="ticker-date">${(mk.sp500?.date||'').slice(0,10)}</span></div>
+      <div class="ticker-item"><span class="ticker-name">KOSPI</span><span class="ticker-price">${mk.kospi?.price?.toLocaleString()||'--'}</span><span class="ticker-date">${(mk.kospi?.date||'').slice(0,10)}</span></div>
+      <div class="ticker-item"><span class="ticker-name">NASDAQ</span><span class="ticker-price">${mk.nasdaq?.price?.toLocaleString()||'--'}</span><span class="ticker-date">${(mk.nasdaq?.date||'').slice(0,10)}</span></div>
     </div>`;
+  }
+  const sd = cachedSoonsal?.length || 0;
+  const wp = cachedWiki?.length || 0;
+  const rc = cachedRules?.length || 0;
+  main.innerHTML = `<div class="main-header"><h2>Overview</h2><span class="header-date">${new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'short'})}</span></div>
+    <div class="overview-hero"><p>Self-built AI agent system. Three axes: <strong style="color:var(--foundation)">Wiki</strong> for long-term knowledge, <strong style="color:var(--operations)">Dashboard</strong> for real-time results, <strong style="color:var(--foundation)">Rules</strong> for agent behavior. Running 12 automated routines across investment, policy scanning, research, and system maintenance.</p></div>
+    <div class="stat-row">
+      <div class="stat"><div class="stat-value"><span class="pulse ok"></span>Live</div><div class="stat-label">System Status</div></div>
+      <div class="stat accent"><div class="stat-value">${wp}</div><div class="stat-label">Wiki Pages</div></div>
+      <div class="stat"><div class="stat-value">12</div><div class="stat-label">Active Routines</div></div>
+      <div class="stat"><div class="stat-value">${rc}</div><div class="stat-label">Rules</div></div>
+    </div>
+    <div class="cards-grid">
+      <div class="card accent-foundation"><h3>Foundation <span class="card-badge foundation">System</span></h3><p style="font-size:13px;color:var(--text-secondary);line-height:1.65">Architecture defines how the system works. Wiki stores 340+ pages of long-term knowledge. Rules encode 26 behavioral directives for the Coach agent. These are the bones.</p></div>
+      <div class="card accent-operations"><h3>Operations <span class="card-badge operations">Runtime</span></h3><p style="font-size:13px;color:var(--text-secondary);line-height:1.65">Routines run on schedule: daily investment briefings, weekly policy scans (gov + Kyung Hee University), prompt journal analysis. Investment tracks portfolio and market data in real-time.</p></div>
+    </div>
+    ${tickers}
+    <div class="card"><h3>Recent Briefings <span class="card-badge muted">${sd} days cached</span></h3><div id="ovBriefings">${renderBriefingPreview()}</div></div>`;
+}
+
+function renderBriefingPreview() {
+  if (!cachedSoonsal?.length) return '<div class="empty-state"><div class="eicon">--</div>No briefings</div>';
+  return cachedSoonsal.slice(0,3).map(d => {
+    const ts=Object.keys(d.types), tl={briefing:'Briefing',crypto:'Crypto',cardnews:'Card'};
+    const ds=d.date.slice(0,4)+'-'+d.date.slice(4,6)+'-'+d.date.slice(6,8);
+    return `<div class="briefing-day"><div class="bd-header" onclick="this.nextElementSibling.classList.toggle('open')"><span>${ds}</span><span style="font-size:11px;color:var(--text-tertiary)">${ts.map(t=>tl[t]||t).join(', ')}</span></div><div class="bd-body">${ts.map(t=>{const b=d.types[t];return`<div class="bd-section"><h4>${esc(b.title)}</h4><p>${esc(b.summary||'').slice(0,250)}...</p>${b.markets?.length?`<div class="bd-markets">${b.markets.map(m=>esc(m)).join('<br>')}</div>`:''}</div>`}).join('')}</div></div>`;
   }).join('');
 }
 
-function openRuleDetail(idx) {
-  const filtered = activeRuleDomain === 'All' ? allRules : allRules.filter(r => (r.domain||[]).includes(activeRuleDomain));
-  const r = filtered[idx]; if(!r) return;
-  let html = `<button class="rd-close" onclick="closeRuleDetail()">x</button>`;
-  html += `<h3>${esc(r.title)}</h3>`;
-  html += `<p style="font-size:12px;color:var(--text-muted);margin-top:4px">${esc(r.file)} · ${r.alwaysApply?'<span class="badge info">always</span>':'<span class="badge ok">on-demand</span>'} ${(r.domain||[]).map(d=>`<span class="badge gray">${d}</span>`).join(' ')}</p>`;
-  html += `<p style="font-size:13px;color:var(--text-secondary);margin-top:8px;line-height:1.7">${esc(r.subtitle||'')}</p>`;
-  if(r.sections&&r.sections.length){
-    r.sections.forEach(s => {
-      html += `<div class="rd-section"><h4>${esc(s.heading)}</h4><p>${esc(s.body)}</p></div>`;
-    });
-  }
-  document.getElementById('ruleDetail').innerHTML = html;
-  document.getElementById('ruleOverlay').classList.add('open');
+function renderArchitecture(main) {
+  main.innerHTML = `<div class="main-header"><h2>System Architecture</h2><span class="header-date">3-Axis Design</span></div>
+    <div class="arch-grid">
+      <div class="arch-card foundation"><h3>Wiki</h3><p>Obsidian vault <code>2_Wiki/</code>, flat directory, ~340 pages. Long-term knowledge store: concepts, decisions, insights, project specs. Connected via prose relations. Auto-verified with 10-step wiki-verify checklist every Sunday.</p></div>
+      <div class="arch-card foundation"><h3>Dashboard</h3><p><code>jsm0308.github.io/home/dashboard.html</code> — this page. Routine results, market data, system health in one view. Updated via <code>extract_*.py</code> scripts that pull from Wiki + CSV caches. Deploys to GitHub Pages on push.</p></div>
+      <div class="arch-card foundation"><h3>Rules Engine</h3><p><code>.cursor/rules/</code> — 26 .mdc files defining Coach agent behavior. 15 always-on, 11 on-demand. Covers domains: Core, Wiki, Economy, Career, Study, Life, Design, Safety. Extracted to readable cards on this dashboard.</p></div>
+    </div>
+    <div class="card" style="margin-bottom:14px"><h3>Data Flow</h3>
+      <div class="flow-row"><span class="flow-node">You (request)</span><span class="flow-arrow">&rarr;</span><span class="flow-node">Coach (DeepSeek v4 Pro)</span><span class="flow-arrow">&rarr;</span><span class="flow-node">WebSearch + Scripts</span></div>
+      <div class="flow-row" style="margin-top:4px"><span class="flow-node" style="font-size:12px;border-color:var(--foundation)">Wiki (permanent)</span><span class="flow-node" style="font-size:12px;border-color:var(--operations)">Dashboard (web)</span><span class="flow-node" style="font-size:12px">Email (alert)</span></div>
+    </div>
+    <div class="card"><h3>Sunday Maintenance <span class="card-badge operations">weekly</span></h3>
+      <div class="maint-item"><span class="maint-dot"></span><span class="maint-label">Rule Pruning</span><span class="maint-desc">Check if 15 always-on rules exceed limit. Propose deactivation for unused ones.</span></div>
+      <div class="maint-item"><span class="maint-dot"></span><span class="maint-label">Adversarial Audit</span><span class="maint-desc">Sample-check wiki frontmatter, broken links, orphan pages. Verify system follows its own rules.</span></div>
+      <div class="maint-item"><span class="maint-dot"></span><span class="maint-label">Skill Inventory</span><span class="maint-desc">Update version and status for all 9 active skills (crypto-bot, deep-research, etc).</span></div>
+      <div class="maint-item"><span class="maint-dot"></span><span class="maint-label">Prompt Journal</span><span class="maint-desc">Analyze last week's prompts. Score clarity/structure/specificity. Suggest improvements.</span></div>
+      <div class="maint-item"><span class="maint-dot"></span><span class="maint-label">Domain Cleanup</span><span class="maint-desc">Archive expired deadlines. Flag stale decisions. Never auto-delete.</span></div>
+    </div>`;
 }
 
-function closeRuleDetail() { document.getElementById('ruleOverlay').classList.remove('open'); }
-
-// === SOONSAL BRIEFINGS ===
-async function renderSoonsal() {
-  const data = await loadJSON('data/soonsal-briefings.json');
-  const el = document.getElementById('soonsalList');
-  if (!data || !data.length) { el.innerHTML = '<div class="empty-state"><div class="icon">--</div>브리핑 데이터 없음</div>'; return; }
-
-  let html = '';
-  data.forEach((day, di) => {
-    const types = Object.keys(day.types);
-    if (!types.length) return;
-    const typeLabels = {briefing:'브리핑', crypto:'크립토', cardnews:'카드뉴스'};
-    const dateStr = day.date.slice(0,4)+'-'+day.date.slice(4,6)+'-'+day.date.slice(6,8);
-    html += `<div class="briefing-day">
-      <div class="bd-header" onclick="toggleBriefing('bd-${di}')">
-        <span>${dateStr}</span>
-        <span style="font-size:11px;color:var(--text-muted)">${types.map(t=>typeLabels[t]||t).join(', ')}</span>
-      </div>
-      <div class="bd-body" id="bd-${di}">`;
-    types.forEach(t => {
-      const b = day.types[t];
-      html += `<div class="bd-section"><h4>${esc(b.title)}</h4>`;
-      if (b.summary) html += `<p>${esc(b.summary).slice(0,300)}...</p>`;
-      if (b.markets && b.markets.length) {
-        html += `<div class="bd-markets">${b.markets.map(m=>esc(m)).join('<br>')}</div>`;
-      }
-      html += `</div>`;
-    });
-    html += `</div></div>`;
-  });
-  el.innerHTML = html;
-}
-
-function toggleBriefing(id) {
-  const body = document.getElementById(id);
-  body.classList.toggle('open');
-}
-
-// === WIKI ===
-async function renderWiki() {
-  allWiki = await loadJSON('data/wiki-index.json') || [];
-  buildWikiFilters();
-  renderWikiGrid();
+function renderWikiView(main) {
+  main.innerHTML = `<div class="main-header"><h2>Wiki Browser</h2><span class="header-date">${cachedWiki?.length||0} pages indexed</span></div>
+    <input type="text" class="wiki-search" id="wikiSearch" placeholder="Search 340+ wiki pages..." oninput="renderWikiGrid()">
+    <div class="filter-bar" id="wikiFilters"></div>
+    <div id="wikiContainer"></div>`;
+  buildWikiFilters(); renderWikiGrid();
 }
 
 function buildWikiFilters() {
-  const domains = new Set();
-  allWiki.forEach(p => domains.add(p.domain));
-  const bar = document.getElementById('wikiFilters');
-  let html = '<span class="filter-label">도메인:</span>';
-  html += `<button class="filter-btn active" onclick="filterWiki('All')">전체 (${allWiki.length})</button>`;
-  [...domains].sort().forEach(d => {
-    const count = allWiki.filter(p => p.domain === d).length;
-    html += `<button class="filter-btn" onclick="filterWiki('${d}')">${d} (${count})</button>`;
-  });
-  bar.innerHTML = html;
+  if(!cachedWiki)return; const domains=new Set(); cachedWiki.forEach(p=>domains.add(p.domain));
+  const bar=document.getElementById('wikiFilters'); if(!bar)return;
+  let h='<span class="flabel">Domain:</span>';
+  h+=`<button class="fbtn active" onclick="fltWiki('All')">All (${cachedWiki.length})</button>`;
+  [...domains].sort().forEach(d=>{const c=cachedWiki.filter(p=>p.domain===d).length;h+=`<button class="fbtn" onclick="fltWiki('${d}')">${d} (${c})</button>`;});
+  bar.innerHTML=h;
 }
-
-function filterWiki(domain) {
-  activeWikiDomain = domain;
-  document.querySelectorAll('#wikiFilters .filter-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector(`#wikiFilters .filter-btn[onclick="filterWiki('${domain}')"]`).classList.add('active');
-  renderWikiGrid();
-}
-
-function filterWiki() {
-  renderWikiGrid();
-}
+function fltWiki(d){activeWikiDomain=d;document.querySelectorAll('#wikiFilters .fbtn').forEach(b=>b.classList.remove('active'));const btn=document.querySelector(`#wikiFilters .fbtn[onclick="fltWiki('${d}')"]`);if(btn)btn.classList.add('active');renderWikiGrid();}
 
 function renderWikiGrid() {
-  const query = (document.getElementById('wikiSearch')?.value||'').toLowerCase();
-  let filtered = activeWikiDomain === 'All' ? allWiki : allWiki.filter(p => p.domain === activeWikiDomain);
-  if(query) filtered = filtered.filter(p => (p.title||'').toLowerCase().includes(query) || (p.summary||'').toLowerCase().includes(query));
-
-  const container = document.getElementById('wikiContainer');
-  const groups = {};
-  filtered.forEach(p => { groups[p.domain] = groups[p.domain]||[]; groups[p.domain].push(p); });
-
-  let html = '';
-  for(const [domain, pages] of Object.entries(groups).sort()) {
-    html += `<div class="wiki-group"><h3>${domain} (${pages.length})</h3>`;
-    pages.forEach(p => {
-      const kindBadge = p.kind ? `<span class="badge gray">${p.kind}</span>` : '';
-      html += `<div class="wiki-item">
-        <span class="wi-title">${esc(p.slug)}</span>
-        <span class="wi-summary">${esc(p.summary||'')}</span>
-        <span class="wi-meta">${kindBadge} ${p.updated||''}</span>
-      </div>`;
-    });
-    html += '</div>';
-  }
-  container.innerHTML = html || '<div class="empty-state"><div class="icon">--</div>일치하는 페이지 없음</div>';
+  if(!cachedWiki)return;const q=(document.getElementById('wikiSearch')?.value||'').toLowerCase();
+  let f=activeWikiDomain==='All'?cachedWiki:cachedWiki.filter(p=>p.domain===activeWikiDomain);
+  if(q)f=f.filter(p=>(p.title||'').toLowerCase().includes(q)||(p.summary||'').toLowerCase().includes(q));
+  const container=document.getElementById('wikiContainer');if(!container)return;
+  const groups={};f.forEach(p=>{groups[p.domain]=groups[p.domain]||[];groups[p.domain].push(p);});
+  let h='';for(const[d,pgs]of Object.entries(groups).sort()){h+=`<div class="wiki-group"><h3>${d} (${pgs.length})</h3>`;pgs.forEach(p=>{h+=`<div class="wiki-item"><span class="wi-title">${esc(p.slug)}</span><span class="wi-summary">${esc(p.summary||'')}</span><span class="wi-meta"><span class="badge muted">${p.kind||''}</span> ${p.updated||''}</span></div>`;});h+='</div>';}
+  container.innerHTML=h||'<div class="empty-state"><div class="eicon">--</div>No matching pages</div>';
 }
 
-function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function renderRulesView(main) {
+  main.innerHTML = `<div class="main-header"><h2>Rules Reference</h2><span class="header-date">${cachedRules?.length||0} .mdc files</span></div>
+    <div class="filter-bar" id="ruleFilters"></div><div class="rule-grid" id="ruleGrid"></div>`;
+  buildRuleFilters(); renderRuleGrid();
+}
 
-// === INIT ===
-async function init() {
-  await Promise.all([renderPolicy(), renderInvestment(), renderSystem(), renderRules(), renderWiki(), renderSoonsal()]);
+function buildRuleFilters() {
+  if(!cachedRules)return;const domains=new Set();cachedRules.forEach(r=>(r.domain||[]).forEach(d=>domains.add(d)));
+  const bar=document.getElementById('ruleFilters');if(!bar)return;
+  let h='<span class="flabel">Domain:</span>';h+=`<button class="fbtn active" onclick="fltRules('All')">All (${cachedRules.length})</button>`;
+  [...domains].sort().forEach(d=>{const c=cachedRules.filter(r=>(r.domain||[]).includes(d)).length;h+=`<button class="fbtn" onclick="fltRules('${d}')">${d} (${c})</button>`;});
+  bar.innerHTML=h;
+}
+function fltRules(d){activeRuleDomain=d;document.querySelectorAll('#ruleFilters .fbtn').forEach(b=>b.classList.remove('active'));const btn=document.querySelector(`#ruleFilters .fbtn[onclick="fltRules('${d}')"]`);if(btn)btn.classList.add('active');renderRuleGrid();}
+
+function renderRuleGrid() {
+  if(!cachedRules)return;const f=activeRuleDomain==='All'?cachedRules:cachedRules.filter(r=>(r.domain||[]).includes(activeRuleDomain));
+  const grid=document.getElementById('ruleGrid');if(!grid)return;
+  grid.innerHTML=f.map((r,i)=>{const idx=cachedRules.indexOf(r);const bb=r.alwaysApply?'<span class="badge foundation">always</span>':'<span class="badge operations">on-demand</span>';const db=(r.domain||[]).slice(0,2).map(d=>`<span class="badge muted">${d}</span>`).join(' ');return`<div class="rule-card" onclick="openRuleModal(${idx})"><div class="rc-title">${esc(r.title)}</div><div class="rc-summary">${esc(r.summary||'')}</div><div class="rc-meta">${bb} ${db} <span style="font-size:10.5px;color:var(--text-tertiary)">${esc(r.file)}</span></div></div>`;}).join('');
+}
+
+function openRuleModal(idx){const r=cachedRules[idx];if(!r)return;let h=`<button class="modal-close" onclick="closeRuleModal()">x</button>`;h+=`<h3 style="font-size:17px;font-weight:700;margin-bottom:2px">${esc(r.title)}</h3>`;h+=`<p style="font-size:11.5px;color:var(--text-tertiary);margin-bottom:8px">${esc(r.file)} · ${r.alwaysApply?'<span class="badge foundation">always</span>':'<span class="badge operations">on-demand</span>'} ${(r.domain||[]).map(d=>`<span class="badge muted">${d}</span>`).join(' ')}</p>`;h+=`<p style="font-size:13px;color:var(--text-secondary);line-height:1.65">${esc(r.subtitle||'')}</p>`;if(r.sections?.length){r.sections.forEach(s=>{h+=`<div class="modal-section"><h4>${esc(s.heading)}</h4><p>${esc(s.body)}</p></div>`;});}document.getElementById('ruleModal').innerHTML=h;document.getElementById('ruleModalOverlay').classList.add('open');}
+function closeRuleModal(){document.getElementById('ruleModalOverlay').classList.remove('open');}
+
+function renderRoutinesView(main) {
+  main.innerHTML = `<div class="main-header"><h2>Routines & Briefings</h2><span class="header-date">12 active routines</span></div>
+    <div class="card accent-operations" style="margin-bottom:14px"><h3>Youth Policy + Kyung Hee Scan <span class="card-badge operations">Sun 10:30</span></h3><div id="policyList"></div></div>
+    <div class="cards-grid" style="margin-bottom:14px">
+      <div class="card"><h3>Daily Investment Briefing <span class="card-badge muted">Mon-Fri</span></h3><div id="dailyBriefing"></div></div>
+      <div class="card"><h3>Weekly Investment Report <span class="card-badge muted">Sun</span></h3><div id="weeklyReport"></div></div>
+      <div class="card"><h3>Prompt Journal Review <span class="card-badge muted">Sun</span></h3><div id="promptReview"></div></div>
+    </div>
+    <div class="card accent-foundation"><h3>Soonsal Briefings <span class="card-badge foundation">${cachedSoonsal?.length||0} days</span></h3><div id="soonsalList">${renderBriefingPreview()}</div></div>`;
+  renderPolicyAsync(); renderInvestmentBriefings(); renderPromptReview();
+}
+
+async function renderPolicyAsync() {
+  if(!cachedPolicy)cachedPolicy=await loadJSON('data/policy-scan.json');const el=document.getElementById('policyList');if(!el)return;const d=cachedPolicy;
+  if(!d||!d.youthPolicies?.length&&!d.kyungheeBenefits?.length){el.innerHTML='<div class="empty-state"><div class="eicon">--</div>First scan scheduled Sunday</div>';return;}
+  let h='';if(d.youthPolicies?.length){h+='<h4 style="font-size:12px;font-weight:600;margin:8px 0 4px">Government</h4>';d.youthPolicies.forEach(p=>{h+=`<div class="policy-item"><strong>${esc(p.title)}</strong><div class="pi-source">${esc(p.source)} ${p.deadline?'| Deadline: '+p.deadline:''}</div><p style="margin-top:2px;font-size:12px;color:var(--text-secondary)">${esc(p.summary)}</p>${p.link?`<a href="${p.link}" target="_blank">Link</a>`:''}</div>`;});}
+  if(d.kyungheeBenefits?.length){h+='<h4 style="font-size:12px;font-weight:600;margin:8px 0 4px">Kyung Hee Univ</h4>';d.kyungheeBenefits.forEach(p=>{h+=`<div class="policy-item"><strong>${esc(p.title)}</strong><div class="pi-source">${esc(p.source)} ${p.deadline?'| Deadline: '+p.deadline:''}</div><p style="margin-top:2px;font-size:12px;color:var(--text-secondary)">${esc(p.summary)}</p>${p.link?`<a href="${p.link}" target="_blank">Link</a>`:''}</div>`;});}
+  el.innerHTML=h;
+}
+
+function renderInvestmentBriefings() {
+  if(!cachedInvestment){document.getElementById('dailyBriefing').innerHTML='<div class="empty-state"><div class="eicon">--</div>Waiting</div>';document.getElementById('weeklyReport').innerHTML='<div class="empty-state"><div class="eicon">--</div>Waiting</div>';return;}
+  const di=cachedInvestment.investmentDaily;document.getElementById('dailyBriefing').innerHTML=di?.summary?`<p style="font-size:12px;color:var(--text-secondary)">${esc(di.summary)}</p><p style="font-size:11px;color:var(--text-tertiary);margin-top:4px">${di.date}</p>`:'<div class="empty-state"><div class="eicon">--</div>Pending</div>';
+  const wi=cachedInvestment.investmentWeekly;document.getElementById('weeklyReport').innerHTML=wi?.summary?`<p style="font-size:12px;color:var(--text-secondary)">${esc(wi.summary)}</p><p style="font-size:11px;color:var(--text-tertiary);margin-top:4px">${wi.date}</p>`:'<div class="empty-state"><div class="eicon">--</div>Pending</div>';
+}
+
+function renderPromptReview() {
+  if(!cachedHealth){document.getElementById('promptReview').innerHTML='<div class="empty-state"><div class="eicon">--</div>Waiting</div>';return;}
+  const pj=cachedHealth.promptJournal;document.getElementById('promptReview').innerHTML=pj?.totalSessions>0?`<p>${pj.weekOf} · ${pj.totalSessions}sessions, ${pj.totalPrompts}prompts</p><p style="font-size:12px;color:var(--text-secondary);margin-top:2px">Avg score: <strong>${pj.avgScore}</strong></p><p style="font-size:12px;color:var(--text-secondary)">Focus: ${pj.focus}</p>`:'<div class="empty-state"><div class="eicon">--</div>Pending</div>';
+}
+
+function renderEconomyView(main) {
+  const mk=cachedInvestment?.markets||{};let tickers='';
+  if(mk.btc?.price){tickers=`<div class="ticker-grid"><div class="ticker-item"><span class="ticker-name">BTC (KRW)</span><span class="ticker-price">${(mk.btc.price/10000).toFixed(0)}<span style="font-size:11px;font-weight:400">만원</span></span><span class="ticker-date">${(mk.btc.date||'').slice(0,10)}</span></div><div class="ticker-item"><span class="ticker-name">S&P 500</span><span class="ticker-price">${mk.sp500?.price?.toLocaleString()||'--'}</span><span class="ticker-date">${(mk.sp500?.date||'').slice(0,10)}</span></div><div class="ticker-item"><span class="ticker-name">KOSPI</span><span class="ticker-price">${mk.kospi?.price?.toLocaleString()||'--'}</span><span class="ticker-date">${(mk.kospi?.date||'').slice(0,10)}</span></div><div class="ticker-item"><span class="ticker-name">NASDAQ</span><span class="ticker-price">${mk.nasdaq?.price?.toLocaleString()||'--'}</span><span class="ticker-date">${(mk.nasdaq?.date||'').slice(0,10)}</span></div></div>`;}
+  main.innerHTML = `<div class="main-header"><h2>Investment</h2><span class="header-date">Portfolio + Market Data</span></div>${tickers}<div class="card accent-operations"><h3>Portfolio Snapshot</h3><div id="portfolioSnapshot"></div></div>`;
+  const el=document.getElementById('portfolioSnapshot');const pf=cachedInvestment?.portfolio;
+  if(!pf){el.innerHTML='<div class="empty-state"><div class="eicon">--</div>No data</div>';return;}
+  el.innerHTML=`<p style="font-size:14px;margin-bottom:8px">Total: <strong>${(pf.totalValue/10000).toFixed(0)}만 KRW</strong> ${pf.needsRebalance?'<span class="badge data">Rebalance needed</span>':''}</p><table class="simple-table"><thead><tr><th>Asset</th><th>Amount</th><th>Target</th><th>Drift</th></tr></thead><tbody>${pf.allocations.map(a=>`<tr><td>${esc(a.asset)}</td><td>${(a.amount/10000).toFixed(0)}만 KRW</td><td>${a.target}</td><td>${a.drift}%</td></tr>`).join('')}</tbody></table>`;
+}
+
+function renderSystemView(main) {
+  const sys=cachedHealth?.systemHealth||{};const wp=cachedWiki?.length||'?';const ar=cachedRules?.filter(r=>r.alwaysApply).length||'?';
+  main.innerHTML = `<div class="main-header"><h2>System Health</h2><span class="header-date">Sunday auto-check</span></div>
+    <div class="stat-row"><div class="stat accent"><div class="stat-value">${wp}</div><div class="stat-label">Wiki Pages</div></div><div class="stat"><div class="stat-value">9</div><div class="stat-label">Skills</div></div><div class="stat"><div class="stat-value">${ar}</div><div class="stat-label">Always-on Rules</div></div><div class="stat"><div class="stat-value"><span class="badge operations">Healthy</span></div><div class="stat-label">Status</div></div></div>
+    <div class="card"><h3>Skill Inventory</h3><div id="skillInventory"></div></div>
+    <div class="card" style="margin-top:14px"><h3>Adversarial Audit</h3><div id="auditResult"></div></div>`;
+  if(sys?.skills)document.getElementById('skillInventory').innerHTML=`<table class="simple-table"><thead><tr><th>Skill</th><th>Ver</th><th>Status</th><th>Last Tested</th></tr></thead><tbody>${sys.skills.map(s=>`<tr><td><strong>${esc(s.name)}</strong></td><td>${s.version}</td><td><span class="badge ${s.status==='active'?'operations':'data'}">${s.status}</span></td><td>${s.lastTested}</td></tr>`).join('')}</tbody></table>`;
+  document.getElementById('auditResult').innerHTML=sys?.lastAudit?`<p>Last: ${sys.lastAudit}</p><p>Orphans: ${sys.orphanPages}, Broken links: ${sys.brokenLinks}</p><p>Rules: ${sys.alwaysOnRules} always (target ${sys.targetMax})</p>`:'<div class="empty-state"><div class="eicon">--</div>First audit scheduled Sunday</div>';
+}
+
+async function loadJSON(path){try{const r=await fetch(path);if(!r.ok)throw new Error('HTTP '+r.status);return await r.json();}catch(e){console.error(path,e);return null;}}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+async function init(){
+  const[rules,wiki,inv,soonsal,health,policy]=await Promise.all([loadJSON('data/rules.json'),loadJSON('data/wiki-index.json'),loadJSON('data/investment.json'),loadJSON('data/soonsal-briefings.json'),loadJSON('data/system-health.json'),loadJSON('data/policy-scan.json')]);
+  cachedRules=rules||[];cachedWiki=wiki||[];cachedInvestment=inv||{};cachedSoonsal=soonsal||[];cachedHealth=health||{};cachedPolicy=policy||{};
+  renderView('overview');
 }
 init();
 </script>
