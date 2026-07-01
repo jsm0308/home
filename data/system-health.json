@@ -1,30 +1,80 @@
 {
-  "lastUpdated": "2026-07-01T00:00:00+09:00",
+  "lastUpdated": "2026-07-01T23:09:46+09:00",
   "promptJournal": {
     "weekOf": "2026-06-23 ~ 2026-06-29",
-    "totalSessions": 0,
-    "totalPrompts": 0,
-    "avgScore": 0,
-    "topPatterns": [],
-    "antipatterns": [],
-    "focus": "아직 프롬프트 저널이 분석되지 않았습니다. 일요일 자동 실행됩니다."
+    "totalSessions": 1,
+    "totalPrompts": 4,
+    "avgScore": 3.9,
+    "topPatterns": [
+      "질문의 구체성과 결과 적합도는 매우 높음. 거의 모든 프롬프트가 첫 응답에서 목표 달성. wiki/active-context에 있는 정보를 자연스럽게 참조하고 중복 언급하지 않음."
+    ],
+    "antipatterns": [
+      "복붙 자료를 프롬프트 본문으로 사용. 자료는 별도로 분리(링크나 \"참고\" 블록)하고, 본문은 순수 자작 질문만으로 구성하는 습관 필요.",
+      "새로운 아이디어 제안 시 구조화 부족. \"뭐뭐 검토하고 싶다\" 보다 \"이런 차원으로 평가해줘\"라고 구체화하면 첫 응답에서 완성도가 올라감."
+    ],
+    "focus": "복붙 자료 분리 규칙 적용 + 신규 아이디어 제안 시 평가 차원 미리 정의하기."
   },
   "systemHealth": {
     "lastAudit": null,
     "lastLint": null,
-    "wikiPages": 200,
+    "wikiPages": 340,
     "orphanPages": 0,
     "brokenLinks": 0,
     "skills": [
-      {"name": "crypto-bot", "version": "v1", "status": "active", "lastTested": "2026-06-29"},
-      {"name": "deep-research", "version": "v2", "status": "active", "lastTested": "2026-06-27"},
-      {"name": "investment-agent", "version": "v1", "status": "active", "lastTested": "2026-06-29"},
-      {"name": "study-coach", "version": "v1", "status": "active", "lastTested": "2026-06-28"},
-      {"name": "career-coach", "version": "v1", "status": "active", "lastTested": "2026-06-25"},
-      {"name": "research-review", "version": "v1", "status": "active", "lastTested": "2026-06-23"},
-      {"name": "spec", "version": "v1", "status": "active", "lastTested": "2026-06-20"},
-      {"name": "frontend-design", "version": "v1", "status": "active", "lastTested": "2026-07-01"},
-      {"name": "product-search", "version": "v1", "status": "active", "lastTested": "2026-06-30"}
+      {
+        "name": "crypto-bot",
+        "version": "v1",
+        "status": "active",
+        "lastTested": "2026-06-29"
+      },
+      {
+        "name": "deep-research",
+        "version": "v2",
+        "status": "active",
+        "lastTested": "2026-06-27"
+      },
+      {
+        "name": "investment-agent",
+        "version": "v1",
+        "status": "active",
+        "lastTested": "2026-06-29"
+      },
+      {
+        "name": "study-coach",
+        "version": "v1",
+        "status": "active",
+        "lastTested": "2026-06-28"
+      },
+      {
+        "name": "career-coach",
+        "version": "v1",
+        "status": "active",
+        "lastTested": "2026-06-25"
+      },
+      {
+        "name": "research-review",
+        "version": "v1",
+        "status": "active",
+        "lastTested": "2026-06-23"
+      },
+      {
+        "name": "spec",
+        "version": "v1",
+        "status": "active",
+        "lastTested": "2026-06-20"
+      },
+      {
+        "name": "frontend-design",
+        "version": "v1",
+        "status": "active",
+        "lastTested": "2026-07-01"
+      },
+      {
+        "name": "product-search",
+        "version": "v1",
+        "status": "active",
+        "lastTested": "2026-06-30"
+      }
     ],
     "alwaysOnRules": 17,
     "onDemandRules": 9,

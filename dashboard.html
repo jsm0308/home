@@ -336,13 +336,13 @@ function overview(main) {
 function renderBriefings(limit) {
   if (!cached.soonsal?.length) return '<div class="empty-state">브리핑 데이터 없음</div>';
   return cached.soonsal.slice(0, limit).map(d => {
-    const ts = Object.keys(d.types), tl = {briefing:'Briefing',crypto:'Crypto',cardnews:'Card'};
+    const ts = Object.keys(d.types), tl = {briefing:'브리핑',crypto:'크립토',cardnews:'카드'};
     const ds = d.date.slice(0,4)+'-'+d.date.slice(4,6)+'-'+d.date.slice(6,8);
     return `<div class="briefing-day">
       <div class="bd-header" onclick="this.nextElementSibling.classList.toggle('open')">
         <span>${ds}</span><span style="font-size:10.5px;color:var(--slate-light)">${ts.map(t=>tl[t]||t).join(', ')}</span>
       </div>
-      <div class="bd-body">${ts.map(t=>{const b=d.types[t];return`<div class="bd-section"><h4>${esc(b.title)}</h4><p>${esc(b.summary||'').slice(0,250)}...</p>${b.markets?.length?`<div class="bd-markets">${b.markets.map(m=>esc(m)).join('<br>')}</div>`:''}</div>`}).join('')}</div>
+      <div class="bd-body">${ts.map(t=>{const b=d.types[t];const s=(b.summary||'').trim();const disp=s.length>200?s.slice(0,200)+'...':s;return`<div class="bd-section"><h4>${esc(b.title)}</h4><p>${esc(disp)}</p>${b.markets?.length?`<div class="bd-markets">${b.markets.map(m=>esc(m)).join('<br>')}</div>`:''}</div>`}).join('')}</div>
     </div>`;
   }).join('');
 }

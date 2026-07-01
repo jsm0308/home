@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-01T16:00:39.663365",
+  "lastUpdated": "2026-07-01T23:09:46.275185",
   "portfolio": {
     "totalValue": 1500000,
     "currency": "KRW",
@@ -37,5 +37,13 @@
       "price": 25888.84,
       "date": "2026-06-12"
     }
+  },
+  "investmentDaily": {
+    "summary": "7/1: BTC 9,695만원. 순살브리핑 아카이브 정리 완료 (210개→인사이트 요약). PCE 데이터 대기 중. 투자 루틴 정상 작동.",
+    "date": "2026-07-01"
+  },
+  "investmentWeekly": {
+    "summary": "6/23-6/29 주간: BTC $64K 박스권 (Fear & Greed 23 극한공포). S&P 7,431, KOSPI 8,123. 워시 매파 FOMC 이후 시장 관망세. 청년미래적금 7/3 마감. BTC 1차 진입은 PCE 이후 결정 유지.",
+    "date": "2026-06-29"
   }
 }
