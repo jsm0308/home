@@ -239,31 +239,31 @@ body {
   </div>
   <div class="sidebar-group">
     <button class="sidebar-item active" onclick="navigate('overview')" data-nav="overview">
-      Overview
+      개요
     </button>
   </div>
   <div class="sidebar-group">
-    <div class="sidebar-label">Foundation</div>
+    <div class="sidebar-label">기반</div>
     <button class="sidebar-item" onclick="navigate('architecture')" data-nav="architecture">
-      <span class="sidebar-dot"></span> Architecture
+      <span class="sidebar-dot"></span> 아키텍처
     </button>
     <button class="sidebar-item" onclick="navigate('wiki')" data-nav="wiki">
-      <span class="sidebar-dot"></span> Wiki
+      <span class="sidebar-dot"></span> 위키
     </button>
     <button class="sidebar-item" onclick="navigate('rules')" data-nav="rules">
-      <span class="sidebar-dot"></span> Rules
+      <span class="sidebar-dot"></span> 규칙
     </button>
   </div>
   <div class="sidebar-group">
-    <div class="sidebar-label">Operations</div>
+    <div class="sidebar-label">운영</div>
     <button class="sidebar-item" onclick="navigate('routines')" data-nav="routines">
-      <span class="sidebar-dot"></span> Routines
+      <span class="sidebar-dot"></span> 루틴
     </button>
     <button class="sidebar-item" onclick="navigate('economy')" data-nav="economy">
-      <span class="sidebar-dot"></span> Investment
+      <span class="sidebar-dot"></span> 투자
     </button>
     <button class="sidebar-item" onclick="navigate('system')" data-nav="system">
-      <span class="sidebar-dot"></span> Health
+      <span class="sidebar-dot"></span> 상태
     </button>
   </div>
 </aside>
@@ -313,28 +313,28 @@ function overview(main) {
   const today = new Date().toLocaleDateString('ko-KR', {year:'numeric',month:'long',day:'numeric',weekday:'short'});
 
   main.innerHTML = `
-    <div class="main-header"><h2>Overview</h2><span>${today}</span></div>
-    <div class="pulse-row"><div class="pulse-dot"></div><span class="pulse-label">System live</span></div>
-    <div class="overview-text">Self-built AI agent system. Three axes: <strong>Wiki</strong> for long-term knowledge, <strong>Dashboard</strong> for real-time results, <strong>Rules Engine</strong> for agent behavior. 12 automated routines across investment, policy scanning, research, and system maintenance.</div>
+    <div class="main-header"><h2>개요</h2><span>${today}</span></div>
+    <div class="pulse-row"><div class="pulse-dot"></div><span class="pulse-label">시스템 작동 중</span></div>
+    <div class="overview-text">자체 구축 AI 에이전트 시스템. 세 개의 축: <strong>위키</strong>는 장기 지식 저장소, <strong>대시보드</strong>는 실시간 결과 확인, <strong>규칙 엔진</strong>은 에이전트 행동을 정의한다. 투자, 정책 스캔, 연구, 시스템 유지보수까지 12개 자동 루틴이 돌아간다.</div>
     <div class="stat-row">
-      <div class="stat-item"><div class="stat-value indigo">${wp}</div><div class="stat-label">Wiki Pages</div></div>
-      <div class="stat-item"><div class="stat-value">12</div><div class="stat-label">Active Routines</div></div>
-      <div class="stat-item"><div class="stat-value">${rc}</div><div class="stat-label">Rules</div></div>
-      <div class="stat-item"><div class="stat-value">9</div><div class="stat-label">Skills</div></div>
+      <div class="stat-item"><div class="stat-value indigo">${wp}</div><div class="stat-label">위키 페이지</div></div>
+      <div class="stat-item"><div class="stat-value">12</div><div class="stat-label">자동 루틴</div></div>
+      <div class="stat-item"><div class="stat-value">${rc}</div><div class="stat-label">규칙</div></div>
+      <div class="stat-item"><div class="stat-value">9</div><div class="stat-label">스킬</div></div>
     </div>
     <div class="card-grid single">
-      <div class="card"><h3>Foundation <span class="card-tag foundation">system</span></h3><p style="font-size:13px;color:var(--slate);line-height:1.6">Architecture defines how the system works. Wiki stores 340+ pages of long-term knowledge. 26 behavioral rules direct the Coach agent. These are structural, not operational.</p></div>
+      <div class="card"><h3>기반 <span class="card-tag foundation">시스템</span></h3><p style="font-size:13px;color:var(--slate);line-height:1.6">아키텍처는 시스템 작동 방식을 정의한다. 위키는 340개 이상의 페이지를 장기 기억으로 저장한다. 26개의 행동 규칙이 Coach 에이전트를 통제한다. 이것들은 뼈대다. 운영이 아니라 구조다.</p></div>
     </div>
     ${tickers}
     <div class="card" style="border:1px solid var(--hairline);background:var(--surface);border-radius:var(--radius);padding:20px 24px;margin-bottom:0">
-      <h3 style="font-size:14px;font-weight:600;margin-bottom:12px">Recent Briefings <span class="card-tag foundation">${sd}d</span></h3>
+      <h3 style="font-size:14px;font-weight:600;margin-bottom:12px">최근 브리핑 <span class="card-tag foundation">${sd}일</span></h3>
       ${renderBriefings(3)}
     </div>
   `;
 }
 
 function renderBriefings(limit) {
-  if (!cached.soonsal?.length) return '<div class="empty-state">No briefings cached</div>';
+  if (!cached.soonsal?.length) return '<div class="empty-state">브리핑 데이터 없음</div>';
   return cached.soonsal.slice(0, limit).map(d => {
     const ts = Object.keys(d.types), tl = {briefing:'Briefing',crypto:'Crypto',cardnews:'Card'};
     const ds = d.date.slice(0,4)+'-'+d.date.slice(4,6)+'-'+d.date.slice(6,8);
@@ -352,44 +352,44 @@ function renderBriefings(limit) {
 // ============================================================
 function architecture(main) {
   main.innerHTML = `
-    <div class="main-header"><h2>System Architecture</h2><span>Three-axis design</span></div>
+    <div class="main-header"><h2>시스템 아키텍처</h2><span>3축 설계</span></div>
     <div class="arch-grid">
       <div class="arch-card foundation">
-        <h3>Wiki</h3>
-        <p>Obsidian vault <code>2_Wiki/</code>, 340+ pages. Long-term knowledge store: concepts, decisions, insights, project specs. Connected via prose relations. Auto-verified every Sunday with wiki-verify checklist.</p>
+        <h3>위키</h3>
+        <p>Obsidian vault <code>2_Wiki/</code>, 340+ 페이지. 장기 지식 저장소. 개념, 결정, 인사이트, 프로젝트 명세. prose relation으로 페이지 간 연결. 매주 일요일 wiki-verify 체크리스트로 자동 검증.</p>
       </div>
       <div class="arch-card foundation">
-        <h3>Dashboard</h3>
-        <p><code>jsm0308.github.io/home/</code>. Routine results, market data, system health in one view. Data extracted from Wiki + CSV caches via Python scripts. Deployed to GitHub Pages on push.</p>
+        <h3>대시보드</h3>
+        <p><code>jsm0308.github.io/home/</code>. 루틴 실행 결과, 시장 데이터, 시스템 상태를 한곳에서. Python 스크립트가 Wiki와 CSV 캐시에서 데이터를 추출하고 GitHub Pages로 자동 배포.</p>
       </div>
       <div class="arch-card foundation">
-        <h3>Rules Engine</h3>
-        <p><code>.cursor/rules/</code> — 26 .mdc files defining Coach agent behavior. 15 always-on, 11 on-demand. Covers Core, Wiki, Economy, Career, Study, Design, Safety domains.</p>
+        <h3>규칙 엔진</h3>
+        <p><code>.cursor/rules/</code> — Coach 에이전트 행동을 정의하는 26개 .mdc 파일. 15개 항상 켜짐, 11개 필요시만. Core, Wiki, Economy, Career, Study, Design, Safety 도메인.</p>
       </div>
     </div>
     <div class="card-grid single" style="margin-bottom:14px">
       <div class="card">
-        <h3>Data Flow</h3>
+        <h3>데이터 흐름</h3>
         <div class="flow-row">
-          <span class="flow-node">You</span><span class="flow-arrow">&rarr;</span>
+          <span class="flow-node">요청</span><span class="flow-arrow">&rarr;</span>
           <span class="flow-node foundation">Coach (DeepSeek v4 Pro)</span><span class="flow-arrow">&rarr;</span>
           <span class="flow-node">WebSearch + Scripts</span>
         </div>
         <div class="flow-row" style="margin-top:6px">
-          <span class="flow-node foundation">Wiki</span>
-          <span class="flow-node">Dashboard</span>
-          <span class="flow-node">Email</span>
+          <span class="flow-node foundation">위키</span>
+          <span class="flow-node">대시보드</span>
+          <span class="flow-node">이메일</span>
         </div>
       </div>
     </div>
     <div class="card-grid single">
       <div class="card">
-        <h3>Sunday Maintenance <span class="card-tag ops">weekly</span></h3>
-        <div class="maint-item"><span class="maint-dot"></span><span class="maint-label">Rule Pruning</span><span class="maint-desc">Check if always-on rules exceed limit. Propose deactivation for unused ones.</span></div>
-        <div class="maint-item"><span class="maint-dot"></span><span class="maint-label">Adversarial Audit</span><span class="maint-desc">Sample-check wiki frontmatter, broken links, orphan pages.</span></div>
-        <div class="maint-item"><span class="maint-dot"></span><span class="maint-label">Skill Inventory</span><span class="maint-desc">Update version and status for all 9 active skills.</span></div>
-        <div class="maint-item"><span class="maint-dot"></span><span class="maint-label">Prompt Journal</span><span class="maint-desc">Analyze last week's prompts. Score clarity. Suggest improvements.</span></div>
-        <div class="maint-item"><span class="maint-dot"></span><span class="maint-label">Domain Cleanup</span><span class="maint-desc">Archive expired deadlines, flag stale decisions.</span></div>
+        <h3>일요일 점검 <span class="card-tag ops">주간</span></h3>
+        <div class="maint-item"><span class="maint-dot"></span><span class="maint-label">규칙 정리</span><span class="maint-desc">항상 켜진 규칙이 목표치를 초과했는지 확인. 안 쓰는 규칙 끄기 제안.</span></div>
+        <div class="maint-item"><span class="maint-dot"></span><span class="maint-label">자가 점검</span><span class="maint-desc">위키 frontmatter, 깨진 링크, orphan 페이지 샘플링 검사.</span></div>
+        <div class="maint-item"><span class="maint-dot"></span><span class="maint-label">스킬 목록</span><span class="maint-desc">9개 스킬의 버전과 상태 갱신.</span></div>
+        <div class="maint-item"><span class="maint-dot"></span><span class="maint-label">프롬프트 리뷰</span><span class="maint-desc">지난주 프롬프트 분석. 명확성 점수화. 개선 제안.</span></div>
+        <div class="maint-item"><span class="maint-dot"></span><span class="maint-label">도메인 정리</span><span class="maint-desc">만료된 데드라인 정리, 오래된 결정 플래그.</span></div>
       </div>
     </div>
   `;
@@ -400,8 +400,8 @@ function architecture(main) {
 // ============================================================
 function wiki(main) {
   main.innerHTML = `
-    <div class="main-header"><h2>Wiki</h2><span>${cached.wiki?.length||0} pages indexed</span></div>
-    <input type="text" class="wiki-search" id="wikiSearch" placeholder="Search pages..." oninput="renderWikiGrid()">
+    <div class="main-header"><h2>위키</h2><span>${cached.wiki?.length||0}개 페이지</span></div>
+    <input type="text" class="wiki-search" id="wikiSearch" placeholder="페이지 검색..." oninput="renderWikiGrid()">
     <div class="filter-bar" id="wikiFilters"></div>
     <div id="wikiContainer"></div>
   `;
@@ -413,8 +413,8 @@ function buildWikiFilters() {
   if (!cached.wiki) return;
   const domains = new Set(); cached.wiki.forEach(p => domains.add(p.domain));
   const bar = document.getElementById('wikiFilters'); if (!bar) return;
-  let h = '<span class="flabel">Domain:</span>';
-  h += `<button class="fbtn active" onclick="fltWiki('All')">All (${cached.wiki.length})</button>`;
+  let h = '<span class="flabel">도메인:</span>';
+  h += `<button class="fbtn active" onclick="fltWiki('All')">전체 (${cached.wiki.length})</button>`;
   [...domains].sort().forEach(d => {
     const c = cached.wiki.filter(p => p.domain === d).length;
     h += `<button class="fbtn" onclick="fltWiki('${d}')">${d} (${c})</button>`;
@@ -445,7 +445,7 @@ function renderWikiGrid() {
     });
     h += '</div>';
   }
-  container.innerHTML = h || '<div class="empty-state">No matching pages</div>';
+  container.innerHTML = h || '<div class="empty-state">일치하는 페이지 없음</div>';
 }
 
 // ============================================================
@@ -453,7 +453,7 @@ function renderWikiGrid() {
 // ============================================================
 function rules(main) {
   main.innerHTML = `
-    <div class="main-header"><h2>Rules</h2><span>${cached.rules?.length||0} .mdc files</span></div>
+    <div class="main-header"><h2>규칙</h2><span>${cached.rules?.length||0}개 .mdc</span></div>
     <div class="filter-bar" id="ruleFilters"></div>
     <div class="rule-grid" id="ruleGrid"></div>
   `;
@@ -464,8 +464,8 @@ function buildRuleFilters() {
   if (!cached.rules) return;
   const domains = new Set(); cached.rules.forEach(r => (r.domain||[]).forEach(d => domains.add(d)));
   const bar = document.getElementById('ruleFilters'); if (!bar) return;
-  let h = '<span class="flabel">Domain:</span>';
-  h += `<button class="fbtn active" onclick="fltRules('All')">All (${cached.rules.length})</button>`;
+  let h = '<span class="flabel">도메인:</span>';
+  h += `<button class="fbtn active" onclick="fltRules('All')">전체 (${cached.rules.length})</button>`;
   [...domains].sort().forEach(d => {
     const c = cached.rules.filter(r => (r.domain||[]).includes(d)).length;
     h += `<button class="fbtn" onclick="fltRules('${d}')">${d} (${c})</button>`;
@@ -487,7 +487,7 @@ function renderRuleGrid() {
   const grid = document.getElementById('ruleGrid'); if (!grid) return;
   grid.innerHTML = f.map(r => {
     const idx = cached.rules.indexOf(r);
-    const bb = r.alwaysApply ? '<span class="badge indigo">always</span>' : '<span class="badge mono">on-demand</span>';
+    const bb = r.alwaysApply ? '<span class="badge indigo">항상</span>' : '<span class="badge mono">요청시</span>';
     const db = (r.domain||[]).slice(0,2).map(d => `<span class="badge mono">${d}</span>`).join(' ');
     return `<div class="rule-card" onclick="openRuleModal(${idx})">
       <div class="rc-title">${esc(r.title)}</div>
@@ -501,7 +501,7 @@ function openRuleModal(idx) {
   const r = cached.rules[idx]; if (!r) return;
   let h = `<button class="modal-close" onclick="closeRuleModal()">x</button>`;
   h += `<h3 style="font-size:16px;font-weight:700;margin-bottom:2px">${esc(r.title)}</h3>`;
-  h += `<p style="font-size:11px;color:var(--slate-light);margin-bottom:8px">${esc(r.file)} · ${r.alwaysApply?'<span class="badge indigo">always</span>':'<span class="badge mono">on-demand</span>'} ${(r.domain||[]).map(d=>`<span class="badge mono">${d}</span>`).join(' ')}</p>`;
+  h += `<p style="font-size:11px;color:var(--slate-light);margin-bottom:8px">${esc(r.file)} · ${r.alwaysApply?'<span class="badge indigo">항상</span>':'<span class="badge mono">요청시</span>'} ${(r.domain||[]).map(d=>`<span class="badge mono">${d}</span>`).join(' ')}</p>`;
   h += `<p style="font-size:12.5px;color:var(--slate);line-height:1.6">${esc(r.subtitle||'')}</p>`;
   if (r.sections?.length) {
     r.sections.forEach(s => {
@@ -519,17 +519,17 @@ function closeRuleModal() { document.getElementById('ruleModalOverlay').classLis
 // ============================================================
 function routines(main) {
   main.innerHTML = `
-    <div class="main-header"><h2>Routines</h2><span>12 active</span></div>
+    <div class="main-header"><h2>루틴</h2><span>12개 자동 실행</span></div>
     <div class="card-grid single" style="margin-bottom:14px">
-      <div class="card"><h3>Youth Policy + Kyung Hee Scan <span class="card-tag ops">sunday</span></h3><div id="policyList"></div></div>
+      <div class="card"><h3>청년 정책 + 경희대 스캔 <span class="card-tag ops">일요일</span></h3><div id="policyList"></div></div>
     </div>
     <div class="card-grid" style="margin-bottom:14px">
-      <div class="card"><h3>Daily Investment Briefing <span class="card-tag ops">mon-fri</span></h3><div id="dailyBriefing"></div></div>
-      <div class="card"><h3>Weekly Investment Report <span class="card-tag ops">sunday</span></h3><div id="weeklyReport"></div></div>
-      <div class="card"><h3>Prompt Journal Review <span class="card-tag ops">sunday</span></h3><div id="promptReview"></div></div>
+      <div class="card"><h3>데일리 투자 브리핑 <span class="card-tag ops">월-금</span></h3><div id="dailyBriefing"></div></div>
+      <div class="card"><h3>주간 투자 보고서 <span class="card-tag ops">일요일</span></h3><div id="weeklyReport"></div></div>
+      <div class="card"><h3>프롬프트 리뷰 <span class="card-tag ops">일요일</span></h3><div id="promptReview"></div></div>
     </div>
     <div class="card-grid single">
-      <div class="card"><h3>Soonsal Briefings <span class="card-tag foundation">${cached.soonsal?.length||0}d</span></h3>${renderBriefings(99)}</div>
+      <div class="card"><h3>순살 브리핑 <span class="card-tag foundation">${cached.soonsal?.length||0}일</span></h3>${renderBriefings(99)}</div>
     </div>
   `;
   renderPolicyAsync();
@@ -542,7 +542,7 @@ async function renderPolicyAsync() {
   const el = document.getElementById('policyList'); if (!el) return;
   const d = cached.policy;
   if (!d || !d.youthPolicies?.length && !d.kyungheeBenefits?.length) {
-    el.innerHTML = '<div class="empty-state">First scan scheduled Sunday</div>'; return;
+    el.innerHTML = '<div class="empty-state">일요일 첫 스캔 예정</div>'; return;
   }
   let h = '';
   if (d.youthPolicies?.length) {
@@ -562,29 +562,29 @@ async function renderPolicyAsync() {
 
 function renderInvBriefings() {
   if (!cached.inv) {
-    document.getElementById('dailyBriefing').innerHTML = '<div class="empty-state">Pending</div>';
-    document.getElementById('weeklyReport').innerHTML = '<div class="empty-state">Pending</div>';
+    document.getElementById('dailyBriefing').innerHTML = '<div class="empty-state">대기 중</div>';
+    document.getElementById('weeklyReport').innerHTML = '<div class="empty-state">대기 중</div>';
     return;
   }
   const di = cached.inv.investmentDaily;
   document.getElementById('dailyBriefing').innerHTML = di?.summary
     ? `<p style="font-size:12px;color:var(--slate)">${esc(di.summary)}</p><p style="font-size:10.5px;color:var(--slate-light);margin-top:4px">${di.date}</p>`
-    : '<div class="empty-state">Pending</div>';
+    : '<div class="empty-state">대기 중</div>';
   const wi = cached.inv.investmentWeekly;
   document.getElementById('weeklyReport').innerHTML = wi?.summary
     ? `<p style="font-size:12px;color:var(--slate)">${esc(wi.summary)}</p><p style="font-size:10.5px;color:var(--slate-light);margin-top:4px">${wi.date}</p>`
-    : '<div class="empty-state">Pending</div>';
+    : '<div class="empty-state">대기 중</div>';
 }
 
 function renderPromptReview() {
   if (!cached.health) {
-    document.getElementById('promptReview').innerHTML = '<div class="empty-state">Pending</div>';
+    document.getElementById('promptReview').innerHTML = '<div class="empty-state">대기 중</div>';
     return;
   }
   const pj = cached.health.promptJournal;
   document.getElementById('promptReview').innerHTML = pj?.totalSessions > 0
-    ? `<p>${pj.weekOf} / ${pj.totalSessions} sessions, ${pj.totalPrompts} prompts</p><p style="font-size:12px;color:var(--slate);margin-top:2px">Avg score: <strong>${pj.avgScore}</strong></p><p style="font-size:12px;color:var(--slate)">${pj.focus}</p>`
-    : '<div class="empty-state">Pending</div>';
+    ? `<p>${pj.weekOf} / ${pj.totalSessions}회, ${pj.totalPrompts}개 프롬프트</p><p style="font-size:12px;color:var(--slate);margin-top:2px">평균 점수: <strong>${pj.avgScore}</strong></p><p style="font-size:12px;color:var(--slate)">${pj.focus}</p>`
+    : '<div class="empty-state">대기 중</div>';
 }
 
 // ============================================================
@@ -601,10 +601,10 @@ function economy(main) {
       <div class="ticker-item"><div class="ticker-name">NASDAQ</div><div class="ticker-value">${mk.nasdaq?.price?.toLocaleString()||'--'}</div><div class="ticker-date">${(mk.nasdaq?.date||'').slice(0,10)}</div></div>
     </div>`;
   }
-  main.innerHTML = `<div class="main-header"><h2>Investment</h2><span>Portfolio + Markets</span></div>${tickers}<div class="card-grid single"><div class="card"><h3>Portfolio Snapshot</h3><div id="portfolioSnapshot"></div></div></div>`;
+  main.innerHTML = `<div class="main-header"><h2>투자</h2><span>포트폴리오 + 시장</span></div>${tickers}<div class="card-grid single"><div class="card"><h3>포트폴리오 <span class="card-tag ops">스냅샷</span></h3><div id="portfolioSnapshot"></div></div></div>`;
   const el = document.getElementById('portfolioSnapshot');
   const pf = cached.inv?.portfolio;
-  if (!pf) { el.innerHTML = '<div class="empty-state">No data</div>'; return; }
+  if (!pf) { el.innerHTML = '<div class="empty-state">데이터 없음</div>'; return; }
   el.innerHTML = `<p style="font-size:13px;margin-bottom:10px">Total: <strong style="font-family:'JetBrains Mono',monospace">${(pf.totalValue/10000).toFixed(0)}</strong> <span style="font-size:12px;color:var(--slate-light)">만 KRW</span> ${pf.needsRebalance?'<span class="badge indigo">Rebalance needed</span>':''}</p>
     <table class="simple-table"><thead><tr><th>Asset</th><th>Amount</th><th>Target</th><th>Drift</th></tr></thead><tbody>${pf.allocations.map(a=>`<tr><td>${esc(a.asset)}</td><td style="font-family:'JetBrains Mono',monospace">${(a.amount/10000).toFixed(0)}만</td><td>${a.target}</td><td>${a.drift}%</td></tr>`).join('')}</tbody></table>`;
 }
@@ -617,22 +617,22 @@ function system(main) {
   const wp = cached.wiki?.length || '?';
   const ar = cached.rules?.filter(r => r.alwaysApply).length || '?';
   main.innerHTML = `
-    <div class="main-header"><h2>System Health</h2><span>Sunday auto-check</span></div>
+    <div class="main-header"><h2>시스템 상태</h2><span>매주 일요일 자동 점검</span></div>
     <div class="stat-row">
-      <div class="stat-item"><div class="stat-value indigo">${wp}</div><div class="stat-label">Wiki Pages</div></div>
-      <div class="stat-item"><div class="stat-value">9</div><div class="stat-label">Skills</div></div>
-      <div class="stat-item"><div class="stat-value">${ar}</div><div class="stat-label">Always-on Rules</div></div>
-      <div class="stat-item"><div class="stat-value" style="font-size:16px"><span class="badge indigo">Healthy</span></div><div class="stat-label">Status</div></div>
+      <div class="stat-item"><div class="stat-value indigo">${wp}</div><div class="stat-label">위키 페이지</div></div>
+      <div class="stat-item"><div class="stat-value">9</div><div class="stat-label">스킬</div></div>
+      <div class="stat-item"><div class="stat-value">${ar}</div><div class="stat-label">항상 켜진 규칙</div></div>
+      <div class="stat-item"><div class="stat-value" style="font-size:16px"><span class="badge indigo">정상</span></div><div class="stat-label">상태</div></div>
     </div>
-    <div class="card-grid single" style="margin-bottom:14px"><div class="card"><h3>Skill Inventory</h3><div id="skillInventory"></div></div></div>
-    <div class="card-grid single"><div class="card"><h3>Adversarial Audit</h3><div id="auditResult"></div></div></div>
+    <div class="card-grid single" style="margin-bottom:14px"><div class="card"><h3>스킬 목록</h3><div id="skillInventory"></div></div></div>
+    <div class="card-grid single"><div class="card"><h3>자가 점검</h3><div id="auditResult"></div></div></div>
   `;
   if (sys?.skills) {
-    document.getElementById('skillInventory').innerHTML = `<table class="simple-table"><thead><tr><th>Skill</th><th>Ver</th><th>Status</th><th>Last Tested</th></tr></thead><tbody>${sys.skills.map(s=>`<tr><td><strong>${esc(s.name)}</strong></td><td>${s.version}</td><td><span class="badge ${s.status==='active'?'indigo':'mono'}">${s.status}</span></td><td>${s.lastTested}</td></tr>`).join('')}</tbody></table>`;
+    document.getElementById('skillInventory').innerHTML = `<table class="simple-table"><thead><tr><th>스킬</th><th>버전</th><th>상태</th><th>마지막 테스트</th></tr></thead><tbody>${sys.skills.map(s=>`<tr><td><strong>${esc(s.name)}</strong></td><td>${s.version}</td><td><span class="badge ${s.status==='active'?'indigo':'mono'}">${s.status}</span></td><td>${s.lastTested}</td></tr>`).join('')}</tbody></table>`;
   }
   document.getElementById('auditResult').innerHTML = sys?.lastAudit
     ? `<p>Last: ${sys.lastAudit}</p><p>Orphans: ${sys.orphanPages}, Broken links: ${sys.brokenLinks}</p><p>Rules: ${sys.alwaysOnRules} always (target ${sys.targetMax})</p>`
-    : '<div class="empty-state">First audit scheduled Sunday</div>';
+    : '<div class="empty-state">일요일 첫 점검 예정</div>';
 }
 
 // ============================================================
