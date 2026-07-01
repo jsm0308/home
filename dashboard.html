@@ -3,319 +3,267 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JSM Command Center</title>
+<title>JSM</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --base: #FCFCFA;
+  --indigo: #3E36B0;
+  --indigo-light: #F2F1FA;
+  --paper: #FAFAF8;
   --surface: #FFFFFF;
-  --border: #E8E8E6;
-  --text: #171717;
-  --text-secondary: #5F5F5F;
-  --text-tertiary: #9E9E9E;
-  --foundation: #3B3B98;
-  --foundation-light: #EEEDF8;
-  --foundation-subtle: #F7F6FC;
-  --operations: #2D936C;
-  --operations-light: #EDF7F2;
-  --data: #E76F51;
-  --data-light: #FDF0EC;
-  --code-bg: #F4F4F3;
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
-  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
-  --radius: 10px;
-  --radius-sm: 6px;
-  --radius-xs: 4px;
+  --hairline: #E8E8E6;
+  --ink: #0D0D0D;
+  --slate: #6B6B6B;
+  --slate-light: #9E9E9E;
+  --code-bg: #F5F5F3;
+  --radius: 6px;
 }
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 html { font-size: 15px; }
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--base);
-  color: var(--text);
-  line-height: 1.55;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.5;
   display: flex;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
 }
+
+/* SIDEBAR */
 .sidebar {
-  width: 260px;
-  min-width: 260px;
+  width: 240px;
+  min-width: 240px;
   background: var(--surface);
-  border-right: 1px solid var(--border);
+  border-right: 1px solid var(--hairline);
   display: flex;
   flex-direction: column;
   position: sticky;
   top: 0;
   height: 100vh;
   overflow-y: auto;
-  padding: 24px 0;
+  padding: 28px 0;
   z-index: 10;
 }
-.sidebar-brand {
-  padding: 0 20px 20px;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 20px;
+.sidebar-brand { padding: 0 24px 24px; border-bottom: 1px solid var(--hairline); margin-bottom: 24px; }
+.sidebar-brand h1 { font-size: 16px; font-weight: 700; letter-spacing: -0.2px; }
+.sidebar-brand div { font-size: 10.5px; color: var(--slate-light); margin-top: 3px; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.3px; }
+.sidebar-group { padding: 0 24px; margin-bottom: 20px; }
+.sidebar-label {
+  font-size: 9.5px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--slate-light); margin-bottom: 6px; padding: 0 4px;
 }
-.sidebar-brand h1 { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; }
-.sidebar-brand .brand-sub { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; font-family: 'JetBrains Mono', monospace; }
-.sidebar-section { padding: 0 20px; margin-bottom: 16px; }
-.sidebar-section-label {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--text-tertiary);
-  margin-bottom: 8px;
-  padding: 0 4px;
+.sidebar-item {
+  display: flex; align-items: center; gap: 8px; padding: 7px 10px; margin-bottom: 1px;
+  border-radius: var(--radius); font-size: 13px; font-weight: 500; color: var(--slate);
+  cursor: pointer; transition: background 0.1s, color 0.1s;
+  border: none; background: none; width: 100%; text-align: left; font-family: inherit;
 }
-.sidebar-nav-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 12px;
-  margin-bottom: 2px;
-  border-radius: var(--radius-sm);
-  font-size: 13.5px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 0.12s;
-  text-decoration: none;
-  border: none;
-  background: none;
-  width: 100%;
-  text-align: left;
-  font-family: inherit;
+.sidebar-item:hover { background: var(--code-bg); color: var(--ink); }
+.sidebar-item.active { background: var(--indigo-light); color: var(--indigo); font-weight: 600; }
+.sidebar-dot {
+  width: 5px; height: 5px; border-radius: 50%; background: var(--indigo); flex-shrink: 0; opacity: 0.7;
 }
-.sidebar-nav-item:hover { background: var(--code-bg); color: var(--text); }
-.sidebar-nav-item.active { background: var(--foundation-light); color: var(--foundation); font-weight: 600; }
-.sidebar-nav-item.ops.active { background: var(--operations-light); color: var(--operations); }
-.sidebar-nav-item .nav-icon { font-size: 16px; width: 22px; text-align: center; flex-shrink: 0; }
-.sidebar-nav-item .nav-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--foundation); flex-shrink: 0;
-}
-.sidebar-nav-item.ops .nav-dot { background: var(--operations); }
 
-.main {
-  flex: 1;
-  padding: 28px 32px;
-  max-width: 1100px;
-  min-width: 0;
-}
-.main-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-}
+/* MAIN */
+.main { flex: 1; padding: 32px 40px; max-width: 1060px; min-width: 0; }
+.main-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 28px; }
 .main-header h2 { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
-.main-header .header-date { font-size: 12px; color: var(--text-tertiary); }
+.main-header span { font-size: 12px; color: var(--slate); }
 
-.cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+/* SYSTEM PULSE — Signature */
+.pulse-row { display: flex; align-items: center; gap: 8px; margin-bottom: 28px; }
+.pulse-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--indigo);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(1.3); } }
+.pulse-label { font-size: 12px; color: var(--slate); font-weight: 500; }
+
+/* OVERVIEW HERO */
+.overview-text { font-size: 14px; color: var(--slate); max-width: 620px; line-height: 1.65; margin-bottom: 28px; }
+
+/* STAT ROW */
+.stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); border-radius: var(--radius); overflow: hidden; margin-bottom: 28px; }
+.stat-item { background: var(--surface); padding: 18px 20px; text-align: center; }
+.stat-value { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; font-family: 'JetBrains Mono', monospace; }
+.stat-value.indigo { color: var(--indigo); }
+.stat-label { font-size: 11px; color: var(--slate-light); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500; }
+
+/* CARDS */
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); border-radius: var(--radius); overflow: hidden; margin-bottom: 28px; }
+.card-grid.single { grid-template-columns: 1fr; }
 .card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px;
-  box-shadow: var(--shadow-sm);
+  background: var(--surface); padding: 22px 24px;
 }
-.card.accent-foundation { border-left: 3px solid var(--foundation); }
-.card.accent-operations { border-left: 3px solid var(--operations); }
-.card.accent-data { border-left: 3px solid var(--data); }
-.card h3 { font-size: 14px; font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-.card h3 .card-badge {
-  font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 10px;
-  letter-spacing: 0.3px;
-}
-.card-badge.foundation { background: var(--foundation-light); color: var(--foundation); }
-.card-badge.operations { background: var(--operations-light); color: var(--operations); }
+.card h3 { font-size: 14px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.card-tag { font-size: 9.5px; font-weight: 600; padding: 2px 7px; border-radius: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+.card-tag.foundation { background: var(--indigo-light); color: var(--indigo); }
+.card-tag.ops { background: #F0FDF6; color: #166534; }
 
-.stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 16px; }
-.stat {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px;
-  text-align: center;
-  box-shadow: var(--shadow-sm);
-}
-.stat .stat-value { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; font-family: 'JetBrains Mono', monospace; }
-.stat .stat-label { font-size: 11px; color: var(--text-tertiary); margin-top: 3px; }
-.stat.accent .stat-value { color: var(--foundation); }
+/* MARKET TICKER */
+.ticker-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); border-radius: var(--radius); overflow: hidden; margin-bottom: 28px; }
+.ticker-item { background: var(--surface); padding: 14px 16px; }
+.ticker-name { font-size: 10px; color: var(--slate-light); text-transform: uppercase; letter-spacing: 0.6px; font-weight: 500; margin-bottom: 3px; }
+.ticker-value { font-size: 20px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+.ticker-date { font-size: 10px; color: var(--slate-light); margin-top: 2px; }
 
-.pulse { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 5px; }
-.pulse.ok { background: var(--operations); animation: pulse-anim 2s infinite; }
-@keyframes pulse-anim { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+/* BADGE */
+.badge { font-size: 10px; font-weight: 600; padding: 1px 7px; border-radius: 8px; white-space: nowrap; }
+.badge.indigo { background: var(--indigo-light); color: var(--indigo); }
+.badge.mono { background: var(--code-bg); color: var(--slate); }
 
-.badge {
-  display: inline-block; padding: 2px 8px; border-radius: 10px;
-  font-size: 10.5px; font-weight: 600; white-space: nowrap; letter-spacing: 0.2px;
-}
-.badge.foundation { background: var(--foundation-light); color: var(--foundation); }
-.badge.operations { background: var(--operations-light); color: var(--operations); }
-.badge.data { background: var(--data-light); color: var(--data); }
-.badge.muted { background: var(--code-bg); color: var(--text-secondary); }
-
-.policy-item {
-  padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 6px;
-  border-left: 3px solid var(--operations);
-}
-.policy-item .pi-source { font-size: 10.5px; color: var(--text-tertiary); margin-top: 2px; }
-.policy-item a { color: var(--foundation); text-decoration: none; font-size: 12px; font-weight: 500; }
-.policy-item a:hover { text-decoration: underline; }
-
-.briefing-day { border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 8px; overflow: hidden; }
+/* BRIEFING ACCORDION */
+.briefing-day { border: 1px solid var(--hairline); border-radius: var(--radius); margin-bottom: 6px; overflow: hidden; }
 .briefing-day .bd-header {
-  padding: 10px 14px; background: var(--code-bg); font-size: 13px; font-weight: 600;
+  padding: 9px 14px; background: var(--code-bg); font-size: 12.5px; font-weight: 600;
   cursor: pointer; display: flex; justify-content: space-between; align-items: center;
-  transition: background 0.12s;
+  transition: background 0.1s;
 }
-.briefing-day .bd-header:hover { background: #ECECEA; }
-.briefing-day .bd-body { display: none; padding: 14px; font-size: 13px; line-height: 1.65; color: var(--text-secondary); border-top: 1px solid var(--border); }
+.briefing-day .bd-header:hover { background: #EDEDEA; }
+.briefing-day .bd-body { display: none; padding: 14px; font-size: 12.5px; line-height: 1.65; color: var(--slate); border-top: 1px solid var(--hairline); }
 .briefing-day .bd-body.open { display: block; }
 .bd-section { margin-bottom: 10px; }
-.bd-section h4 { font-size: 12px; color: var(--foundation); font-weight: 600; margin-bottom: 2px; }
-.bd-markets { font-size: 11.5px; color: var(--text-tertiary); padding: 8px 10px; background: var(--code-bg); border-radius: var(--radius-xs); margin-top: 6px; line-height: 1.6; }
+.bd-section h4 { font-size: 11.5px; color: var(--indigo); font-weight: 600; margin-bottom: 2px; }
+.bd-markets { font-size: 11px; color: var(--slate-light); padding: 7px 10px; background: var(--code-bg); border-radius: 3px; margin-top: 6px; line-height: 1.6; }
 
-.ticker-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 8px; margin-bottom: 16px; }
-.ticker-item { padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius); display: flex; flex-direction: column; box-shadow: var(--shadow-sm); }
-.ticker-item .ticker-name { font-size: 10.5px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
-.ticker-item .ticker-price { font-size: 20px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
-.ticker-item .ticker-date { font-size: 10px; color: var(--text-tertiary); margin-top: 2px; }
+/* POLICY */
+.policy-item { padding: 10px 12px; border: 1px solid var(--hairline); border-radius: var(--radius); margin-bottom: 6px; border-left: 2px solid var(--indigo); }
+.policy-item .pi-source { font-size: 10.5px; color: var(--slate-light); margin-top: 2px; }
+.policy-item a { color: var(--indigo); text-decoration: none; font-size: 11.5px; font-weight: 500; }
+.policy-item a:hover { text-decoration: underline; }
 
-.simple-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.simple-table th, .simple-table td { padding: 7px 10px; text-align: left; border-bottom: 1px solid var(--border); }
-.simple-table th { font-weight: 600; color: var(--text-tertiary); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.5px; }
-
-.rule-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
-.rule-card {
-  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 14px 16px; cursor: pointer; transition: all 0.15s; box-shadow: var(--shadow-sm);
-}
-.rule-card:hover { border-color: var(--foundation); box-shadow: var(--shadow-md); }
+/* RULE CARDS */
+.rule-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); border-radius: var(--radius); overflow: hidden; }
+.rule-card { background: var(--surface); padding: 16px 18px; cursor: pointer; transition: background 0.1s; }
+.rule-card:hover { background: #F8F8F6; }
 .rule-card .rc-title { font-size: 13.5px; font-weight: 600; margin-bottom: 4px; }
-.rule-card .rc-summary { font-size: 12px; color: var(--text-secondary); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 8px; }
-.rule-card .rc-meta { display: flex; gap: 4px; flex-wrap: wrap; }
+.rule-card .rc-summary { font-size: 11.5px; color: var(--slate); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 8px; }
+.rule-card .rc-meta { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
 
-.filter-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
-.filter-bar .fbtn {
-  padding: 4px 10px; border: 1px solid var(--border); border-radius: 14px;
-  background: var(--surface); font-size: 11.5px; cursor: pointer; font-family: inherit; color: var(--text-secondary);
-  transition: all 0.12s;
-}
-.filter-bar .fbtn:hover { border-color: var(--foundation); color: var(--foundation); }
-.filter-bar .fbtn.active { background: var(--foundation); color: #fff; border-color: var(--foundation); }
-.filter-bar .flabel { font-size: 11px; color: var(--text-tertiary); margin-right: 4px; }
-
+/* WIKI */
 .wiki-search {
-  width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm);
-  font-size: 13px; font-family: inherit; margin-bottom: 12px; outline: none; background: var(--surface);
+  width: 100%; padding: 9px 12px; border: 1px solid var(--hairline); border-radius: var(--radius);
+  font-size: 13px; font-family: inherit; margin-bottom: 14px; outline: none; background: var(--surface);
+  transition: border-color 0.1s;
 }
-.wiki-search:focus { border-color: var(--foundation); }
-.wiki-group { margin-bottom: 14px; }
-.wiki-group h3 { font-size: 11px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
-.wiki-item { padding: 7px 0; border-bottom: 1px solid #F0F0EE; display: flex; align-items: baseline; gap: 8px; font-size: 12.5px; }
+.wiki-search:focus { border-color: var(--indigo); }
+.wiki-group { margin-bottom: 16px; }
+.wiki-group h3 { font-size: 10.5px; font-weight: 600; color: var(--slate-light); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px; }
+.wiki-item { padding: 7px 0; border-bottom: 1px solid var(--hairline); display: flex; align-items: baseline; gap: 8px; font-size: 12.5px; }
 .wiki-item:last-child { border-bottom: none; }
 .wiki-item .wi-title { font-weight: 500; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.wiki-item .wi-summary { color: var(--text-tertiary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 2.5; }
-.wiki-item .wi-meta { font-size: 10.5px; color: var(--text-tertiary); white-space: nowrap; }
+.wiki-item .wi-summary { color: var(--slate-light); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 2.5; }
+.wiki-item .wi-meta { font-size: 10px; color: var(--slate-light); white-space: nowrap; }
 
-.modal-overlay {
-  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.25);
-  z-index: 100; align-items: center; justify-content: center;
+/* FILTER */
+.filter-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; align-items: center; }
+.filter-bar .fbtn {
+  padding: 4px 10px; border: 1px solid var(--hairline); border-radius: 12px;
+  background: var(--surface); font-size: 11px; cursor: pointer; font-family: inherit; color: var(--slate);
+  transition: all 0.1s;
 }
+.filter-bar .fbtn:hover { border-color: var(--indigo); color: var(--indigo); }
+.filter-bar .fbtn.active { background: var(--indigo); color: #fff; border-color: var(--indigo); }
+.filter-bar .flabel { font-size: 11px; color: var(--slate-light); margin-right: 2px; }
+
+/* SIMPLE TABLE */
+.simple-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.simple-table th, .simple-table td { padding: 7px 10px; text-align: left; border-bottom: 1px solid var(--hairline); }
+.simple-table th { font-weight: 600; color: var(--slate-light); font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* MODAL */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.2); z-index: 100; align-items: center; justify-content: center; }
 .modal-overlay.open { display: flex; }
 .modal {
-  background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border);
-  width: 90%; max-width: 680px; max-height: 85vh; overflow-y: auto; padding: 24px; position: relative;
+  background: var(--surface); border-radius: var(--radius); border: 1px solid var(--hairline);
+  width: 90%; max-width: 640px; max-height: 82vh; overflow-y: auto; padding: 24px; position: relative;
 }
 .modal-close {
-  position: absolute; top: 12px; right: 16px; width: 28px; height: 28px;
-  border: 1px solid var(--border); border-radius: 50%; background: var(--surface);
-  font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-tertiary);
+  position: absolute; top: 12px; right: 14px; width: 26px; height: 26px;
+  border: 1px solid var(--hairline); border-radius: 50%; background: var(--surface);
+  font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--slate-light);
 }
 .modal-close:hover { background: var(--code-bg); }
-.modal-section { margin-top: 12px; padding: 12px; background: var(--code-bg); border-radius: var(--radius-sm); }
-.modal-section h4 { font-size: 12px; font-weight: 600; color: var(--foundation); margin-bottom: 3px; }
-.modal-section p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+.modal-section { margin-top: 12px; padding: 12px; background: var(--code-bg); border-radius: var(--radius); }
+.modal-section h4 { font-size: 12px; font-weight: 600; color: var(--indigo); margin-bottom: 3px; }
+.modal-section p { font-size: 12.5px; color: var(--slate); line-height: 1.6; }
 
-.arch-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-bottom: 16px; }
-.arch-card {
-  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 18px; box-shadow: var(--shadow-sm);
-}
-.arch-card.foundation { border-top: 3px solid var(--foundation); }
-.arch-card.operations { border-top: 3px solid var(--operations); }
-.arch-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.2px; }
-.arch-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.65; }
+/* ARCHITECTURE */
+.arch-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); border-radius: var(--radius); overflow: hidden; margin-bottom: 28px; }
+.arch-card { background: var(--surface); padding: 20px 22px; }
+.arch-card.foundation { border-top: 2px solid var(--indigo); padding-top: 18px; }
+.arch-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+.arch-card p { font-size: 12.5px; color: var(--slate); line-height: 1.65; }
+.arch-card code { font-family: 'JetBrains Mono', monospace; font-size: 11px; background: var(--code-bg); padding: 1px 4px; border-radius: 2px; }
 
-.maint-item { padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; gap: 12px; }
-.maint-item:last-child { border-bottom: none; }
-.maint-item .maint-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; background: var(--data); }
-.maint-item .maint-label { font-size: 13px; font-weight: 600; min-width: 130px; }
-.maint-item .maint-desc { font-size: 13px; color: var(--text-secondary); }
-
+/* FLOW */
 .flow-row { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 12px 0; }
-.flow-node { padding: 8px 16px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); font-size: 13px; font-weight: 500; box-shadow: var(--shadow-sm); }
-.flow-arrow { color: var(--text-tertiary); font-size: 16px; }
+.flow-node { padding: 7px 14px; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--surface); font-size: 12.5px; font-weight: 500; }
+.flow-node.foundation { border-color: var(--indigo); }
+.flow-arrow { color: var(--slate-light); font-size: 14px; }
 
-.empty-state { text-align: center; padding: 28px; color: var(--text-tertiary); font-size: 13px; }
-.empty-state .eicon { font-size: 24px; margin-bottom: 6px; opacity: 0.3; }
+/* MAINTENANCE */
+.maint-item { padding: 10px 0; border-bottom: 1px solid var(--hairline); display: flex; gap: 12px; }
+.maint-item:last-child { border-bottom: none; }
+.maint-item .maint-dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; background: var(--slate-light); }
+.maint-item .maint-label { font-size: 12.5px; font-weight: 600; min-width: 130px; }
+.maint-item .maint-desc { font-size: 12.5px; color: var(--slate); }
 
-.overview-hero { margin-bottom: 20px; }
-.overview-hero p { font-size: 14px; color: var(--text-secondary); max-width: 600px; line-height: 1.65; }
+/* EMPTY */
+.empty-state { text-align: center; padding: 32px; color: var(--slate-light); font-size: 12.5px; }
 
+/* RESPONSIVE */
 @media (max-width: 768px) {
   body { flex-direction: column; }
   .sidebar { width: 100%; min-width: 0; height: auto; position: static; flex-direction: row; flex-wrap: wrap; padding: 12px 16px; gap: 8px; }
   .sidebar-brand { display: none; }
-  .sidebar-section { padding: 0; margin: 0; display: flex; gap: 4px; flex-wrap: wrap; }
-  .sidebar-section-label { display: none; }
-  .sidebar-nav-item { width: auto; font-size: 12px; padding: 5px 10px; }
+  .sidebar-group { padding: 0; margin: 0; display: flex; gap: 4px; flex-wrap: wrap; }
+  .sidebar-label { display: none; }
+  .sidebar-item { width: auto; font-size: 11.5px; padding: 5px 8px; }
   .main { padding: 16px; }
   .stat-row { grid-template-columns: repeat(2, 1fr); }
-  .cards-grid { grid-template-columns: 1fr; }
+  .card-grid { grid-template-columns: 1fr; }
   .ticker-grid { grid-template-columns: repeat(2, 1fr); }
 }
 </style>
 </head>
 <body>
+
 <aside class="sidebar">
   <div class="sidebar-brand">
-    <h1>JSM Command</h1>
-    <div class="brand-sub">personal agent system v3</div>
+    <h1>JSM</h1>
+    <div>command center</div>
   </div>
-  <div class="sidebar-section">
-    <button class="sidebar-nav-item active" onclick="navigate('overview')" data-nav="overview">
-      <span class="nav-icon">&#9679;</span> Overview
-    </button>
-  </div>
-  <div class="sidebar-section">
-    <div class="sidebar-section-label">Foundation</div>
-    <button class="sidebar-nav-item" onclick="navigate('architecture')" data-nav="architecture">
-      <span class="nav-dot"></span> Architecture
-    </button>
-    <button class="sidebar-nav-item" onclick="navigate('wiki')" data-nav="wiki">
-      <span class="nav-dot"></span> Wiki Browser
-    </button>
-    <button class="sidebar-nav-item" onclick="navigate('rules')" data-nav="rules">
-      <span class="nav-dot"></span> Rules Reference
+  <div class="sidebar-group">
+    <button class="sidebar-item active" onclick="navigate('overview')" data-nav="overview">
+      Overview
     </button>
   </div>
-  <div class="sidebar-section">
-    <div class="sidebar-section-label">Operations</div>
-    <button class="sidebar-nav-item ops" onclick="navigate('routines')" data-nav="routines">
-      <span class="nav-dot" style="background:var(--operations)"></span> Routines & Briefings
+  <div class="sidebar-group">
+    <div class="sidebar-label">Foundation</div>
+    <button class="sidebar-item" onclick="navigate('architecture')" data-nav="architecture">
+      <span class="sidebar-dot"></span> Architecture
     </button>
-    <button class="sidebar-nav-item ops" onclick="navigate('economy')" data-nav="economy">
-      <span class="nav-dot" style="background:var(--operations)"></span> Investment
+    <button class="sidebar-item" onclick="navigate('wiki')" data-nav="wiki">
+      <span class="sidebar-dot"></span> Wiki
     </button>
-    <button class="sidebar-nav-item ops" onclick="navigate('system')" data-nav="system">
-      <span class="nav-dot" style="background:var(--operations)"></span> System Health
+    <button class="sidebar-item" onclick="navigate('rules')" data-nav="rules">
+      <span class="sidebar-dot"></span> Rules
+    </button>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-label">Operations</div>
+    <button class="sidebar-item" onclick="navigate('routines')" data-nav="routines">
+      <span class="sidebar-dot"></span> Routines
+    </button>
+    <button class="sidebar-item" onclick="navigate('economy')" data-nav="economy">
+      <span class="sidebar-dot"></span> Investment
+    </button>
+    <button class="sidebar-item" onclick="navigate('system')" data-nav="system">
+      <span class="sidebar-dot"></span> Health
     </button>
   </div>
 </aside>
@@ -327,205 +275,385 @@ body {
 </div>
 
 <script>
-let currentView = 'overview';
-let cachedRules = null;
-let cachedWiki = null;
-let cachedInvestment = null;
-let cachedSoonsal = null;
-let cachedPolicy = null;
-let cachedHealth = null;
-let activeRuleDomain = 'All';
-let activeWikiDomain = 'All';
+let cached = { rules: null, wiki: null, inv: null, soonsal: null, policy: null, health: null };
+let filterRuleDomain = 'All';
+let filterWikiDomain = 'All';
 
 function navigate(view) {
-  currentView = view;
-  document.querySelectorAll('.sidebar-nav-item').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(b => b.classList.remove('active'));
   const btn = document.querySelector(`[data-nav="${view}"]`);
-  if (btn) { btn.classList.add('active'); if (btn.classList.contains('ops')) btn.classList.add('ops'); }
-  renderView(view);
+  if (btn) btn.classList.add('active');
+  render(view);
 }
 
-function renderView(view) {
+function render(view) {
   const m = document.getElementById('mainContent');
-  switch (view) {
-    case 'overview': renderOverview(m); break;
-    case 'architecture': renderArchitecture(m); break;
-    case 'wiki': renderWikiView(m); break;
-    case 'rules': renderRulesView(m); break;
-    case 'routines': renderRoutinesView(m); break;
-    case 'economy': renderEconomyView(m); break;
-    case 'system': renderSystemView(m); break;
-  }
+  const fns = { overview, architecture, wiki, rules, routines, economy, system };
+  if (fns[view]) fns[view](m);
 }
 
-function renderOverview(main) {
-  const mk = cachedInvestment?.markets || {};
+// ============================================================
+// OVERVIEW
+// ============================================================
+function overview(main) {
+  const mk = cached.inv?.markets || {};
   let tickers = '';
   if (mk.btc?.price) {
     tickers = `<div class="ticker-grid">
-      <div class="ticker-item"><span class="ticker-name">BTC (KRW)</span><span class="ticker-price">${(mk.btc.price/10000).toFixed(0)}<span style="font-size:11px;font-weight:400">만원</span></span><span class="ticker-date">${(mk.btc.date||'').slice(0,10)}</span></div>
-      <div class="ticker-item"><span class="ticker-name">S&P 500</span><span class="ticker-price">${mk.sp500?.price?.toLocaleString()||'--'}</span><span class="ticker-date">${(mk.sp500?.date||'').slice(0,10)}</span></div>
-      <div class="ticker-item"><span class="ticker-name">KOSPI</span><span class="ticker-price">${mk.kospi?.price?.toLocaleString()||'--'}</span><span class="ticker-date">${(mk.kospi?.date||'').slice(0,10)}</span></div>
-      <div class="ticker-item"><span class="ticker-name">NASDAQ</span><span class="ticker-price">${mk.nasdaq?.price?.toLocaleString()||'--'}</span><span class="ticker-date">${(mk.nasdaq?.date||'').slice(0,10)}</span></div>
+      <div class="ticker-item"><div class="ticker-name">BTC (KRW)</div><div class="ticker-value">${(mk.btc.price/10000).toFixed(0)}<span style="font-size:12px;font-weight:400">만</span></div><div class="ticker-date">${(mk.btc.date||'').slice(0,10)}</div></div>
+      <div class="ticker-item"><div class="ticker-name">S&P 500</div><div class="ticker-value">${mk.sp500?.price?.toLocaleString()||'--'}</div><div class="ticker-date">${(mk.sp500?.date||'').slice(0,10)}</div></div>
+      <div class="ticker-item"><div class="ticker-name">KOSPI</div><div class="ticker-value">${mk.kospi?.price?.toLocaleString()||'--'}</div><div class="ticker-date">${(mk.kospi?.date||'').slice(0,10)}</div></div>
+      <div class="ticker-item"><div class="ticker-name">NASDAQ</div><div class="ticker-value">${mk.nasdaq?.price?.toLocaleString()||'--'}</div><div class="ticker-date">${(mk.nasdaq?.date||'').slice(0,10)}</div></div>
     </div>`;
   }
-  const sd = cachedSoonsal?.length || 0;
-  const wp = cachedWiki?.length || 0;
-  const rc = cachedRules?.length || 0;
-  main.innerHTML = `<div class="main-header"><h2>Overview</h2><span class="header-date">${new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'short'})}</span></div>
-    <div class="overview-hero"><p>Self-built AI agent system. Three axes: <strong style="color:var(--foundation)">Wiki</strong> for long-term knowledge, <strong style="color:var(--operations)">Dashboard</strong> for real-time results, <strong style="color:var(--foundation)">Rules</strong> for agent behavior. Running 12 automated routines across investment, policy scanning, research, and system maintenance.</p></div>
+
+  const wp = cached.wiki?.length || 0;
+  const rc = cached.rules?.length || 0;
+  const sd = cached.soonsal?.length || 0;
+  const today = new Date().toLocaleDateString('ko-KR', {year:'numeric',month:'long',day:'numeric',weekday:'short'});
+
+  main.innerHTML = `
+    <div class="main-header"><h2>Overview</h2><span>${today}</span></div>
+    <div class="pulse-row"><div class="pulse-dot"></div><span class="pulse-label">System live</span></div>
+    <div class="overview-text">Self-built AI agent system. Three axes: <strong>Wiki</strong> for long-term knowledge, <strong>Dashboard</strong> for real-time results, <strong>Rules Engine</strong> for agent behavior. 12 automated routines across investment, policy scanning, research, and system maintenance.</div>
     <div class="stat-row">
-      <div class="stat"><div class="stat-value"><span class="pulse ok"></span>Live</div><div class="stat-label">System Status</div></div>
-      <div class="stat accent"><div class="stat-value">${wp}</div><div class="stat-label">Wiki Pages</div></div>
-      <div class="stat"><div class="stat-value">12</div><div class="stat-label">Active Routines</div></div>
-      <div class="stat"><div class="stat-value">${rc}</div><div class="stat-label">Rules</div></div>
+      <div class="stat-item"><div class="stat-value indigo">${wp}</div><div class="stat-label">Wiki Pages</div></div>
+      <div class="stat-item"><div class="stat-value">12</div><div class="stat-label">Active Routines</div></div>
+      <div class="stat-item"><div class="stat-value">${rc}</div><div class="stat-label">Rules</div></div>
+      <div class="stat-item"><div class="stat-value">9</div><div class="stat-label">Skills</div></div>
     </div>
-    <div class="cards-grid">
-      <div class="card accent-foundation"><h3>Foundation <span class="card-badge foundation">System</span></h3><p style="font-size:13px;color:var(--text-secondary);line-height:1.65">Architecture defines how the system works. Wiki stores 340+ pages of long-term knowledge. Rules encode 26 behavioral directives for the Coach agent. These are the bones.</p></div>
-      <div class="card accent-operations"><h3>Operations <span class="card-badge operations">Runtime</span></h3><p style="font-size:13px;color:var(--text-secondary);line-height:1.65">Routines run on schedule: daily investment briefings, weekly policy scans (gov + Kyung Hee University), prompt journal analysis. Investment tracks portfolio and market data in real-time.</p></div>
+    <div class="card-grid single">
+      <div class="card"><h3>Foundation <span class="card-tag foundation">system</span></h3><p style="font-size:13px;color:var(--slate);line-height:1.6">Architecture defines how the system works. Wiki stores 340+ pages of long-term knowledge. 26 behavioral rules direct the Coach agent. These are structural, not operational.</p></div>
     </div>
     ${tickers}
-    <div class="card"><h3>Recent Briefings <span class="card-badge muted">${sd} days cached</span></h3><div id="ovBriefings">${renderBriefingPreview()}</div></div>`;
+    <div class="card" style="border:1px solid var(--hairline);background:var(--surface);border-radius:var(--radius);padding:20px 24px;margin-bottom:0">
+      <h3 style="font-size:14px;font-weight:600;margin-bottom:12px">Recent Briefings <span class="card-tag foundation">${sd}d</span></h3>
+      ${renderBriefings(3)}
+    </div>
+  `;
 }
 
-function renderBriefingPreview() {
-  if (!cachedSoonsal?.length) return '<div class="empty-state"><div class="eicon">--</div>No briefings</div>';
-  return cachedSoonsal.slice(0,3).map(d => {
-    const ts=Object.keys(d.types), tl={briefing:'Briefing',crypto:'Crypto',cardnews:'Card'};
-    const ds=d.date.slice(0,4)+'-'+d.date.slice(4,6)+'-'+d.date.slice(6,8);
-    return `<div class="briefing-day"><div class="bd-header" onclick="this.nextElementSibling.classList.toggle('open')"><span>${ds}</span><span style="font-size:11px;color:var(--text-tertiary)">${ts.map(t=>tl[t]||t).join(', ')}</span></div><div class="bd-body">${ts.map(t=>{const b=d.types[t];return`<div class="bd-section"><h4>${esc(b.title)}</h4><p>${esc(b.summary||'').slice(0,250)}...</p>${b.markets?.length?`<div class="bd-markets">${b.markets.map(m=>esc(m)).join('<br>')}</div>`:''}</div>`}).join('')}</div></div>`;
+function renderBriefings(limit) {
+  if (!cached.soonsal?.length) return '<div class="empty-state">No briefings cached</div>';
+  return cached.soonsal.slice(0, limit).map(d => {
+    const ts = Object.keys(d.types), tl = {briefing:'Briefing',crypto:'Crypto',cardnews:'Card'};
+    const ds = d.date.slice(0,4)+'-'+d.date.slice(4,6)+'-'+d.date.slice(6,8);
+    return `<div class="briefing-day">
+      <div class="bd-header" onclick="this.nextElementSibling.classList.toggle('open')">
+        <span>${ds}</span><span style="font-size:10.5px;color:var(--slate-light)">${ts.map(t=>tl[t]||t).join(', ')}</span>
+      </div>
+      <div class="bd-body">${ts.map(t=>{const b=d.types[t];return`<div class="bd-section"><h4>${esc(b.title)}</h4><p>${esc(b.summary||'').slice(0,250)}...</p>${b.markets?.length?`<div class="bd-markets">${b.markets.map(m=>esc(m)).join('<br>')}</div>`:''}</div>`}).join('')}</div>
+    </div>`;
   }).join('');
 }
 
-function renderArchitecture(main) {
-  main.innerHTML = `<div class="main-header"><h2>System Architecture</h2><span class="header-date">3-Axis Design</span></div>
+// ============================================================
+// ARCHITECTURE
+// ============================================================
+function architecture(main) {
+  main.innerHTML = `
+    <div class="main-header"><h2>System Architecture</h2><span>Three-axis design</span></div>
     <div class="arch-grid">
-      <div class="arch-card foundation"><h3>Wiki</h3><p>Obsidian vault <code>2_Wiki/</code>, flat directory, ~340 pages. Long-term knowledge store: concepts, decisions, insights, project specs. Connected via prose relations. Auto-verified with 10-step wiki-verify checklist every Sunday.</p></div>
-      <div class="arch-card foundation"><h3>Dashboard</h3><p><code>jsm0308.github.io/home/dashboard.html</code> — this page. Routine results, market data, system health in one view. Updated via <code>extract_*.py</code> scripts that pull from Wiki + CSV caches. Deploys to GitHub Pages on push.</p></div>
-      <div class="arch-card foundation"><h3>Rules Engine</h3><p><code>.cursor/rules/</code> — 26 .mdc files defining Coach agent behavior. 15 always-on, 11 on-demand. Covers domains: Core, Wiki, Economy, Career, Study, Life, Design, Safety. Extracted to readable cards on this dashboard.</p></div>
+      <div class="arch-card foundation">
+        <h3>Wiki</h3>
+        <p>Obsidian vault <code>2_Wiki/</code>, 340+ pages. Long-term knowledge store: concepts, decisions, insights, project specs. Connected via prose relations. Auto-verified every Sunday with wiki-verify checklist.</p>
+      </div>
+      <div class="arch-card foundation">
+        <h3>Dashboard</h3>
+        <p><code>jsm0308.github.io/home/</code>. Routine results, market data, system health in one view. Data extracted from Wiki + CSV caches via Python scripts. Deployed to GitHub Pages on push.</p>
+      </div>
+      <div class="arch-card foundation">
+        <h3>Rules Engine</h3>
+        <p><code>.cursor/rules/</code> — 26 .mdc files defining Coach agent behavior. 15 always-on, 11 on-demand. Covers Core, Wiki, Economy, Career, Study, Design, Safety domains.</p>
+      </div>
     </div>
-    <div class="card" style="margin-bottom:14px"><h3>Data Flow</h3>
-      <div class="flow-row"><span class="flow-node">You (request)</span><span class="flow-arrow">&rarr;</span><span class="flow-node">Coach (DeepSeek v4 Pro)</span><span class="flow-arrow">&rarr;</span><span class="flow-node">WebSearch + Scripts</span></div>
-      <div class="flow-row" style="margin-top:4px"><span class="flow-node" style="font-size:12px;border-color:var(--foundation)">Wiki (permanent)</span><span class="flow-node" style="font-size:12px;border-color:var(--operations)">Dashboard (web)</span><span class="flow-node" style="font-size:12px">Email (alert)</span></div>
+    <div class="card-grid single" style="margin-bottom:14px">
+      <div class="card">
+        <h3>Data Flow</h3>
+        <div class="flow-row">
+          <span class="flow-node">You</span><span class="flow-arrow">&rarr;</span>
+          <span class="flow-node foundation">Coach (DeepSeek v4 Pro)</span><span class="flow-arrow">&rarr;</span>
+          <span class="flow-node">WebSearch + Scripts</span>
+        </div>
+        <div class="flow-row" style="margin-top:6px">
+          <span class="flow-node foundation">Wiki</span>
+          <span class="flow-node">Dashboard</span>
+          <span class="flow-node">Email</span>
+        </div>
+      </div>
     </div>
-    <div class="card"><h3>Sunday Maintenance <span class="card-badge operations">weekly</span></h3>
-      <div class="maint-item"><span class="maint-dot"></span><span class="maint-label">Rule Pruning</span><span class="maint-desc">Check if 15 always-on rules exceed limit. Propose deactivation for unused ones.</span></div>
-      <div class="maint-item"><span class="maint-dot"></span><span class="maint-label">Adversarial Audit</span><span class="maint-desc">Sample-check wiki frontmatter, broken links, orphan pages. Verify system follows its own rules.</span></div>
-      <div class="maint-item"><span class="maint-dot"></span><span class="maint-label">Skill Inventory</span><span class="maint-desc">Update version and status for all 9 active skills (crypto-bot, deep-research, etc).</span></div>
-      <div class="maint-item"><span class="maint-dot"></span><span class="maint-label">Prompt Journal</span><span class="maint-desc">Analyze last week's prompts. Score clarity/structure/specificity. Suggest improvements.</span></div>
-      <div class="maint-item"><span class="maint-dot"></span><span class="maint-label">Domain Cleanup</span><span class="maint-desc">Archive expired deadlines. Flag stale decisions. Never auto-delete.</span></div>
-    </div>`;
+    <div class="card-grid single">
+      <div class="card">
+        <h3>Sunday Maintenance <span class="card-tag ops">weekly</span></h3>
+        <div class="maint-item"><span class="maint-dot"></span><span class="maint-label">Rule Pruning</span><span class="maint-desc">Check if always-on rules exceed limit. Propose deactivation for unused ones.</span></div>
+        <div class="maint-item"><span class="maint-dot"></span><span class="maint-label">Adversarial Audit</span><span class="maint-desc">Sample-check wiki frontmatter, broken links, orphan pages.</span></div>
+        <div class="maint-item"><span class="maint-dot"></span><span class="maint-label">Skill Inventory</span><span class="maint-desc">Update version and status for all 9 active skills.</span></div>
+        <div class="maint-item"><span class="maint-dot"></span><span class="maint-label">Prompt Journal</span><span class="maint-desc">Analyze last week's prompts. Score clarity. Suggest improvements.</span></div>
+        <div class="maint-item"><span class="maint-dot"></span><span class="maint-label">Domain Cleanup</span><span class="maint-desc">Archive expired deadlines, flag stale decisions.</span></div>
+      </div>
+    </div>
+  `;
 }
 
-function renderWikiView(main) {
-  main.innerHTML = `<div class="main-header"><h2>Wiki Browser</h2><span class="header-date">${cachedWiki?.length||0} pages indexed</span></div>
-    <input type="text" class="wiki-search" id="wikiSearch" placeholder="Search 340+ wiki pages..." oninput="renderWikiGrid()">
+// ============================================================
+// WIKI
+// ============================================================
+function wiki(main) {
+  main.innerHTML = `
+    <div class="main-header"><h2>Wiki</h2><span>${cached.wiki?.length||0} pages indexed</span></div>
+    <input type="text" class="wiki-search" id="wikiSearch" placeholder="Search pages..." oninput="renderWikiGrid()">
     <div class="filter-bar" id="wikiFilters"></div>
-    <div id="wikiContainer"></div>`;
-  buildWikiFilters(); renderWikiGrid();
+    <div id="wikiContainer"></div>
+  `;
+  buildWikiFilters();
+  renderWikiGrid();
 }
 
 function buildWikiFilters() {
-  if(!cachedWiki)return; const domains=new Set(); cachedWiki.forEach(p=>domains.add(p.domain));
-  const bar=document.getElementById('wikiFilters'); if(!bar)return;
-  let h='<span class="flabel">Domain:</span>';
-  h+=`<button class="fbtn active" onclick="fltWiki('All')">All (${cachedWiki.length})</button>`;
-  [...domains].sort().forEach(d=>{const c=cachedWiki.filter(p=>p.domain===d).length;h+=`<button class="fbtn" onclick="fltWiki('${d}')">${d} (${c})</button>`;});
-  bar.innerHTML=h;
+  if (!cached.wiki) return;
+  const domains = new Set(); cached.wiki.forEach(p => domains.add(p.domain));
+  const bar = document.getElementById('wikiFilters'); if (!bar) return;
+  let h = '<span class="flabel">Domain:</span>';
+  h += `<button class="fbtn active" onclick="fltWiki('All')">All (${cached.wiki.length})</button>`;
+  [...domains].sort().forEach(d => {
+    const c = cached.wiki.filter(p => p.domain === d).length;
+    h += `<button class="fbtn" onclick="fltWiki('${d}')">${d} (${c})</button>`;
+  });
+  bar.innerHTML = h;
 }
-function fltWiki(d){activeWikiDomain=d;document.querySelectorAll('#wikiFilters .fbtn').forEach(b=>b.classList.remove('active'));const btn=document.querySelector(`#wikiFilters .fbtn[onclick="fltWiki('${d}')"]`);if(btn)btn.classList.add('active');renderWikiGrid();}
+
+function fltWiki(d) {
+  filterWikiDomain = d;
+  document.querySelectorAll('#wikiFilters .fbtn').forEach(b => b.classList.remove('active'));
+  const btn = document.querySelector(`#wikiFilters .fbtn[onclick="fltWiki('${d}')"]`);
+  if (btn) btn.classList.add('active');
+  renderWikiGrid();
+}
 
 function renderWikiGrid() {
-  if(!cachedWiki)return;const q=(document.getElementById('wikiSearch')?.value||'').toLowerCase();
-  let f=activeWikiDomain==='All'?cachedWiki:cachedWiki.filter(p=>p.domain===activeWikiDomain);
-  if(q)f=f.filter(p=>(p.title||'').toLowerCase().includes(q)||(p.summary||'').toLowerCase().includes(q));
-  const container=document.getElementById('wikiContainer');if(!container)return;
-  const groups={};f.forEach(p=>{groups[p.domain]=groups[p.domain]||[];groups[p.domain].push(p);});
-  let h='';for(const[d,pgs]of Object.entries(groups).sort()){h+=`<div class="wiki-group"><h3>${d} (${pgs.length})</h3>`;pgs.forEach(p=>{h+=`<div class="wiki-item"><span class="wi-title">${esc(p.slug)}</span><span class="wi-summary">${esc(p.summary||'')}</span><span class="wi-meta"><span class="badge muted">${p.kind||''}</span> ${p.updated||''}</span></div>`;});h+='</div>';}
-  container.innerHTML=h||'<div class="empty-state"><div class="eicon">--</div>No matching pages</div>';
+  if (!cached.wiki) return;
+  const q = (document.getElementById('wikiSearch')?.value || '').toLowerCase();
+  let f = filterWikiDomain === 'All' ? cached.wiki : cached.wiki.filter(p => p.domain === filterWikiDomain);
+  if (q) f = f.filter(p => (p.title||'').toLowerCase().includes(q) || (p.summary||'').toLowerCase().includes(q));
+  const container = document.getElementById('wikiContainer'); if (!container) return;
+  const groups = {}; f.forEach(p => { groups[p.domain] = groups[p.domain] || []; groups[p.domain].push(p); });
+  let h = '';
+  for (const [d, pgs] of Object.entries(groups).sort()) {
+    h += `<div class="wiki-group"><h3>${d} (${pgs.length})</h3>`;
+    pgs.forEach(p => {
+      h += `<div class="wiki-item"><span class="wi-title">${esc(p.slug)}</span><span class="wi-summary">${esc(p.summary||'')}</span><span class="wi-meta"><span class="badge mono">${p.kind||''}</span> ${p.updated||''}</span></div>`;
+    });
+    h += '</div>';
+  }
+  container.innerHTML = h || '<div class="empty-state">No matching pages</div>';
 }
 
-function renderRulesView(main) {
-  main.innerHTML = `<div class="main-header"><h2>Rules Reference</h2><span class="header-date">${cachedRules?.length||0} .mdc files</span></div>
-    <div class="filter-bar" id="ruleFilters"></div><div class="rule-grid" id="ruleGrid"></div>`;
+// ============================================================
+// RULES
+// ============================================================
+function rules(main) {
+  main.innerHTML = `
+    <div class="main-header"><h2>Rules</h2><span>${cached.rules?.length||0} .mdc files</span></div>
+    <div class="filter-bar" id="ruleFilters"></div>
+    <div class="rule-grid" id="ruleGrid"></div>
+  `;
   buildRuleFilters(); renderRuleGrid();
 }
 
 function buildRuleFilters() {
-  if(!cachedRules)return;const domains=new Set();cachedRules.forEach(r=>(r.domain||[]).forEach(d=>domains.add(d)));
-  const bar=document.getElementById('ruleFilters');if(!bar)return;
-  let h='<span class="flabel">Domain:</span>';h+=`<button class="fbtn active" onclick="fltRules('All')">All (${cachedRules.length})</button>`;
-  [...domains].sort().forEach(d=>{const c=cachedRules.filter(r=>(r.domain||[]).includes(d)).length;h+=`<button class="fbtn" onclick="fltRules('${d}')">${d} (${c})</button>`;});
-  bar.innerHTML=h;
+  if (!cached.rules) return;
+  const domains = new Set(); cached.rules.forEach(r => (r.domain||[]).forEach(d => domains.add(d)));
+  const bar = document.getElementById('ruleFilters'); if (!bar) return;
+  let h = '<span class="flabel">Domain:</span>';
+  h += `<button class="fbtn active" onclick="fltRules('All')">All (${cached.rules.length})</button>`;
+  [...domains].sort().forEach(d => {
+    const c = cached.rules.filter(r => (r.domain||[]).includes(d)).length;
+    h += `<button class="fbtn" onclick="fltRules('${d}')">${d} (${c})</button>`;
+  });
+  bar.innerHTML = h;
 }
-function fltRules(d){activeRuleDomain=d;document.querySelectorAll('#ruleFilters .fbtn').forEach(b=>b.classList.remove('active'));const btn=document.querySelector(`#ruleFilters .fbtn[onclick="fltRules('${d}')"]`);if(btn)btn.classList.add('active');renderRuleGrid();}
+
+function fltRules(d) {
+  filterRuleDomain = d;
+  document.querySelectorAll('#ruleFilters .fbtn').forEach(b => b.classList.remove('active'));
+  const btn = document.querySelector(`#ruleFilters .fbtn[onclick="fltRules('${d}')"]`);
+  if (btn) btn.classList.add('active');
+  renderRuleGrid();
+}
 
 function renderRuleGrid() {
-  if(!cachedRules)return;const f=activeRuleDomain==='All'?cachedRules:cachedRules.filter(r=>(r.domain||[]).includes(activeRuleDomain));
-  const grid=document.getElementById('ruleGrid');if(!grid)return;
-  grid.innerHTML=f.map((r,i)=>{const idx=cachedRules.indexOf(r);const bb=r.alwaysApply?'<span class="badge foundation">always</span>':'<span class="badge operations">on-demand</span>';const db=(r.domain||[]).slice(0,2).map(d=>`<span class="badge muted">${d}</span>`).join(' ');return`<div class="rule-card" onclick="openRuleModal(${idx})"><div class="rc-title">${esc(r.title)}</div><div class="rc-summary">${esc(r.summary||'')}</div><div class="rc-meta">${bb} ${db} <span style="font-size:10.5px;color:var(--text-tertiary)">${esc(r.file)}</span></div></div>`;}).join('');
+  if (!cached.rules) return;
+  const f = filterRuleDomain === 'All' ? cached.rules : cached.rules.filter(r => (r.domain||[]).includes(filterRuleDomain));
+  const grid = document.getElementById('ruleGrid'); if (!grid) return;
+  grid.innerHTML = f.map(r => {
+    const idx = cached.rules.indexOf(r);
+    const bb = r.alwaysApply ? '<span class="badge indigo">always</span>' : '<span class="badge mono">on-demand</span>';
+    const db = (r.domain||[]).slice(0,2).map(d => `<span class="badge mono">${d}</span>`).join(' ');
+    return `<div class="rule-card" onclick="openRuleModal(${idx})">
+      <div class="rc-title">${esc(r.title)}</div>
+      <div class="rc-summary">${esc(r.summary||'')}</div>
+      <div class="rc-meta">${bb} ${db} <span style="font-size:10px;color:var(--slate-light)">${esc(r.file)}</span></div>
+    </div>`;
+  }).join('');
 }
 
-function openRuleModal(idx){const r=cachedRules[idx];if(!r)return;let h=`<button class="modal-close" onclick="closeRuleModal()">x</button>`;h+=`<h3 style="font-size:17px;font-weight:700;margin-bottom:2px">${esc(r.title)}</h3>`;h+=`<p style="font-size:11.5px;color:var(--text-tertiary);margin-bottom:8px">${esc(r.file)} · ${r.alwaysApply?'<span class="badge foundation">always</span>':'<span class="badge operations">on-demand</span>'} ${(r.domain||[]).map(d=>`<span class="badge muted">${d}</span>`).join(' ')}</p>`;h+=`<p style="font-size:13px;color:var(--text-secondary);line-height:1.65">${esc(r.subtitle||'')}</p>`;if(r.sections?.length){r.sections.forEach(s=>{h+=`<div class="modal-section"><h4>${esc(s.heading)}</h4><p>${esc(s.body)}</p></div>`;});}document.getElementById('ruleModal').innerHTML=h;document.getElementById('ruleModalOverlay').classList.add('open');}
-function closeRuleModal(){document.getElementById('ruleModalOverlay').classList.remove('open');}
+function openRuleModal(idx) {
+  const r = cached.rules[idx]; if (!r) return;
+  let h = `<button class="modal-close" onclick="closeRuleModal()">x</button>`;
+  h += `<h3 style="font-size:16px;font-weight:700;margin-bottom:2px">${esc(r.title)}</h3>`;
+  h += `<p style="font-size:11px;color:var(--slate-light);margin-bottom:8px">${esc(r.file)} · ${r.alwaysApply?'<span class="badge indigo">always</span>':'<span class="badge mono">on-demand</span>'} ${(r.domain||[]).map(d=>`<span class="badge mono">${d}</span>`).join(' ')}</p>`;
+  h += `<p style="font-size:12.5px;color:var(--slate);line-height:1.6">${esc(r.subtitle||'')}</p>`;
+  if (r.sections?.length) {
+    r.sections.forEach(s => {
+      h += `<div class="modal-section"><h4>${esc(s.heading)}</h4><p>${esc(s.body)}</p></div>`;
+    });
+  }
+  document.getElementById('ruleModal').innerHTML = h;
+  document.getElementById('ruleModalOverlay').classList.add('open');
+}
 
-function renderRoutinesView(main) {
-  main.innerHTML = `<div class="main-header"><h2>Routines & Briefings</h2><span class="header-date">12 active routines</span></div>
-    <div class="card accent-operations" style="margin-bottom:14px"><h3>Youth Policy + Kyung Hee Scan <span class="card-badge operations">Sun 10:30</span></h3><div id="policyList"></div></div>
-    <div class="cards-grid" style="margin-bottom:14px">
-      <div class="card"><h3>Daily Investment Briefing <span class="card-badge muted">Mon-Fri</span></h3><div id="dailyBriefing"></div></div>
-      <div class="card"><h3>Weekly Investment Report <span class="card-badge muted">Sun</span></h3><div id="weeklyReport"></div></div>
-      <div class="card"><h3>Prompt Journal Review <span class="card-badge muted">Sun</span></h3><div id="promptReview"></div></div>
+function closeRuleModal() { document.getElementById('ruleModalOverlay').classList.remove('open'); }
+
+// ============================================================
+// ROUTINES
+// ============================================================
+function routines(main) {
+  main.innerHTML = `
+    <div class="main-header"><h2>Routines</h2><span>12 active</span></div>
+    <div class="card-grid single" style="margin-bottom:14px">
+      <div class="card"><h3>Youth Policy + Kyung Hee Scan <span class="card-tag ops">sunday</span></h3><div id="policyList"></div></div>
     </div>
-    <div class="card accent-foundation"><h3>Soonsal Briefings <span class="card-badge foundation">${cachedSoonsal?.length||0} days</span></h3><div id="soonsalList">${renderBriefingPreview()}</div></div>`;
-  renderPolicyAsync(); renderInvestmentBriefings(); renderPromptReview();
+    <div class="card-grid" style="margin-bottom:14px">
+      <div class="card"><h3>Daily Investment Briefing <span class="card-tag ops">mon-fri</span></h3><div id="dailyBriefing"></div></div>
+      <div class="card"><h3>Weekly Investment Report <span class="card-tag ops">sunday</span></h3><div id="weeklyReport"></div></div>
+      <div class="card"><h3>Prompt Journal Review <span class="card-tag ops">sunday</span></h3><div id="promptReview"></div></div>
+    </div>
+    <div class="card-grid single">
+      <div class="card"><h3>Soonsal Briefings <span class="card-tag foundation">${cached.soonsal?.length||0}d</span></h3>${renderBriefings(99)}</div>
+    </div>
+  `;
+  renderPolicyAsync();
+  renderInvBriefings();
+  renderPromptReview();
 }
 
 async function renderPolicyAsync() {
-  if(!cachedPolicy)cachedPolicy=await loadJSON('data/policy-scan.json');const el=document.getElementById('policyList');if(!el)return;const d=cachedPolicy;
-  if(!d||!d.youthPolicies?.length&&!d.kyungheeBenefits?.length){el.innerHTML='<div class="empty-state"><div class="eicon">--</div>First scan scheduled Sunday</div>';return;}
-  let h='';if(d.youthPolicies?.length){h+='<h4 style="font-size:12px;font-weight:600;margin:8px 0 4px">Government</h4>';d.youthPolicies.forEach(p=>{h+=`<div class="policy-item"><strong>${esc(p.title)}</strong><div class="pi-source">${esc(p.source)} ${p.deadline?'| Deadline: '+p.deadline:''}</div><p style="margin-top:2px;font-size:12px;color:var(--text-secondary)">${esc(p.summary)}</p>${p.link?`<a href="${p.link}" target="_blank">Link</a>`:''}</div>`;});}
-  if(d.kyungheeBenefits?.length){h+='<h4 style="font-size:12px;font-weight:600;margin:8px 0 4px">Kyung Hee Univ</h4>';d.kyungheeBenefits.forEach(p=>{h+=`<div class="policy-item"><strong>${esc(p.title)}</strong><div class="pi-source">${esc(p.source)} ${p.deadline?'| Deadline: '+p.deadline:''}</div><p style="margin-top:2px;font-size:12px;color:var(--text-secondary)">${esc(p.summary)}</p>${p.link?`<a href="${p.link}" target="_blank">Link</a>`:''}</div>`;});}
-  el.innerHTML=h;
+  if (!cached.policy) cached.policy = await loadJSON('data/policy-scan.json');
+  const el = document.getElementById('policyList'); if (!el) return;
+  const d = cached.policy;
+  if (!d || !d.youthPolicies?.length && !d.kyungheeBenefits?.length) {
+    el.innerHTML = '<div class="empty-state">First scan scheduled Sunday</div>'; return;
+  }
+  let h = '';
+  if (d.youthPolicies?.length) {
+    h += '<h4 style="font-size:12px;font-weight:600;margin:8px 0 4px">Government</h4>';
+    d.youthPolicies.forEach(p => {
+      h += `<div class="policy-item"><strong>${esc(p.title)}</strong><div class="pi-source">${esc(p.source)}${p.deadline?' / Deadline: '+p.deadline:''}</div><p style="margin-top:2px;font-size:12px;color:var(--slate)">${esc(p.summary)}</p>${p.link?`<a href="${p.link}" target="_blank">Link</a>`:''}</div>`;
+    });
+  }
+  if (d.kyungheeBenefits?.length) {
+    h += '<h4 style="font-size:12px;font-weight:600;margin:8px 0 4px">Kyung Hee University</h4>';
+    d.kyungheeBenefits.forEach(p => {
+      h += `<div class="policy-item"><strong>${esc(p.title)}</strong><div class="pi-source">${esc(p.source)}${p.deadline?' / Deadline: '+p.deadline:''}</div><p style="margin-top:2px;font-size:12px;color:var(--slate)">${esc(p.summary)}</p>${p.link?`<a href="${p.link}" target="_blank">Link</a>`:''}</div>`;
+    });
+  }
+  el.innerHTML = h;
 }
 
-function renderInvestmentBriefings() {
-  if(!cachedInvestment){document.getElementById('dailyBriefing').innerHTML='<div class="empty-state"><div class="eicon">--</div>Waiting</div>';document.getElementById('weeklyReport').innerHTML='<div class="empty-state"><div class="eicon">--</div>Waiting</div>';return;}
-  const di=cachedInvestment.investmentDaily;document.getElementById('dailyBriefing').innerHTML=di?.summary?`<p style="font-size:12px;color:var(--text-secondary)">${esc(di.summary)}</p><p style="font-size:11px;color:var(--text-tertiary);margin-top:4px">${di.date}</p>`:'<div class="empty-state"><div class="eicon">--</div>Pending</div>';
-  const wi=cachedInvestment.investmentWeekly;document.getElementById('weeklyReport').innerHTML=wi?.summary?`<p style="font-size:12px;color:var(--text-secondary)">${esc(wi.summary)}</p><p style="font-size:11px;color:var(--text-tertiary);margin-top:4px">${wi.date}</p>`:'<div class="empty-state"><div class="eicon">--</div>Pending</div>';
+function renderInvBriefings() {
+  if (!cached.inv) {
+    document.getElementById('dailyBriefing').innerHTML = '<div class="empty-state">Pending</div>';
+    document.getElementById('weeklyReport').innerHTML = '<div class="empty-state">Pending</div>';
+    return;
+  }
+  const di = cached.inv.investmentDaily;
+  document.getElementById('dailyBriefing').innerHTML = di?.summary
+    ? `<p style="font-size:12px;color:var(--slate)">${esc(di.summary)}</p><p style="font-size:10.5px;color:var(--slate-light);margin-top:4px">${di.date}</p>`
+    : '<div class="empty-state">Pending</div>';
+  const wi = cached.inv.investmentWeekly;
+  document.getElementById('weeklyReport').innerHTML = wi?.summary
+    ? `<p style="font-size:12px;color:var(--slate)">${esc(wi.summary)}</p><p style="font-size:10.5px;color:var(--slate-light);margin-top:4px">${wi.date}</p>`
+    : '<div class="empty-state">Pending</div>';
 }
 
 function renderPromptReview() {
-  if(!cachedHealth){document.getElementById('promptReview').innerHTML='<div class="empty-state"><div class="eicon">--</div>Waiting</div>';return;}
-  const pj=cachedHealth.promptJournal;document.getElementById('promptReview').innerHTML=pj?.totalSessions>0?`<p>${pj.weekOf} · ${pj.totalSessions}sessions, ${pj.totalPrompts}prompts</p><p style="font-size:12px;color:var(--text-secondary);margin-top:2px">Avg score: <strong>${pj.avgScore}</strong></p><p style="font-size:12px;color:var(--text-secondary)">Focus: ${pj.focus}</p>`:'<div class="empty-state"><div class="eicon">--</div>Pending</div>';
+  if (!cached.health) {
+    document.getElementById('promptReview').innerHTML = '<div class="empty-state">Pending</div>';
+    return;
+  }
+  const pj = cached.health.promptJournal;
+  document.getElementById('promptReview').innerHTML = pj?.totalSessions > 0
+    ? `<p>${pj.weekOf} / ${pj.totalSessions} sessions, ${pj.totalPrompts} prompts</p><p style="font-size:12px;color:var(--slate);margin-top:2px">Avg score: <strong>${pj.avgScore}</strong></p><p style="font-size:12px;color:var(--slate)">${pj.focus}</p>`
+    : '<div class="empty-state">Pending</div>';
 }
 
-function renderEconomyView(main) {
-  const mk=cachedInvestment?.markets||{};let tickers='';
-  if(mk.btc?.price){tickers=`<div class="ticker-grid"><div class="ticker-item"><span class="ticker-name">BTC (KRW)</span><span class="ticker-price">${(mk.btc.price/10000).toFixed(0)}<span style="font-size:11px;font-weight:400">만원</span></span><span class="ticker-date">${(mk.btc.date||'').slice(0,10)}</span></div><div class="ticker-item"><span class="ticker-name">S&P 500</span><span class="ticker-price">${mk.sp500?.price?.toLocaleString()||'--'}</span><span class="ticker-date">${(mk.sp500?.date||'').slice(0,10)}</span></div><div class="ticker-item"><span class="ticker-name">KOSPI</span><span class="ticker-price">${mk.kospi?.price?.toLocaleString()||'--'}</span><span class="ticker-date">${(mk.kospi?.date||'').slice(0,10)}</span></div><div class="ticker-item"><span class="ticker-name">NASDAQ</span><span class="ticker-price">${mk.nasdaq?.price?.toLocaleString()||'--'}</span><span class="ticker-date">${(mk.nasdaq?.date||'').slice(0,10)}</span></div></div>`;}
-  main.innerHTML = `<div class="main-header"><h2>Investment</h2><span class="header-date">Portfolio + Market Data</span></div>${tickers}<div class="card accent-operations"><h3>Portfolio Snapshot</h3><div id="portfolioSnapshot"></div></div>`;
-  const el=document.getElementById('portfolioSnapshot');const pf=cachedInvestment?.portfolio;
-  if(!pf){el.innerHTML='<div class="empty-state"><div class="eicon">--</div>No data</div>';return;}
-  el.innerHTML=`<p style="font-size:14px;margin-bottom:8px">Total: <strong>${(pf.totalValue/10000).toFixed(0)}만 KRW</strong> ${pf.needsRebalance?'<span class="badge data">Rebalance needed</span>':''}</p><table class="simple-table"><thead><tr><th>Asset</th><th>Amount</th><th>Target</th><th>Drift</th></tr></thead><tbody>${pf.allocations.map(a=>`<tr><td>${esc(a.asset)}</td><td>${(a.amount/10000).toFixed(0)}만 KRW</td><td>${a.target}</td><td>${a.drift}%</td></tr>`).join('')}</tbody></table>`;
+// ============================================================
+// INVESTMENT
+// ============================================================
+function economy(main) {
+  const mk = cached.inv?.markets || {};
+  let tickers = '';
+  if (mk.btc?.price) {
+    tickers = `<div class="ticker-grid">
+      <div class="ticker-item"><div class="ticker-name">BTC (KRW)</div><div class="ticker-value">${(mk.btc.price/10000).toFixed(0)}<span style="font-size:12px;font-weight:400">만</span></div><div class="ticker-date">${(mk.btc.date||'').slice(0,10)}</div></div>
+      <div class="ticker-item"><div class="ticker-name">S&P 500</div><div class="ticker-value">${mk.sp500?.price?.toLocaleString()||'--'}</div><div class="ticker-date">${(mk.sp500?.date||'').slice(0,10)}</div></div>
+      <div class="ticker-item"><div class="ticker-name">KOSPI</div><div class="ticker-value">${mk.kospi?.price?.toLocaleString()||'--'}</div><div class="ticker-date">${(mk.kospi?.date||'').slice(0,10)}</div></div>
+      <div class="ticker-item"><div class="ticker-name">NASDAQ</div><div class="ticker-value">${mk.nasdaq?.price?.toLocaleString()||'--'}</div><div class="ticker-date">${(mk.nasdaq?.date||'').slice(0,10)}</div></div>
+    </div>`;
+  }
+  main.innerHTML = `<div class="main-header"><h2>Investment</h2><span>Portfolio + Markets</span></div>${tickers}<div class="card-grid single"><div class="card"><h3>Portfolio Snapshot</h3><div id="portfolioSnapshot"></div></div></div>`;
+  const el = document.getElementById('portfolioSnapshot');
+  const pf = cached.inv?.portfolio;
+  if (!pf) { el.innerHTML = '<div class="empty-state">No data</div>'; return; }
+  el.innerHTML = `<p style="font-size:13px;margin-bottom:10px">Total: <strong style="font-family:'JetBrains Mono',monospace">${(pf.totalValue/10000).toFixed(0)}</strong> <span style="font-size:12px;color:var(--slate-light)">만 KRW</span> ${pf.needsRebalance?'<span class="badge indigo">Rebalance needed</span>':''}</p>
+    <table class="simple-table"><thead><tr><th>Asset</th><th>Amount</th><th>Target</th><th>Drift</th></tr></thead><tbody>${pf.allocations.map(a=>`<tr><td>${esc(a.asset)}</td><td style="font-family:'JetBrains Mono',monospace">${(a.amount/10000).toFixed(0)}만</td><td>${a.target}</td><td>${a.drift}%</td></tr>`).join('')}</tbody></table>`;
 }
 
-function renderSystemView(main) {
-  const sys=cachedHealth?.systemHealth||{};const wp=cachedWiki?.length||'?';const ar=cachedRules?.filter(r=>r.alwaysApply).length||'?';
-  main.innerHTML = `<div class="main-header"><h2>System Health</h2><span class="header-date">Sunday auto-check</span></div>
-    <div class="stat-row"><div class="stat accent"><div class="stat-value">${wp}</div><div class="stat-label">Wiki Pages</div></div><div class="stat"><div class="stat-value">9</div><div class="stat-label">Skills</div></div><div class="stat"><div class="stat-value">${ar}</div><div class="stat-label">Always-on Rules</div></div><div class="stat"><div class="stat-value"><span class="badge operations">Healthy</span></div><div class="stat-label">Status</div></div></div>
-    <div class="card"><h3>Skill Inventory</h3><div id="skillInventory"></div></div>
-    <div class="card" style="margin-top:14px"><h3>Adversarial Audit</h3><div id="auditResult"></div></div>`;
-  if(sys?.skills)document.getElementById('skillInventory').innerHTML=`<table class="simple-table"><thead><tr><th>Skill</th><th>Ver</th><th>Status</th><th>Last Tested</th></tr></thead><tbody>${sys.skills.map(s=>`<tr><td><strong>${esc(s.name)}</strong></td><td>${s.version}</td><td><span class="badge ${s.status==='active'?'operations':'data'}">${s.status}</span></td><td>${s.lastTested}</td></tr>`).join('')}</tbody></table>`;
-  document.getElementById('auditResult').innerHTML=sys?.lastAudit?`<p>Last: ${sys.lastAudit}</p><p>Orphans: ${sys.orphanPages}, Broken links: ${sys.brokenLinks}</p><p>Rules: ${sys.alwaysOnRules} always (target ${sys.targetMax})</p>`:'<div class="empty-state"><div class="eicon">--</div>First audit scheduled Sunday</div>';
+// ============================================================
+// SYSTEM HEALTH
+// ============================================================
+function system(main) {
+  const sys = cached.health?.systemHealth || {};
+  const wp = cached.wiki?.length || '?';
+  const ar = cached.rules?.filter(r => r.alwaysApply).length || '?';
+  main.innerHTML = `
+    <div class="main-header"><h2>System Health</h2><span>Sunday auto-check</span></div>
+    <div class="stat-row">
+      <div class="stat-item"><div class="stat-value indigo">${wp}</div><div class="stat-label">Wiki Pages</div></div>
+      <div class="stat-item"><div class="stat-value">9</div><div class="stat-label">Skills</div></div>
+      <div class="stat-item"><div class="stat-value">${ar}</div><div class="stat-label">Always-on Rules</div></div>
+      <div class="stat-item"><div class="stat-value" style="font-size:16px"><span class="badge indigo">Healthy</span></div><div class="stat-label">Status</div></div>
+    </div>
+    <div class="card-grid single" style="margin-bottom:14px"><div class="card"><h3>Skill Inventory</h3><div id="skillInventory"></div></div></div>
+    <div class="card-grid single"><div class="card"><h3>Adversarial Audit</h3><div id="auditResult"></div></div></div>
+  `;
+  if (sys?.skills) {
+    document.getElementById('skillInventory').innerHTML = `<table class="simple-table"><thead><tr><th>Skill</th><th>Ver</th><th>Status</th><th>Last Tested</th></tr></thead><tbody>${sys.skills.map(s=>`<tr><td><strong>${esc(s.name)}</strong></td><td>${s.version}</td><td><span class="badge ${s.status==='active'?'indigo':'mono'}">${s.status}</span></td><td>${s.lastTested}</td></tr>`).join('')}</tbody></table>`;
+  }
+  document.getElementById('auditResult').innerHTML = sys?.lastAudit
+    ? `<p>Last: ${sys.lastAudit}</p><p>Orphans: ${sys.orphanPages}, Broken links: ${sys.brokenLinks}</p><p>Rules: ${sys.alwaysOnRules} always (target ${sys.targetMax})</p>`
+    : '<div class="empty-state">First audit scheduled Sunday</div>';
 }
 
-async function loadJSON(path){try{const r=await fetch(path);if(!r.ok)throw new Error('HTTP '+r.status);return await r.json();}catch(e){console.error(path,e);return null;}}
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+// ============================================================
+// UTILS
+// ============================================================
+async function loadJSON(path) {
+  try { const r = await fetch(path); if (!r.ok) throw new Error(path+' '+r.status); return await r.json(); }
+  catch (e) { console.error(e); return null; }
+}
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-async function init(){
-  const[rules,wiki,inv,soonsal,health,policy]=await Promise.all([loadJSON('data/rules.json'),loadJSON('data/wiki-index.json'),loadJSON('data/investment.json'),loadJSON('data/soonsal-briefings.json'),loadJSON('data/system-health.json'),loadJSON('data/policy-scan.json')]);
-  cachedRules=rules||[];cachedWiki=wiki||[];cachedInvestment=inv||{};cachedSoonsal=soonsal||[];cachedHealth=health||{};cachedPolicy=policy||{};
-  renderView('overview');
+async function init() {
+  const [rules, wiki, inv, soonsal, health, policy] = await Promise.all([
+    loadJSON('data/rules.json'), loadJSON('data/wiki-index.json'),
+    loadJSON('data/investment.json'), loadJSON('data/soonsal-briefings.json'),
+    loadJSON('data/system-health.json'), loadJSON('data/policy-scan.json')
+  ]);
+  cached.rules = rules || []; cached.wiki = wiki || [];
+  cached.inv = inv || {}; cached.soonsal = soonsal || [];
+  cached.health = health || {}; cached.policy = policy || {};
+  render('overview');
 }
 init();
 </script>
