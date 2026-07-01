@@ -6,504 +6,583 @@
 <title>JSM Personal Dashboard</title>
 <style>
 :root {
-  --bg: #ffffff;
-  --bg-secondary: #f8fafc;
-  --bg-tertiary: #f1f5f9;
-  --text: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #94a3b8;
-  --border: #e2e8f0;
-  --primary: #2563eb;
+  --bg: #fafafa;
+  --bg-card: #ffffff;
+  --bg-hover: #f5f5f5;
+  --text: #171717;
+  --text-secondary: #525252;
+  --text-muted: #8a8a8a;
+  --border: #e5e5e5;
+  --primary: #3b82f6;
   --primary-light: #eff6ff;
   --success: #059669;
   --warning: #d97706;
   --danger: #dc2626;
-  --radius: 8px;
-  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-md: 0 4px 6px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.04);
+  --radius: 10px;
+  --radius-sm: 6px;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
-  background: var(--bg-secondary);
+  background: var(--bg);
   color: var(--text);
   line-height: 1.6;
-  font-size: 15px;
+  font-size: 14px;
 }
-.container { max-width: 960px; margin: 0 auto; padding: 24px 20px; }
+.container { max-width: 1000px; margin: 0 auto; padding: 20px 16px; }
 header {
-  background: var(--bg);
+  background: var(--bg-card);
   border-bottom: 1px solid var(--border);
-  padding: 16px 0;
+  padding: 14px 0;
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 20;
 }
 .header-inner {
-  max-width: 960px;
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-.header-inner h1 { font-size: 20px; font-weight: 700; color: var(--text); }
-.header-inner .date { font-size: 13px; color: var(--text-muted); }
-.status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+.header-inner h1 { font-size: 18px; font-weight: 700; }
+.header-inner .date { font-size: 12px; color: var(--text-muted); }
+.status-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
 .status-dot.ok { background: var(--success); }
 .status-dot.warn { background: var(--warning); }
+
+/* Tabs */
 nav.tabs {
   display: flex;
-  gap: 2px;
-  background: var(--bg);
+  gap: 0;
+  background: var(--bg-card);
   border-radius: var(--radius);
   padding: 4px;
-  margin-bottom: 24px;
-  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+  overflow-x: auto;
 }
 nav.tabs button {
-  flex: 1;
-  padding: 10px 16px;
+  flex: 1 0 auto;
+  padding: 8px 12px;
   border: none;
   background: transparent;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--text-secondary);
   cursor: pointer;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   transition: all 0.15s;
   font-family: inherit;
+  white-space: nowrap;
 }
-nav.tabs button:hover { color: var(--text); background: var(--bg-tertiary); }
+nav.tabs button:hover { color: var(--text); background: var(--bg-hover); }
 nav.tabs button.active { color: var(--primary); background: var(--primary-light); font-weight: 600; }
+
+/* Card */
 .card {
-  background: var(--bg);
+  background: var(--bg-card);
   border-radius: var(--radius);
   border: 1px solid var(--border);
-  padding: 20px;
-  margin-bottom: 16px;
-  box-shadow: var(--shadow);
+  padding: 18px 20px;
+  margin-bottom: 14px;
 }
-.card h2 {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 12px;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.card h3 { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+.card h2 { font-size: 16px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.card h3 { font-size: 14px; font-weight: 600; margin: 12px 0 6px; }
+
+/* Badge */
 .badge {
   display: inline-block;
   padding: 2px 8px;
-  border-radius: 12px;
+  border-radius: 10px;
   font-size: 11px;
   font-weight: 600;
+  white-space: nowrap;
 }
 .badge.ok { background: #ecfdf5; color: var(--success); }
 .badge.warn { background: #fffbeb; color: var(--warning); }
 .badge.info { background: var(--primary-light); color: var(--primary); }
-.empty-state {
-  text-align: center;
-  padding: 32px 20px;
-  color: var(--text-muted);
-  font-size: 14px;
-}
-.empty-state .icon { font-size: 32px; margin-bottom: 8px; opacity: 0.4; }
-/* Accordion / Rules */
-.accordion { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
-.accordion-item { border-bottom: 1px solid var(--border); }
-.accordion-item:last-child { border-bottom: none; }
-.accordion-header {
-  width: 100%;
-  padding: 14px 16px;
-  text-align: left;
-  background: var(--bg);
-  border: none;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  transition: background 0.15s;
-  font-family: inherit;
-  color: var(--text);
-}
-.accordion-header:hover { background: var(--bg-tertiary); }
-.accordion-header .label {
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.accordion-header .meta {
-  display: flex;
-  gap: 6px;
-  flex-shrink: 0;
-}
-.accordion-header .arrow {
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s;
-  flex-shrink: 0;
-}
-.accordion-header.open .arrow { transform: rotate(180deg); }
-.accordion-body {
-  display: none;
-  padding: 16px;
-  background: var(--bg-secondary);
-  font-size: 13px;
-  color: var(--text-secondary);
-  white-space: pre-wrap;
-  line-height: 1.7;
-  max-height: 400px;
-  overflow-y: auto;
-  border-top: 1px solid var(--border);
-}
-.accordion-body.open { display: block; }
+.badge.gray { background: #f3f4f6; color: var(--text-secondary); }
+.badge.red { background: #fef2f2; color: var(--danger); }
+
 /* Stats grid */
-.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 16px; }
 .stat-card {
-  background: var(--bg);
+  background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 14px;
   text-align: center;
 }
-.stat-card .value { font-size: 24px; font-weight: 700; color: var(--text); }
-.stat-card .label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
-/* Policy item */
+.stat-card .value { font-size: 22px; font-weight: 700; }
+.stat-card .label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+/* Policy */
 .policy-item {
   padding: 12px;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   margin-bottom: 8px;
 }
-.policy-item .source { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
-.policy-item a { color: var(--primary); text-decoration: none; font-size: 13px; }
+.policy-item .source { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.policy-item a { color: var(--primary); text-decoration: none; font-size: 12px; }
 .policy-item a:hover { text-decoration: underline; }
+
 /* Table */
 .simple-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.simple-table th, .simple-table td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border); }
-.simple-table th { font-weight: 600; color: var(--text-muted); font-size: 12px; text-transform: uppercase; }
+.simple-table th, .simple-table td { padding: 7px 10px; text-align: left; border-bottom: 1px solid var(--border); }
+.simple-table th { font-weight: 600; color: var(--text-muted); font-size: 11px; text-transform: uppercase; }
+
+.empty-state { text-align: center; padding: 28px 20px; color: var(--text-muted); font-size: 13px; }
+.empty-state .icon { font-size: 28px; margin-bottom: 6px; opacity: 0.3; }
+
+/* === RULE CARDS === */
+.rule-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 10px; }
+.rule-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  position: relative;
+}
+.rule-card:hover { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
+.rule-card .rc-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+.rule-card .rc-title { font-size: 14px; font-weight: 600; line-height: 1.3; }
+.rule-card .rc-summary { font-size: 12px; color: var(--text-secondary); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 8px; }
+.rule-card .rc-meta { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+.rule-card .rc-file { font-size: 11px; color: var(--text-muted); }
+
+/* Expanded rule detail */
+.rule-detail-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+}
+.rule-detail-overlay.open { display: flex; }
+.rule-detail {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  width: 90%;
+  max-width: 700px;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 24px;
+  position: relative;
+}
+.rule-detail .rd-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--bg-card);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+.rule-detail .rd-close:hover { background: var(--bg-hover); }
+.rule-detail h3 { font-size: 18px; margin-bottom: 4px; }
+.rule-detail .rd-section { margin-top: 14px; padding: 12px; background: #fafafa; border-radius: var(--radius-sm); }
+.rule-detail .rd-section h4 { font-size: 13px; font-weight: 600; margin-bottom: 4px; color: var(--primary); }
+.rule-detail .rd-section p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+/* === DOMAIN FILTER === */
+.filter-bar {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+  align-items: center;
+}
+.filter-bar .filter-btn {
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg-card);
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--text-secondary);
+  transition: all 0.15s;
+}
+.filter-bar .filter-btn:hover { border-color: var(--primary); color: var(--primary); }
+.filter-bar .filter-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.filter-bar .filter-label { font-size: 12px; color: var(--text-muted); margin-right: 4px; }
+
+/* === WIKI BROWSER === */
+.wiki-search {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-family: inherit;
+  margin-bottom: 12px;
+  outline: none;
+}
+.wiki-search:focus { border-color: var(--primary); }
+.wiki-group { margin-bottom: 16px; }
+.wiki-group h3 { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+.wiki-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.wiki-item:last-child { border-bottom: none; }
+.wiki-item .wi-title { font-size: 13px; font-weight: 500; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wiki-item .wi-summary { font-size: 12px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 2; }
+.wiki-item .wi-meta { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+
+/* === ARCHITECTURE === */
+.arch-axis { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.arch-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.arch-card h3 { font-size: 15px; margin-bottom: 6px; }
+.arch-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+.arch-card .arch-icon { font-size: 24px; margin-bottom: 6px; }
+.arch-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+  font-size: 13px;
+}
+.arch-flow .node {
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  font-weight: 500;
+}
+.arch-flow .arrow { color: var(--text-muted); font-size: 18px; }
+
 /* Responsive */
 @media (max-width: 640px) {
-  .container { padding: 12px; }
+  .container { padding: 8px; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
-  nav.tabs button { font-size: 12px; padding: 8px 10px; }
+  .rule-grid { grid-template-columns: 1fr; }
+  .arch-axis { grid-template-columns: 1fr; }
+  nav.tabs button { font-size: 11px; padding: 6px 8px; }
+  .wiki-item { flex-direction: column; gap: 2px; }
+  .wiki-item .wi-summary { flex: none; }
 }
 </style>
 </head>
 <body>
 <header>
   <div class="header-inner">
-    <h1><span class="status-dot ok"></span>JSM Personal Dashboard</h1>
+    <h1><span class="status-dot ok"></span>JSM Dashboard</h1>
     <span class="date" id="currentDate"></span>
   </div>
 </header>
 
 <div class="container">
   <nav class="tabs">
-    <button class="active" onclick="switchTab('routine')">루틴 결과</button>
+    <button class="active" onclick="switchTab('routine')">루틴</button>
     <button onclick="switchTab('economy')">경제</button>
-    <button onclick="switchTab('system')">시스템 상태</button>
+    <button onclick="switchTab('system')">시스템</button>
+    <button onclick="switchTab('architecture')">아키텍처</button>
+    <button onclick="switchTab('wiki')">위키</button>
     <button onclick="switchTab('rules')">규칙</button>
   </nav>
 
-  <!-- ===== ROUTINE TAB ===== -->
+  <!-- ===== ROUTINE ===== -->
   <div id="tab-routine">
     <div class="stats-grid">
-      <div class="stat-card">
-        <div class="value" id="stat-routines">12</div>
-        <div class="label">Active 루틴</div>
-      </div>
-      <div class="stat-card">
-        <div class="value" id="stat-lastScan">--</div>
-        <div class="label">마지막 정책 스캔</div>
-      </div>
-      <div class="stat-card">
-        <div class="value" id="stat-promptScore">--</div>
-        <div class="label">프롬프트 평균 점수</div>
-      </div>
-      <div class="stat-card">
-        <div class="value" id="stat-portfolio">₩150만</div>
-        <div class="label">포트폴리오</div>
-      </div>
+      <div class="stat-card"><div class="value">12</div><div class="label">Active 루틴</div></div>
+      <div class="stat-card"><div class="value" id="stat-lastScan">--</div><div class="label">마지막 정책 스캔</div></div>
+      <div class="stat-card"><div class="value" id="stat-promptScore">--</div><div class="label">프롬프트 점수</div></div>
+      <div class="stat-card"><div class="value">₩150만</div><div class="label">포트폴리오</div></div>
     </div>
-
-    <div class="card">
-      <h2>청년 정책 + 경희대 스캔 <span class="badge info">매주 일요일</span></h2>
-      <div id="policyList"><div class="empty-state"><div class="icon">--</div>데이터를 불러오는 중...</div></div>
-    </div>
-
-    <div class="card">
-      <h2>데일리 투자 브리핑 <span class="badge info">매일 (월-금)</span></h2>
-      <div id="dailyBriefing"><div class="empty-state"><div class="icon">--</div>데이터를 불러오는 중...</div></div>
-    </div>
-
-    <div class="card">
-      <h2>주간 투자 보고서 <span class="badge info">매주 일요일</span></h2>
-      <div id="weeklyReport"><div class="empty-state"><div class="icon">--</div>데이터를 불러오는 중...</div></div>
-    </div>
-
-    <div class="card">
-      <h2>주간 프롬프트 리뷰 <span class="badge info">매주 일요일</span></h2>
-      <div id="promptReview"><div class="empty-state"><div class="icon">--</div>데이터를 불러오는 중...</div></div>
-    </div>
+    <div class="card"><h2>청년 정책 + 경희대 <span class="badge info">매주 일요일</span></h2><div id="policyList"></div></div>
+    <div class="card"><h2>데일리 투자 브리핑 <span class="badge info">매일</span></h2><div id="dailyBriefing"></div></div>
+    <div class="card"><h2>주간 투자 보고서 <span class="badge info">매주 일요일</span></h2><div id="weeklyReport"></div></div>
+    <div class="card"><h2>주간 프롬프트 리뷰 <span class="badge info">매주 일요일</span></h2><div id="promptReview"></div></div>
   </div>
 
-  <!-- ===== ECONOMY TAB ===== -->
+  <!-- ===== ECONOMY ===== -->
   <div id="tab-economy" style="display:none">
-    <div class="card">
-      <h2>포트폴리오 스냅샷</h2>
-      <div id="portfolioSnapshot"><div class="empty-state"><div class="icon">--</div>데이터를 불러오는 중...</div></div>
-    </div>
-
-    <div class="card">
-      <h2>매크로 지표</h2>
-      <div id="macroIndicators"><div class="empty-state"><div class="icon">--</div>데이터를 불러오는 중...</div></div>
-    </div>
-
-    <div class="card">
-      <h2>BTC 모니터링</h2>
-      <div id="btcMonitor"><div class="empty-state"><div class="icon">--</div>데이터를 불러오는 중...</div></div>
-    </div>
+    <div class="card"><h2>포트폴리오</h2><div id="portfolioSnapshot"></div></div>
+    <div class="card"><h2>매크로 지표</h2><div id="macroIndicators"></div></div>
+    <div class="card"><h2>BTC 모니터링</h2><div id="btcMonitor"></div></div>
   </div>
 
-  <!-- ===== SYSTEM TAB ===== -->
+  <!-- ===== SYSTEM ===== -->
   <div id="tab-system" style="display:none">
     <div class="stats-grid">
-      <div class="stat-card">
-        <div class="value" id="sys-wikiPages">~200</div>
-        <div class="label">Wiki 페이지</div>
+      <div class="stat-card"><div class="value">~340</div><div class="label">Wiki Pages</div></div>
+      <div class="stat-card"><div class="value">9</div><div class="label">Skills</div></div>
+      <div class="stat-card"><div class="value">15</div><div class="label">항상 켜진 규칙</div></div>
+      <div class="stat-card"><div class="value"><span class="badge ok">Healthy</span></div><div class="label">상태</div></div>
+    </div>
+    <div class="card"><h2>스킬 인벤토리</h2><div id="skillInventory"></div></div>
+    <div class="card"><h2>자가 점검</h2><div id="auditResult"></div></div>
+  </div>
+
+  <!-- ===== ARCHITECTURE ===== -->
+  <div id="tab-architecture" style="display:none">
+    <div class="arch-axis">
+      <div class="arch-card">
+        <div class="arch-icon">&#128214;</div>
+        <h3>위키 (Wiki)</h3>
+        <p>Obsidian vault <code>2_Wiki/</code>, flat directory, ~340 pages. 장기 지식 저장소. 개념, 결정, 인사이트, 프로젝트 명세. prose relation으로 페이지 간 연결. wiki-verify.mdc 10-step 자동 품질 검사.</p>
       </div>
-      <div class="stat-card">
-        <div class="value" id="sys-skills">9</div>
-        <div class="label">Active 스킬</div>
+      <div class="arch-card">
+        <div class="arch-icon">&#127760;</div>
+        <h3>웹사이트 (Dashboard)</h3>
+        <p><code>jsm0308.github.io/home/dashboard.html</code>. 루틴 실행 결과를 한눈에 확인하는 대시보드. 루틴, 경제, 시스템, 아키텍처, 위키, 규칙 6개 탭. <code>update_dashboard.py</code>로 데이터 갱신, GitHub Pages로 자동 배포.</p>
       </div>
-      <div class="stat-card">
-        <div class="value" id="sys-alwaysRules">17</div>
-        <div class="label">항상 켜진 규칙</div>
-      </div>
-      <div class="stat-card">
-        <div class="value"><span class="badge ok" id="sys-health">Healthy</span></div>
-        <div class="label">시스템 상태</div>
+      <div class="arch-card">
+        <div class="arch-icon">&#9881;</div>
+        <h3>시스템 (Rules + Scripts)</h3>
+        <p><code>.cursor/rules/</code> 26개 .mdc 파일로 Coach 행동 규칙 정의. <code>scripts/</code> 자동화 스크립트 (데이터 수집, 보고서 생성, 이메일 발송). DeepSeek v4 Pro가 규칙을 읽고 판단.</p>
       </div>
     </div>
 
     <div class="card">
-      <h2>스킬 인벤토리</h2>
-      <div id="skillInventory"><div class="empty-state"><div class="icon">--</div>데이터를 불러오는 중...</div></div>
+      <h2>데이터 흐름</h2>
+      <div class="arch-flow">
+        <span class="node">You (요청)</span>
+        <span class="arrow">→</span>
+        <span class="node">Coach (DeepSeek)</span>
+        <span class="arrow">→</span>
+        <span class="node">WebSearch + Scripts</span>
+      </div>
+      <div class="arch-flow" style="margin-top:4px">
+        <span class="node" style="font-size:12px">Wiki (영구 저장)</span>
+        <span class="node" style="font-size:12px">Dashboard (웹)</span>
+        <span class="node" style="font-size:12px">Email (알림)</span>
+      </div>
     </div>
 
     <div class="card">
-      <h2>주간 자가 점검 (Adversarial Audit)</h2>
-      <div id="auditResult"><div class="empty-state"><div class="icon">--</div>아직 점검이 실행되지 않았습니다. 일요일 자동 실행됩니다.</div></div>
+      <h2>주간 유지보수 (매주 일요일)</h2>
+      <div style="display:grid; gap:8px; font-size:13px">
+        <div><strong>Rule Pruning</strong>: 항상 켜진 규칙 15개가 7개 초과인지 확인. 안 쓰는 규칙 끄기 제안.</div>
+        <div><strong>Adversarial Audit</strong>: 위키 frontmatter, 깨진 wikilink, orphan 페이지 샘플링 점검.</div>
+        <div><strong>Skill Inventory</strong>: 9개 스킬 버전 + 작동 상태 갱신.</div>
+        <div><strong>Prompt Journal</strong>: 지난주 프롬프트 분석, 점수 매기기, 개선 제안.</div>
+        <div><strong>Domain Cleanup</strong>: 만료된 데드라인, 오래된 결정 정리 제안.</div>
+      </div>
     </div>
   </div>
 
-  <!-- ===== RULES TAB ===== -->
+  <!-- ===== WIKI ===== -->
+  <div id="tab-wiki" style="display:none">
+    <input type="text" class="wiki-search" id="wikiSearch" placeholder="위키 페이지 검색 (제목, 요약)..." oninput="filterWiki()">
+    <div class="filter-bar" id="wikiFilters"></div>
+    <div id="wikiContainer"></div>
+  </div>
+
+  <!-- ===== RULES ===== -->
   <div id="tab-rules" style="display:none">
-    <div class="card">
-      <h2>모든 규칙 <span class="badge info">26개</span></h2>
-      <div id="accordionContainer"><div class="empty-state"><div class="icon">--</div>데이터를 불러오는 중...</div></div>
+    <div class="filter-bar" id="ruleFilters">
+      <span class="filter-label">도메인:</span>
     </div>
+    <div class="rule-grid" id="ruleGrid"></div>
   </div>
 </div>
 
+<!-- Rule detail overlay -->
+<div class="rule-detail-overlay" id="ruleOverlay" onclick="if(event.target===this)closeRuleDetail()">
+  <div class="rule-detail" id="ruleDetail"></div>
+</div>
+
 <script>
-// --- Tab Switching ---
+// === State ===
+let allRules = [];
+let allWiki = [];
+let activeWikiDomain = 'All';
+let activeRuleDomain = 'All';
+
+// === Tab Switching ===
+const TAB_IDS = ['routine','economy','system','architecture','wiki','rules'];
 function switchTab(name) {
-  document.querySelectorAll('#tab-routine, #tab-economy, #tab-system, #tab-rules').forEach(el => el.style.display = 'none');
-  document.getElementById('tab-' + name).style.display = 'block';
+  TAB_IDS.forEach(id => document.getElementById('tab-'+id).style.display = (id===name)?'block':'none');
   document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
   document.querySelector(`nav.tabs button[onclick="switchTab('${name}')"]`).classList.add('active');
 }
 
-// --- Date ---
 document.getElementById('currentDate').textContent = new Date().toLocaleDateString('ko-KR', {year:'numeric',month:'long',day:'numeric',weekday:'short'});
 
-// --- Load Data ---
 async function loadJSON(path) {
-  try {
-    const resp = await fetch(path);
-    if (!resp.ok) throw new Error('HTTP ' + resp.status);
-    return await resp.json();
-  } catch(e) {
-    console.error('Failed to load', path, e);
-    return null;
-  }
+  try { const r = await fetch(path); if(!r.ok) throw new Error('HTTP '+r.status); return await r.json(); }
+  catch(e) { console.error(path, e); return null; }
 }
 
-// --- Policy Scan ---
-async function renderPolicyScan() {
-  const data = await loadJSON('data/policy-scan.json');
+// === POLICY ===
+async function renderPolicy() {
+  const d = await loadJSON('data/policy-scan.json');
   const el = document.getElementById('policyList');
-  if (!data || (!data.youthPolicies?.length && !data.kyungheeBenefits?.length)) {
-    el.innerHTML = '<div class="empty-state"><div class="icon">--</div>아직 스캔 결과가 없습니다. 일요일에 자동 실행됩니다.</div>';
-    return;
-  }
-  document.getElementById('stat-lastScan').textContent = data.lastScan || '--';
-  let html = '';
-  if (data.youthPolicies?.length) {
-    html += '<h3>정부 청년 정책</h3>';
-    data.youthPolicies.forEach(p => {
-      html += `<div class="policy-item">
-        <strong>${p.title}</strong>
-        <div class="source">${p.source} ${p.deadline ? '| 마감: '+p.deadline : ''}</div>
-        <p style="margin-top:4px;font-size:13px;color:var(--text-secondary)">${p.summary}</p>
-        ${p.link ? `<a href="${p.link}" target="_blank">바로가기</a>` : ''}
-      </div>`;
-    });
-  }
-  if (data.kyungheeBenefits?.length) {
-    html += '<h3 style="margin-top:12px">경희대 혜택/이벤트</h3>';
-    data.kyungheeBenefits.forEach(p => {
-      html += `<div class="policy-item">
-        <strong>${p.title}</strong>
-        <div class="source">${p.source} ${p.deadline ? '| 마감: '+p.deadline : ''}</div>
-        <p style="margin-top:4px;font-size:13px;color:var(--text-secondary)">${p.summary}</p>
-        ${p.link ? `<a href="${p.link}" target="_blank">바로가기</a>` : ''}
-      </div>`;
-    });
-  }
-  el.innerHTML = html;
+  if(!d||!d.youthPolicies?.length&&!d.kyungheeBenefits?.length) { el.innerHTML='<div class="empty-state"><div class="icon">--</div>일요일에 첫 스캔 예정</div>'; return; }
+  document.getElementById('stat-lastScan').textContent = d.lastScan||'--';
+  let h='';
+  if(d.youthPolicies?.length){h+='<h3>정부 청년 정책</h3>';d.youthPolicies.forEach(p=>{h+=`<div class="policy-item"><strong>${p.title}</strong><div class="source">${p.source} ${p.deadline?'| 마감:'+p.deadline:''}</div><p style="margin-top:4px;font-size:13px;color:var(--text-secondary)">${p.summary}</p>${p.link?`<a href="${p.link}" target="_blank">바로가기</a>`:''}</div>`;});}
+  if(d.kyungheeBenefits?.length){h+='<h3 style="margin-top:12px">경희대</h3>';d.kyungheeBenefits.forEach(p=>{h+=`<div class="policy-item"><strong>${p.title}</strong><div class="source">${p.source} ${p.deadline?'| 마감:'+p.deadline:''}</div><p style="margin-top:4px;font-size:13px;color:var(--text-secondary)">${p.summary}</p>${p.link?`<a href="${p.link}" target="_blank">바로가기</a>`:''}</div>`;});}
+  el.innerHTML=h;
 }
 
-// --- Investment ---
+// === INVESTMENT ===
 async function renderInvestment() {
-  const data = await loadJSON('data/investment.json');
-  if (!data) return;
-
-  const daily = data.investmentDaily;
-  document.getElementById('dailyBriefing').innerHTML = daily
-    ? `<p style="font-size:13px;color:var(--text-secondary)">${daily.summary}</p>
-       <p style="font-size:12px;color:var(--text-muted);margin-top:4px">${daily.date}</p>`
-    : '<div class="empty-state"><div class="icon">--</div>데이터 없음</div>';
-
-  const weekly = data.investmentWeekly;
-  document.getElementById('weeklyReport').innerHTML = weekly
-    ? `<p style="font-size:13px;color:var(--text-secondary)">${weekly.summary}</p>
-       <p style="font-size:12px;color:var(--text-muted);margin-top:4px">${weekly.date}</p>`
-    : '<div class="empty-state"><div class="icon">--</div>데이터 없음</div>';
-
-  // Portfolio
-  const pf = data.portfolio;
-  document.getElementById('portfolioSnapshot').innerHTML = pf ? `
-    <p style="font-size:14px;margin-bottom:8px">총액: <strong>₩${pf.totalValue.toLocaleString()}</strong> ${pf.needsRebalance ? '<span class="badge warn">리밸런싱 필요</span>' : ''}</p>
-    <table class="simple-table">
-      <thead><tr><th>자산</th><th>금액</th><th>목표</th><th>Drift</th></tr></thead>
-      <tbody>${pf.allocations.map(a => `<tr>
-        <td>${a.asset}</td>
-        <td>₩${a.amount.toLocaleString()}</td>
-        <td>${a.target}</td>
-        <td>${a.drift}%</td>
-      </tr>`).join('')}</tbody>
-    </table>
-  ` : '<div class="empty-state"><div class="icon">--</div>데이터 없음</div>';
+  const d = await loadJSON('data/investment.json'); if(!d) return;
+  const di=d.investmentDaily; document.getElementById('dailyBriefing').innerHTML=di?`<p style="font-size:13px;color:var(--text-secondary)">${di.summary}</p><p style="font-size:12px;color:var(--text-muted);margin-top:4px">${di.date}</p>`:'<div class="empty-state"><div class="icon">--</div>데이터 없음</div>';
+  const wi=d.investmentWeekly; document.getElementById('weeklyReport').innerHTML=wi?`<p style="font-size:13px;color:var(--text-secondary)">${wi.summary}</p><p style="font-size:12px;color:var(--text-muted);margin-top:4px">${wi.date}</p>`:'<div class="empty-state"><div class="icon">--</div>데이터 없음</div>';
+  const pf=d.portfolio; document.getElementById('portfolioSnapshot').innerHTML=pf?`<p style="font-size:14px;margin-bottom:8px">총액: <strong>₩${pf.totalValue.toLocaleString()}</strong>${pf.needsRebalance?' <span class="badge warn">리밸런싱 필요</span>':''}</p><table class="simple-table"><thead><tr><th>자산</th><th>금액</th><th>목표</th><th>Drift</th></tr></thead><tbody>${pf.allocations.map(a=>`<tr><td>${a.asset}</td><td>₩${a.amount.toLocaleString()}</td><td>${a.target}</td><td>${a.drift}%</td></tr>`).join('')}</tbody></table>`:'<div class="empty-state"><div class="icon">--</div>데이터 없음</div>';
+  document.getElementById('macroIndicators').innerHTML='<div class="empty-state"><div class="icon">--</div>매크로 지표 수집 중</div>';
+  document.getElementById('btcMonitor').innerHTML='<div class="empty-state"><div class="icon">--</div>BTC 모니터링 준비 중</div>';
 }
 
-// --- System Health ---
+// === SYSTEM ===
 async function renderSystem() {
-  const data = await loadJSON('data/system-health.json');
-  if (!data) return;
-
-  // Prompt journal
-  const pj = data.promptJournal;
-  document.getElementById('promptReview').innerHTML = pj && pj.totalSessions > 0 ? `
-    <p>${pj.weekOf} · ${pj.totalSessions}세션, ${pj.totalPrompts}프롬프트</p>
-    <p style="font-size:13px;color:var(--text-secondary);margin-top:4px">평균 점수: <strong>${pj.avgScore}</strong></p>
-    <p style="font-size:13px;color:var(--text-secondary)">Focus: ${pj.focus}</p>
-  ` : `<div class="empty-state"><div class="icon">--</div>${pj?.focus || '아직 분석되지 않았습니다.'}</div>`;
-
-  // Skills
-  const sys = data.systemHealth;
-  if (sys?.skills) {
-    document.getElementById('skillInventory').innerHTML = `
-      <table class="simple-table">
-        <thead><tr><th>스킬</th><th>버전</th><th>상태</th><th>마지막 테스트</th></tr></thead>
-        <tbody>${sys.skills.map(s => `<tr>
-          <td><strong>${s.name}</strong></td>
-          <td>${s.version}</td>
-          <td><span class="badge ${s.status==='active'?'ok':'warn'}">${s.status}</span></td>
-          <td>${s.lastTested}</td>
-        </tr>`).join('')}</tbody>
-      </table>`;
-  }
-
-  // Audit
-  document.getElementById('auditResult').innerHTML = sys?.lastAudit
-    ? `<p>마지막 점검: ${sys.lastAudit}</p>
-       <p>Orphan 페이지: ${sys.orphanPages}, 깨진 링크: ${sys.brokenLinks}</p>
-       <p>규칙: 항상 ${sys.alwaysOnRules}개 (목표 ${sys.targetMax}개)</p>`
-    : '<div class="empty-state"><div class="icon">--</div>아직 점검이 실행되지 않았습니다. 일요일 자동 실행됩니다.</div>';
+  const d = await loadJSON('data/system-health.json'); if(!d) return;
+  const pj=d.promptJournal;
+  document.getElementById('promptReview').innerHTML=pj&&pj.totalSessions>0?`<p>${pj.weekOf} · ${pj.totalSessions}세션, ${pj.totalPrompts}프롬프트</p><p style="font-size:13px;color:var(--text-secondary);margin-top:4px">평균 점수: <strong>${pj.avgScore}</strong></p><p style="font-size:13px;color:var(--text-secondary)">Focus: ${pj.focus}</p>`:`<div class="empty-state"><div class="icon">--</div>${pj?.focus||'아직 분석되지 않음'}</div>`;
+  const sys=d.systemHealth;
+  if(sys?.skills) document.getElementById('skillInventory').innerHTML=`<table class="simple-table"><thead><tr><th>스킬</th><th>버전</th><th>상태</th><th>마지막 테스트</th></tr></thead><tbody>${sys.skills.map(s=>`<tr><td><strong>${s.name}</strong></td><td>${s.version}</td><td><span class="badge ${s.status==='active'?'ok':'warn'}">${s.status}</span></td><td>${s.lastTested}</td></tr>`).join('')}</tbody></table>`;
+  document.getElementById('auditResult').innerHTML=sys?.lastAudit?`<p>마지막 점검: ${sys.lastAudit}</p><p>Orphan: ${sys.orphanPages}, Broken links: ${sys.brokenLinks}</p><p>Rules: always ${sys.alwaysOnRules} (target ${sys.targetMax})</p>`:'<div class="empty-state"><div class="icon">--</div>일요일 첫 점검 예정</div>';
 }
 
-// --- Rules Accordion ---
+// === RULES ===
 async function renderRules() {
-  const rules = await loadJSON('data/rules.json');
-  const container = document.getElementById('accordionContainer');
-  if (!rules || !rules.length) {
-    container.innerHTML = '<div class="empty-state"><div class="icon">--</div>규칙 데이터를 불러올 수 없습니다.</div>';
-    return;
-  }
+  allRules = await loadJSON('data/rules.json') || [];
+  buildRuleFilters();
+  renderRuleGrid();
+}
 
-  let html = '<div class="accordion">';
-  rules.forEach((r, i) => {
-    const id = 'rule-' + i;
-    const badge = r.alwaysApply
-      ? '<span class="badge info">항상 켜짐</span>'
-      : '<span class="badge ok">필요시만</span>';
-    html += `
-      <div class="accordion-item">
-        <button class="accordion-header" onclick="toggleAccordion('${id}', this)">
-          <span class="label">${escapeHtml(r.title)}</span>
-          <span class="meta">
-            <span style="font-size:11px;color:var(--text-muted)">${r.file}</span>
-            ${badge}
-          </span>
-          <span class="arrow">&#9660;</span>
-        </button>
-        <div class="accordion-body" id="${id}">${escapeHtml(r.content)}</div>
-      </div>`;
+function buildRuleFilters() {
+  const domains = new Set();
+  allRules.forEach(r => (r.domain||[]).forEach(d => domains.add(d)));
+  const bar = document.getElementById('ruleFilters');
+  let html = '<span class="filter-label">도메인:</span>';
+  html += `<button class="filter-btn active" onclick="filterRules('All')">전체 (${allRules.length})</button>`;
+  [...domains].sort().forEach(d => {
+    const count = allRules.filter(r => (r.domain||[]).includes(d)).length;
+    html += `<button class="filter-btn" onclick="filterRules('${d}')">${d} (${count})</button>`;
   });
-  html += '</div>';
-  container.innerHTML = html;
+  bar.innerHTML = html;
 }
 
-function toggleAccordion(id, header) {
-  const body = document.getElementById(id);
-  const isOpen = body.classList.contains('open');
-  // Close all
-  document.querySelectorAll('.accordion-body.open').forEach(b => b.classList.remove('open'));
-  document.querySelectorAll('.accordion-header.open').forEach(h => h.classList.remove('open'));
-  // Open clicked
-  if (!isOpen) {
-    body.classList.add('open');
-    header.classList.add('open');
+function filterRules(domain) {
+  activeRuleDomain = domain;
+  document.querySelectorAll('#ruleFilters .filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`#ruleFilters .filter-btn[onclick="filterRules('${domain}')"]`).classList.add('active');
+  renderRuleGrid();
+}
+
+function renderRuleGrid() {
+  const filtered = activeRuleDomain === 'All' ? allRules : allRules.filter(r => (r.domain||[]).includes(activeRuleDomain));
+  const grid = document.getElementById('ruleGrid');
+  grid.innerHTML = filtered.map((r, i) => {
+    const badges = r.alwaysApply ? '<span class="badge info">always</span>' : '<span class="badge ok">on-demand</span>';
+    const domainBadges = (r.domain||[]).slice(0,3).map(d => `<span class="badge gray">${d}</span>`).join(' ');
+    return `<div class="rule-card" onclick="openRuleDetail(${i})">
+      <div class="rc-header"><span class="rc-title">${esc(r.title)}</span></div>
+      <div class="rc-summary">${esc(r.summary||'')}</div>
+      <div class="rc-meta">${badges} ${domainBadges} <span class="rc-file">${esc(r.file)}</span></div>
+    </div>`;
+  }).join('');
+}
+
+function openRuleDetail(idx) {
+  const filtered = activeRuleDomain === 'All' ? allRules : allRules.filter(r => (r.domain||[]).includes(activeRuleDomain));
+  const r = filtered[idx]; if(!r) return;
+  let html = `<button class="rd-close" onclick="closeRuleDetail()">x</button>`;
+  html += `<h3>${esc(r.title)}</h3>`;
+  html += `<p style="font-size:12px;color:var(--text-muted);margin-top:4px">${esc(r.file)} · ${r.alwaysApply?'<span class="badge info">always</span>':'<span class="badge ok">on-demand</span>'} ${(r.domain||[]).map(d=>`<span class="badge gray">${d}</span>`).join(' ')}</p>`;
+  html += `<p style="font-size:13px;color:var(--text-secondary);margin-top:8px;line-height:1.7">${esc(r.subtitle||'')}</p>`;
+  if(r.sections&&r.sections.length){
+    r.sections.forEach(s => {
+      html += `<div class="rd-section"><h4>${esc(s.heading)}</h4><p>${esc(s.body)}</p></div>`;
+    });
   }
+  document.getElementById('ruleDetail').innerHTML = html;
+  document.getElementById('ruleOverlay').classList.add('open');
 }
 
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
+function closeRuleDetail() { document.getElementById('ruleOverlay').classList.remove('open'); }
+
+// === WIKI ===
+async function renderWiki() {
+  allWiki = await loadJSON('data/wiki-index.json') || [];
+  buildWikiFilters();
+  renderWikiGrid();
 }
 
-// --- Init ---
+function buildWikiFilters() {
+  const domains = new Set();
+  allWiki.forEach(p => domains.add(p.domain));
+  const bar = document.getElementById('wikiFilters');
+  let html = '<span class="filter-label">도메인:</span>';
+  html += `<button class="filter-btn active" onclick="filterWiki('All')">전체 (${allWiki.length})</button>`;
+  [...domains].sort().forEach(d => {
+    const count = allWiki.filter(p => p.domain === d).length;
+    html += `<button class="filter-btn" onclick="filterWiki('${d}')">${d} (${count})</button>`;
+  });
+  bar.innerHTML = html;
+}
+
+function filterWiki(domain) {
+  activeWikiDomain = domain;
+  document.querySelectorAll('#wikiFilters .filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`#wikiFilters .filter-btn[onclick="filterWiki('${domain}')"]`).classList.add('active');
+  renderWikiGrid();
+}
+
+function filterWiki() {
+  renderWikiGrid();
+}
+
+function renderWikiGrid() {
+  const query = (document.getElementById('wikiSearch')?.value||'').toLowerCase();
+  let filtered = activeWikiDomain === 'All' ? allWiki : allWiki.filter(p => p.domain === activeWikiDomain);
+  if(query) filtered = filtered.filter(p => (p.title||'').toLowerCase().includes(query) || (p.summary||'').toLowerCase().includes(query));
+
+  const container = document.getElementById('wikiContainer');
+  const groups = {};
+  filtered.forEach(p => { groups[p.domain] = groups[p.domain]||[]; groups[p.domain].push(p); });
+
+  let html = '';
+  for(const [domain, pages] of Object.entries(groups).sort()) {
+    html += `<div class="wiki-group"><h3>${domain} (${pages.length})</h3>`;
+    pages.forEach(p => {
+      const kindBadge = p.kind ? `<span class="badge gray">${p.kind}</span>` : '';
+      html += `<div class="wiki-item">
+        <span class="wi-title">${esc(p.slug)}</span>
+        <span class="wi-summary">${esc(p.summary||'')}</span>
+        <span class="wi-meta">${kindBadge} ${p.updated||''}</span>
+      </div>`;
+    });
+    html += '</div>';
+  }
+  container.innerHTML = html || '<div class="empty-state"><div class="icon">--</div>일치하는 페이지 없음</div>';
+}
+
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// === INIT ===
 async function init() {
-  await Promise.all([
-    renderPolicyScan(),
-    renderInvestment(),
-    renderSystem(),
-    renderRules()
-  ]);
+  await Promise.all([renderPolicy(), renderInvestment(), renderSystem(), renderRules(), renderWiki()]);
 }
 init();
 </script>
