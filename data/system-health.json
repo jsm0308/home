@@ -1,0 +1,33 @@
+{
+  "lastUpdated": "2026-07-01T00:00:00+09:00",
+  "promptJournal": {
+    "weekOf": "2026-06-23 ~ 2026-06-29",
+    "totalSessions": 0,
+    "totalPrompts": 0,
+    "avgScore": 0,
+    "topPatterns": [],
+    "antipatterns": [],
+    "focus": "아직 프롬프트 저널이 분석되지 않았습니다. 일요일 자동 실행됩니다."
+  },
+  "systemHealth": {
+    "lastAudit": null,
+    "lastLint": null,
+    "wikiPages": 200,
+    "orphanPages": 0,
+    "brokenLinks": 0,
+    "skills": [
+      {"name": "crypto-bot", "version": "v1", "status": "active", "lastTested": "2026-06-29"},
+      {"name": "deep-research", "version": "v2", "status": "active", "lastTested": "2026-06-27"},
+      {"name": "investment-agent", "version": "v1", "status": "active", "lastTested": "2026-06-29"},
+      {"name": "study-coach", "version": "v1", "status": "active", "lastTested": "2026-06-28"},
+      {"name": "career-coach", "version": "v1", "status": "active", "lastTested": "2026-06-25"},
+      {"name": "research-review", "version": "v1", "status": "active", "lastTested": "2026-06-23"},
+      {"name": "spec", "version": "v1", "status": "active", "lastTested": "2026-06-20"},
+      {"name": "frontend-design", "version": "v1", "status": "active", "lastTested": "2026-07-01"},
+      {"name": "product-search", "version": "v1", "status": "active", "lastTested": "2026-06-30"}
+    ],
+    "alwaysOnRules": 17,
+    "onDemandRules": 9,
+    "targetMax": 6
+  }
+}

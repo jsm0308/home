@@ -1,0 +1,26 @@
+{
+  "lastUpdated": "2026-07-01T00:00:00+09:00",
+  "investmentDaily": {
+    "date": "2026-07-01",
+    "summary": "데일리 투자 브리핑이 아직 생성되지 않았습니다. 투자 대화 시작 시 자동 생성됩니다.",
+    "markets": {
+      "btc": {"price": 0, "change24h": 0},
+      "sp500": {"price": 0, "change24h": 0},
+      "nasdaq": {"price": 0, "change24h": 0}
+    }
+  },
+  "investmentWeekly": {
+    "date": "2026-06-29",
+    "summary": "주간 투자 보고서가 아직 생성되지 않았습니다. 일요일 아침 자동 생성됩니다."
+  },
+  "portfolio": {
+    "totalValue": 1500000,
+    "currency": "KRW",
+    "allocations": [
+      {"asset": "현금 (버퍼)", "amount": 1000000, "target": "66%", "drift": 0},
+      {"asset": "BTC 진입 대기", "amount": 500000, "target": "33%", "drift": 0}
+    ],
+    "lastRebalance": null,
+    "needsRebalance": false
+  }
+}

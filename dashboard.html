@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSM Personal Dashboard</title>
+<style>
+:root {
+  --bg: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
+  --text: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --border: #e2e8f0;
+  --primary: #2563eb;
+  --primary-light: #eff6ff;
+  --success: #059669;
+  --warning: #d97706;
+  --danger: #dc2626;
+  --radius: 8px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.04);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+  background: var(--bg-secondary);
+  color: var(--text);
+  line-height: 1.6;
+  font-size: 15px;
+}
+.container { max-width: 960px; margin: 0 auto; padding: 24px 20px; }
+header {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.header-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.header-inner h1 { font-size: 20px; font-weight: 700; color: var(--text); }
+.header-inner .date { font-size: 13px; color: var(--text-muted); }
+.status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+.status-dot.ok { background: var(--success); }
+.status-dot.warn { background: var(--warning); }
+nav.tabs {
+  display: flex;
+  gap: 2px;
+  background: var(--bg);
+  border-radius: var(--radius);
+  padding: 4px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+}
+nav.tabs button {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+nav.tabs button:hover { color: var(--text); background: var(--bg-tertiary); }
+nav.tabs button.active { color: var(--primary); background: var(--primary-light); font-weight: 600; }
+.card {
+  background: var(--bg);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+.card h2 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card h3 { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.badge.ok { background: #ecfdf5; color: var(--success); }
+.badge.warn { background: #fffbeb; color: var(--warning); }
+.badge.info { background: var(--primary-light); color: var(--primary); }
+.empty-state {
+  text-align: center;
+  padding: 32px 20px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+.empty-state .icon { font-size: 32px; margin-bottom: 8px; opacity: 0.4; }
+/* Accordion / Rules */
+.accordion { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.accordion-item { border-bottom: 1px solid var(--border); }
+.accordion-item:last-child { border-bottom: none; }
+.accordion-header {
+  width: 100%;
+  padding: 14px 16px;
+  text-align: left;
+  background: var(--bg);
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  transition: background 0.15s;
+  font-family: inherit;
+  color: var(--text);
+}
+.accordion-header:hover { background: var(--bg-tertiary); }
+.accordion-header .label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.accordion-header .meta {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.accordion-header .arrow {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.accordion-header.open .arrow { transform: rotate(180deg); }
+.accordion-body {
+  display: none;
+  padding: 16px;
+  background: var(--bg-secondary);
+  font-size: 13px;
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  line-height: 1.7;
+  max-height: 400px;
+  overflow-y: auto;
+  border-top: 1px solid var(--border);
+}
+.accordion-body.open { display: block; }
+/* Stats grid */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.stat-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  text-align: center;
+}
+.stat-card .value { font-size: 24px; font-weight: 700; color: var(--text); }
+.stat-card .label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+/* Policy item */
+.policy-item {
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+.policy-item .source { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+.policy-item a { color: var(--primary); text-decoration: none; font-size: 13px; }
+.policy-item a:hover { text-decoration: underline; }
+/* Table */
+.simple-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.simple-table th, .simple-table td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+.simple-table th { font-weight: 600; color: var(--text-muted); font-size: 12px; text-transform: uppercase; }
+/* Responsive */
+@media (max-width: 640px) {
+  .container { padding: 12px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  nav.tabs button { font-size: 12px; padding: 8px 10px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <h1><span class="status-dot ok"></span>JSM Personal Dashboard</h1>
+    <span class="date" id="currentDate"></span>
+  </div>
+</header>
+
+<div class="container">
+  <nav class="tabs">
+    <button class="active" onclick="switchTab('routine')">루틴 결과</button>
+    <button onclick="switchTab('economy')">경제</button>
+    <button onclick="switchTab('system')">시스템 상태</button>
+    <button onclick="switchTab('rules')">규칙</button>
+  </nav>
+
+  <!-- ===== ROUTINE TAB ===== -->
+  <div id="tab-routine">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="value" id="stat-routines">12</div>
+        <div class="label">Active 루틴</div>
+      </div>
+      <div class="stat-card">
+        <div class="value" id="stat-lastScan">--</div>
+        <div class="label">마지막 정책 스캔</div>
+      </div>
+      <div class="stat-card">
+        <div class="value" id="stat-promptScore">--</div>
+        <div class="label">프롬프트 평균 점수</div>
+      </div>
+      <div class="stat-card">
+        <div class="value" id="stat-portfolio">₩150만</div>
+        <div class="label">포트폴리오</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>청년 정책 + 경희대 스캔 <span class="badge info">매주 일요일</span></h2>
+      <div id="policyList"><div class="empty-state"><div class="icon">--</div>데이터를 불러오는 중...</div></div>
+    </div>
+
+    <div class="card">
+      <h2>데일리 투자 브리핑 <span class="badge info">매일 (월-금)</span></h2>
+      <div id="dailyBriefing"><div class="empty-state"><div class="icon">--</div>데이터를 불러오는 중...</div></div>
+    </div>
+
+    <div class="card">
+      <h2>주간 투자 보고서 <span class="badge info">매주 일요일</span></h2>
+      <div id="weeklyReport"><div class="empty-state"><div class="icon">--</div>데이터를 불러오는 중...</div></div>
+    </div>
+
+    <div class="card">
+      <h2>주간 프롬프트 리뷰 <span class="badge info">매주 일요일</span></h2>
+      <div id="promptReview"><div class="empty-state"><div class="icon">--</div>데이터를 불러오는 중...</div></div>
+    </div>
+  </div>
+
+  <!-- ===== ECONOMY TAB ===== -->
+  <div id="tab-economy" style="display:none">
+    <div class="card">
+      <h2>포트폴리오 스냅샷</h2>
+      <div id="portfolioSnapshot"><div class="empty-state"><div class="icon">--</div>데이터를 불러오는 중...</div></div>
+    </div>
+
+    <div class="card">
+      <h2>매크로 지표</h2>
+      <div id="macroIndicators"><div class="empty-state"><div class="icon">--</div>데이터를 불러오는 중...</div></div>
+    </div>
+
+    <div class="card">
+      <h2>BTC 모니터링</h2>
+      <div id="btcMonitor"><div class="empty-state"><div class="icon">--</div>데이터를 불러오는 중...</div></div>
+    </div>
+  </div>
+
+  <!-- ===== SYSTEM TAB ===== -->
+  <div id="tab-system" style="display:none">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="value" id="sys-wikiPages">~200</div>
+        <div class="label">Wiki 페이지</div>
+      </div>
+      <div class="stat-card">
+        <div class="value" id="sys-skills">9</div>
+        <div class="label">Active 스킬</div>
+      </div>
+      <div class="stat-card">
+        <div class="value" id="sys-alwaysRules">17</div>
+        <div class="label">항상 켜진 규칙</div>
+      </div>
+      <div class="stat-card">
+        <div class="value"><span class="badge ok" id="sys-health">Healthy</span></div>
+        <div class="label">시스템 상태</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>스킬 인벤토리</h2>
+      <div id="skillInventory"><div class="empty-state"><div class="icon">--</div>데이터를 불러오는 중...</div></div>
+    </div>
+
+    <div class="card">
+      <h2>주간 자가 점검 (Adversarial Audit)</h2>
+      <div id="auditResult"><div class="empty-state"><div class="icon">--</div>아직 점검이 실행되지 않았습니다. 일요일 자동 실행됩니다.</div></div>
+    </div>
+  </div>
+
+  <!-- ===== RULES TAB ===== -->
+  <div id="tab-rules" style="display:none">
+    <div class="card">
+      <h2>모든 규칙 <span class="badge info">26개</span></h2>
+      <div id="accordionContainer"><div class="empty-state"><div class="icon">--</div>데이터를 불러오는 중...</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// --- Tab Switching ---
+function switchTab(name) {
+  document.querySelectorAll('#tab-routine, #tab-economy, #tab-system, #tab-rules').forEach(el => el.style.display = 'none');
+  document.getElementById('tab-' + name).style.display = 'block';
+  document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
+  document.querySelector(`nav.tabs button[onclick="switchTab('${name}')"]`).classList.add('active');
+}
+
+// --- Date ---
+document.getElementById('currentDate').textContent = new Date().toLocaleDateString('ko-KR', {year:'numeric',month:'long',day:'numeric',weekday:'short'});
+
+// --- Load Data ---
+async function loadJSON(path) {
+  try {
+    const resp = await fetch(path);
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    return await resp.json();
+  } catch(e) {
+    console.error('Failed to load', path, e);
+    return null;
+  }
+}
+
+// --- Policy Scan ---
+async function renderPolicyScan() {
+  const data = await loadJSON('data/policy-scan.json');
+  const el = document.getElementById('policyList');
+  if (!data || (!data.youthPolicies?.length && !data.kyungheeBenefits?.length)) {
+    el.innerHTML = '<div class="empty-state"><div class="icon">--</div>아직 스캔 결과가 없습니다. 일요일에 자동 실행됩니다.</div>';
+    return;
+  }
+  document.getElementById('stat-lastScan').textContent = data.lastScan || '--';
+  let html = '';
+  if (data.youthPolicies?.length) {
+    html += '<h3>정부 청년 정책</h3>';
+    data.youthPolicies.forEach(p => {
+      html += `<div class="policy-item">
+        <strong>${p.title}</strong>
+        <div class="source">${p.source} ${p.deadline ? '| 마감: '+p.deadline : ''}</div>
+        <p style="margin-top:4px;font-size:13px;color:var(--text-secondary)">${p.summary}</p>
+        ${p.link ? `<a href="${p.link}" target="_blank">바로가기</a>` : ''}
+      </div>`;
+    });
+  }
+  if (data.kyungheeBenefits?.length) {
+    html += '<h3 style="margin-top:12px">경희대 혜택/이벤트</h3>';
+    data.kyungheeBenefits.forEach(p => {
+      html += `<div class="policy-item">
+        <strong>${p.title}</strong>
+        <div class="source">${p.source} ${p.deadline ? '| 마감: '+p.deadline : ''}</div>
+        <p style="margin-top:4px;font-size:13px;color:var(--text-secondary)">${p.summary}</p>
+        ${p.link ? `<a href="${p.link}" target="_blank">바로가기</a>` : ''}
+      </div>`;
+    });
+  }
+  el.innerHTML = html;
+}
+
+// --- Investment ---
+async function renderInvestment() {
+  const data = await loadJSON('data/investment.json');
+  if (!data) return;
+
+  const daily = data.investmentDaily;
+  document.getElementById('dailyBriefing').innerHTML = daily
+    ? `<p style="font-size:13px;color:var(--text-secondary)">${daily.summary}</p>
+       <p style="font-size:12px;color:var(--text-muted);margin-top:4px">${daily.date}</p>`
+    : '<div class="empty-state"><div class="icon">--</div>데이터 없음</div>';
+
+  const weekly = data.investmentWeekly;
+  document.getElementById('weeklyReport').innerHTML = weekly
+    ? `<p style="font-size:13px;color:var(--text-secondary)">${weekly.summary}</p>
+       <p style="font-size:12px;color:var(--text-muted);margin-top:4px">${weekly.date}</p>`
+    : '<div class="empty-state"><div class="icon">--</div>데이터 없음</div>';
+
+  // Portfolio
+  const pf = data.portfolio;
+  document.getElementById('portfolioSnapshot').innerHTML = pf ? `
+    <p style="font-size:14px;margin-bottom:8px">총액: <strong>₩${pf.totalValue.toLocaleString()}</strong> ${pf.needsRebalance ? '<span class="badge warn">리밸런싱 필요</span>' : ''}</p>
+    <table class="simple-table">
+      <thead><tr><th>자산</th><th>금액</th><th>목표</th><th>Drift</th></tr></thead>
+      <tbody>${pf.allocations.map(a => `<tr>
+        <td>${a.asset}</td>
+        <td>₩${a.amount.toLocaleString()}</td>
+        <td>${a.target}</td>
+        <td>${a.drift}%</td>
+      </tr>`).join('')}</tbody>
+    </table>
+  ` : '<div class="empty-state"><div class="icon">--</div>데이터 없음</div>';
+}
+
+// --- System Health ---
+async function renderSystem() {
+  const data = await loadJSON('data/system-health.json');
+  if (!data) return;
+
+  // Prompt journal
+  const pj = data.promptJournal;
+  document.getElementById('promptReview').innerHTML = pj && pj.totalSessions > 0 ? `
+    <p>${pj.weekOf} · ${pj.totalSessions}세션, ${pj.totalPrompts}프롬프트</p>
+    <p style="font-size:13px;color:var(--text-secondary);margin-top:4px">평균 점수: <strong>${pj.avgScore}</strong></p>
+    <p style="font-size:13px;color:var(--text-secondary)">Focus: ${pj.focus}</p>
+  ` : `<div class="empty-state"><div class="icon">--</div>${pj?.focus || '아직 분석되지 않았습니다.'}</div>`;
+
+  // Skills
+  const sys = data.systemHealth;
+  if (sys?.skills) {
+    document.getElementById('skillInventory').innerHTML = `
+      <table class="simple-table">
+        <thead><tr><th>스킬</th><th>버전</th><th>상태</th><th>마지막 테스트</th></tr></thead>
+        <tbody>${sys.skills.map(s => `<tr>
+          <td><strong>${s.name}</strong></td>
+          <td>${s.version}</td>
+          <td><span class="badge ${s.status==='active'?'ok':'warn'}">${s.status}</span></td>
+          <td>${s.lastTested}</td>
+        </tr>`).join('')}</tbody>
+      </table>`;
+  }
+
+  // Audit
+  document.getElementById('auditResult').innerHTML = sys?.lastAudit
+    ? `<p>마지막 점검: ${sys.lastAudit}</p>
+       <p>Orphan 페이지: ${sys.orphanPages}, 깨진 링크: ${sys.brokenLinks}</p>
+       <p>규칙: 항상 ${sys.alwaysOnRules}개 (목표 ${sys.targetMax}개)</p>`
+    : '<div class="empty-state"><div class="icon">--</div>아직 점검이 실행되지 않았습니다. 일요일 자동 실행됩니다.</div>';
+}
+
+// --- Rules Accordion ---
+async function renderRules() {
+  const rules = await loadJSON('data/rules.json');
+  const container = document.getElementById('accordionContainer');
+  if (!rules || !rules.length) {
+    container.innerHTML = '<div class="empty-state"><div class="icon">--</div>규칙 데이터를 불러올 수 없습니다.</div>';
+    return;
+  }
+
+  let html = '<div class="accordion">';
+  rules.forEach((r, i) => {
+    const id = 'rule-' + i;
+    const badge = r.alwaysApply
+      ? '<span class="badge info">항상 켜짐</span>'
+      : '<span class="badge ok">필요시만</span>';
+    html += `
+      <div class="accordion-item">
+        <button class="accordion-header" onclick="toggleAccordion('${id}', this)">
+          <span class="label">${escapeHtml(r.title)}</span>
+          <span class="meta">
+            <span style="font-size:11px;color:var(--text-muted)">${r.file}</span>
+            ${badge}
+          </span>
+          <span class="arrow">&#9660;</span>
+        </button>
+        <div class="accordion-body" id="${id}">${escapeHtml(r.content)}</div>
+      </div>`;
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function toggleAccordion(id, header) {
+  const body = document.getElementById(id);
+  const isOpen = body.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.accordion-body.open').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.accordion-header.open').forEach(h => h.classList.remove('open'));
+  // Open clicked
+  if (!isOpen) {
+    body.classList.add('open');
+    header.classList.add('open');
+  }
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// --- Init ---
+async function init() {
+  await Promise.all([
+    renderPolicyScan(),
+    renderInvestment(),
+    renderSystem(),
+    renderRules()
+  ]);
+}
+init();
+</script>
+</body>
+</html>
