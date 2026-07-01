@@ -1,0 +1,145 @@
+[
+  {
+    "date": "20260622",
+    "types": {
+      "briefing": {
+        "title": "순살브리핑 2026-06-22",
+        "summary": "1. 워시 첫 FOMC - 매파 충격 - 금리 동결(3.50-3.75%), 위원 절반이 연내 인상 전망 - 워시 본인은 점도표 제출 거부, 포워드 가이던스 폐지 - \"The Committee will deliver price stability\" 한 줄로 대체 - Core PCE 3.3% YoY (April), 5년 연속 목표 2% 상회 - Fed 2026 PCE 전망: 2.7% → 3.6%로 대폭 상향 - DXY 100.7, 엔 161, 원 1,523까지 급등 2. 미-이란 협상 (스위스)",
+        "markets": [
+          "S&P 500: 7,500.58 (6/18, Juneteenth 휴장)",
+          "NASDAQ: 26,517.93",
+          "KOSPI: 9,052.42 (-0.13%, 장중 9,385)",
+          "BTC: $64,071 (-0.4%, Fear & Greed 23)"
+        ],
+        "hasContent": true
+      },
+      "crypto": {
+        "title": "순살크립토 2026-06-22",
+        "summary": "1. BTC $64K 극한 공포 vs 주식 축제 - S&P·NASDAQ 사상 최고 부근, KOSPI 9,000 돌파 - BTC는 Fear & Greed 23 (올해 최저), ATH 대비 -49% - AI 주식 멜트업이 크립토에서 자금 흡수 - 52주 레인지 $59K~$126K, 현재 바닥권 근접 - 온체인: 장기 보유자(155일+) 매도 중단·축적 모드 전환 - 6/15 기준 BTC ETF 유출, ETH·SOL·XRP ETF 소액 유입 2. 워시 매파 연준 = 크립토 이중 악재",
+        "markets": [
+          "BTC: $64,080 (+1.18%)",
+          "ETH: $1,724 (+0.50%)",
+          "SOL: $73.95 (+3.61%)",
+          "Fear & Greed: 23 (Extreme Fear, 전일 28→23)",
+          "S&P·NASDAQ 사상 최고 부근, KOSPI 9,000 돌파",
+          "BTC는 Fear & Greed 23 (올해 최저), ATH 대비 -49%"
+        ],
+        "hasContent": true
+      }
+    }
+  },
+  {
+    "date": "20260620",
+    "types": {
+      "cardnews": {
+        "title": "순살카드뉴스 — 엔비디아, 현금 쌓아놓고도 빚 내는 이유",
+        "summary": "출처: 순살브리핑 (cardnews) | 2026-06-20 운영사: 주식회사 순살(Soonsal Co.,Ltd.) | 대표 신기동 (모건스탠리 홍콩 출신) 엔비디아 5년 만에 회사채 발행 — 250억불 규모. 현금이 충분한데도 빚을 낸 이유는 AI 데이터센터 투자 때문.",
+        "markets": [
+          "올해 5곳 설비투자만 8,050억불 — 비테크 S&P500 전체 설비투자와 맞먹음"
+        ],
+        "hasContent": true
+      }
+    }
+  },
+  {
+    "date": "20260619",
+    "types": {
+      "briefing": {
+        "title": "순살브리핑 2026-06-19",
+        "summary": "### 1. FOMC 매파 충격 → 이란 평화로 상쇄 - 연준 위원 18명 중 9명이 연내 금리 인상에 점 찍음 (매파 점도표) - 점도표 중간값 3.4% → 3.8%로 상향. 6개월 전에는 2회 인하였음 - 워시 의장: forward guidance 삭제, 본인 점도 미공개 - 그러나 이란 평화협정 발효로 WTI 76불대 하락 → 인플레 압력 완화 - S&P +1.08%, 나스닥 +1.91% 반등 ### 2. BTC-주식 디커플링 심화 - S&P +1.08% 반등에도 BTC -1.3% 추가 하락. 갭 2.4%p",
+        "markets": [
+          "S&P +1.08%, 나스닥 +1.91% 반등",
+          "S&P +1.08% 반등에도 BTC -1.3% 추가 하락. 갭 2.4%p",
+          "BTC·ETH 현물ETF 하루 $111M 순유출. 5월 중순 이후 누적 $4.75B"
+        ],
+        "hasContent": true
+      },
+      "crypto": {
+        "title": "🐟 주식은 올랐는데 나만 빠짐 — 순살크립토 2026.06.19",
+        "summary": "출처: 순살브리핑 (crypto) | 2026-06-19 운영사: 주식회사 순살(Soonsal Co.,Ltd.) | 대표 신기동 (모건스탠리 홍콩 출신) 🐟 주식은 올랐는데 나만 빠짐 — 순살크립토 2026.06.19 body { font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif; background-color: #f5f5f0; margin: 0; padding: 0; color: #222; font-size: 15px; line-height: 1.75; } .wrapper { max-width: 680px; margin: 32px auto; background: #fff; border-radius: 4px; overflow: vi",
+        "markets": [],
+        "hasContent": true
+      },
+      "cardnews": {
+        "title": "금리 내린다던 연준, 6개월 만에 올린다",
+        "summary": "출처: 순살브리핑 (cardnews) | 2026-06-19 운영사: 주식회사 순살(Soonsal Co.,Ltd.) | 대표 신기동 (모건스탠리 홍콩 출신) 금리 내린다던 연준, 6개월 만에 올린다 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');  { box-sizing: border-box; margin: 0; padding: 0; } body { background: #e8e8e8; display: flex; flex-direction: column; align-items: center; padding: 40px 20px; gap: 32px; font-family: 'Noto",
+        "markets": [],
+        "hasContent": true
+      }
+    }
+  },
+  {
+    "date": "20260618",
+    "types": {
+      "briefing": {
+        "title": "🐟 새로운 기축통화 탄생 — 순살브리핑 2026.06.18",
+        "summary": "출처: 순살브리핑 (briefing) | 2026-06-18 운영사: 주식회사 순살(Soonsal Co.,Ltd.) | 대표 신기동 (모건스탠리 홍콩 출신) 🐟 새로운 기축통화 탄생 — 순살브리핑 2026.06.18 body { font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif; background-color: #f5f5f0; margin: 0; padding: 0; color: #222; font-size: 15px; line-height: 1.75; } .wrapper { max-width: 680px; margin: 32px auto; background: #fff; border-radius: 4px; overflow: vis",
+        "markets": [],
+        "hasContent": true
+      },
+      "crypto": {
+        "title": "🐟 BTC $63K, 매파 dot plot이 쏘아올린 공 — 순살크립토 2026.06.18",
+        "summary": "출처: 순살브리핑 (crypto) | 2026-06-18 운영사: 주식회사 순살(Soonsal Co.,Ltd.) | 대표 신기동 (모건스탠리 홍콩 출신) 🐟 BTC $63K, 매파 dot plot이 쏘아올린 공 — 순살크립토 2026.06.18 body { font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif; background-color: #f5f5f0; margin: 0; padding: 0; color: #222; font-size: 15px; line-height: 1.75; } .wrapper { max-width: 680px; margin: 32px auto; background: #fff; border-radius: 4p",
+        "markets": [],
+        "hasContent": true
+      }
+    }
+  },
+  {
+    "date": "20260617",
+    "types": {
+      "briefing": {
+        "title": "🐟 열렸다, 그 문이 — 순살브리핑 2026.06.17",
+        "summary": "출처: 순살브리핑 (briefing) | 2026-06-17 운영사: 주식회사 순살(Soonsal Co.,Ltd.) | 대표 신기동 (모건스탠리 홍콩 출신) 🐟 열렸다, 그 문이 — 순살브리핑 2026.06.17 body { font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif; background-color: #f5f5f0; margin: 0; padding: 0; color: #222; font-size: 15px; line-height: 1.75; } .wrapper { max-width: 680px; margin: 32px auto; background: #fff; border-radius: 4px; overflow: visib",
+        "markets": [],
+        "hasContent": true
+      },
+      "crypto": {
+        "title": "🐟 GPU가 금융상품이 되는 세상 — 순살크립토 2026.06.17",
+        "summary": "출처: 순살브리핑 (crypto) | 2026-06-17 운영사: 주식회사 순살(Soonsal Co.,Ltd.) | 대표 신기동 (모건스탠리 홍콩 출신) 🐟 GPU가 금융상품이 되는 세상 — 순살크립토 2026.06.17 안에 삽입 --> body { font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif; background-color: #f5f5f0; margin: 0; padding: 0; color: #222; font-size: 15px; line-height: 1.75; } .wrapper { max-width: 680px; margin: 32px auto; background: #fff; border-radius: 4px; ",
+        "markets": [],
+        "hasContent": true
+      },
+      "cardnews": {
+        "title": "삼전·하이닉스 끌어올린 돈, 월가가 조이는 중",
+        "summary": "출처: 순살브리핑 (cardnews) | 2026-06-17 운영사: 주식회사 순살(Soonsal Co.,Ltd.) | 대표 신기동 (모건스탠리 홍콩 출신) 삼전·하이닉스 끌어올린 돈, 월가가 조이는 중 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');  { box-sizing: border-box; margin: 0; padding: 0; } body { background: #e8e8e8; display: flex; flex-direction: column; align-items: center; padding: 40px 20px; gap: 32px; font-family: 'N",
+        "markets": [],
+        "hasContent": true
+      }
+    }
+  },
+  {
+    "date": "20260616",
+    "types": {
+      "briefing": {
+        "title": "💸 천지개벽 — 순살브리핑 2026.06.16",
+        "summary": "출처: 순살브리핑 (briefing) | 2026-06-16 운영사: 주식회사 순살(Soonsal Co.,Ltd.) | 대표 신기동 (모건스탠리 홍콩 출신) 💸 천지개벽 — 순살브리핑 2026.06.16 body { font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif; background-color: #f5f5f0; margin: 0; padding: 0; color: #222; font-size: 15px; line-height: 1.75; } .wrapper { max-width: 680px; margin: 32px auto; background: #fff; border-radius: 4px; overflow: visible; b",
+        "markets": [],
+        "hasContent": true
+      },
+      "crypto": {
+        "title": "🐟 개미의 항복 — 순살크립토 2026.06.12",
+        "summary": "출처: 순살브리핑 (crypto) | 2026-06-16 운영사: 주식회사 순살(Soonsal Co.,Ltd.) | 대표 신기동 (모건스탠리 홍콩 출신) 🐟 개미의 항복 — 순살크립토 2026.06.12 안에 삽입 --> body { font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif; background-color: #f5f5f0; margin: 0; padding: 0; color: #222; font-size: 15px; line-height: 1.75; } .wrapper { max-width: 680px; margin: 32px auto; background: #fff; border-radius: 4px; overflow: ",
+        "markets": [],
+        "hasContent": true
+      }
+    }
+  },
+  {
+    "date": "20260615",
+    "types": {
+      "briefing": {
+        "title": "🐟 현금 쌓으랄땐 언제고.. — 순살브리핑 2026.06.15",
+        "summary": "출처: 순살브리핑 (briefing) | 2026-06-15 운영사: 주식회사 순살(Soonsal Co.,Ltd.) | 대표 신기동 (모건스탠리 홍콩 출신) 🐟 현금 쌓으랄땐 언제고.. — 순살브리핑 2026.06.15 body { font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif; background-color: #f5f5f0; margin: 0; padding: 0; color: #222; font-size: 15px; line-height: 1.75; } .wrapper { max-width: 680px; margin: 32px auto; background: #fff; border-radius: 4px; overflow: v",
+        "markets": [],
+        "hasContent": true
+      },
+      "crypto": {
+        "title": "🐟 개미의 항복 — 순살크립토 2026.06.12",
+        "summary": "출처: 순살브리핑 (crypto) | 2026-06-15 운영사: 주식회사 순살(Soonsal Co.,Ltd.) | 대표 신기동 (모건스탠리 홍콩 출신) 🐟 개미의 항복 — 순살크립토 2026.06.12 안에 삽입 --> body { font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', Arial, sans-serif; background-color: #f5f5f0; margin: 0; padding: 0; color: #222; font-size: 15px; line-height: 1.75; } .wrapper { max-width: 680px; margin: 32px auto; background: #fff; border-radius: 4px; overflow: ",
+        "markets": [],
+        "hasContent": true
+      }
+    }
+  }
+]

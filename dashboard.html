@@ -223,6 +223,48 @@ nav.tabs button.active { color: var(--primary); background: var(--primary-light)
 .filter-bar .filter-label { font-size: 12px; color: var(--text-muted); margin-right: 4px; }
 
 /* === WIKI BROWSER === */
+/* === SOONSAL BRIEFING === */
+.briefing-day {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.briefing-day .bd-header {
+  padding: 8px 12px;
+  background: #f9fafb;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.briefing-day .bd-header:hover { background: #f3f4f6; }
+.briefing-day .bd-body {
+  display: none;
+  padding: 12px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  border-top: 1px solid var(--border);
+}
+.briefing-day .bd-body.open { display: block; }
+.briefing-day .bd-type { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+.briefing-day .bd-section { margin-bottom: 10px; }
+.briefing-day .bd-section h4 { font-size: 12px; color: var(--primary); margin-bottom: 2px; }
+.briefing-day .bd-markets { font-size: 12px; color: var(--text-muted); padding: 6px 8px; background: #fafafa; border-radius: 4px; margin-top: 6px; }
+.briefing-tabs { display: flex; gap: 4px; margin-bottom: 8px; }
+.briefing-tabs button { padding: 4px 10px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-card); font-size: 11px; cursor: pointer; font-family: inherit; }
+.briefing-tabs button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+/* Market ticker */
+.market-ticker { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 8px; margin-bottom: 12px; }
+.market-ticker .ticker-item { padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); display: flex; justify-content: space-between; align-items: baseline; }
+.ticker-item .ticker-name { font-size: 11px; color: var(--text-muted); }
+.ticker-item .ticker-price { font-size: 15px; font-weight: 700; }
+.ticker-item .ticker-date { font-size: 10px; color: var(--text-muted); }
+
 .wiki-search {
   width: 100%;
   padding: 8px 12px;
@@ -319,13 +361,13 @@ nav.tabs button.active { color: var(--primary); background: var(--primary-light)
     <div class="card"><h2>데일리 투자 브리핑 <span class="badge info">매일</span></h2><div id="dailyBriefing"></div></div>
     <div class="card"><h2>주간 투자 보고서 <span class="badge info">매주 일요일</span></h2><div id="weeklyReport"></div></div>
     <div class="card"><h2>주간 프롬프트 리뷰 <span class="badge info">매주 일요일</span></h2><div id="promptReview"></div></div>
+    <div class="card"><h2>순살 브리핑 최근 <span class="badge info">7일치</span></h2><div id="soonsalList"></div></div>
   </div>
 
   <!-- ===== ECONOMY ===== -->
   <div id="tab-economy" style="display:none">
+    <div class="market-ticker" id="marketTicker"></div>
     <div class="card"><h2>포트폴리오</h2><div id="portfolioSnapshot"></div></div>
-    <div class="card"><h2>매크로 지표</h2><div id="macroIndicators"></div></div>
-    <div class="card"><h2>BTC 모니터링</h2><div id="btcMonitor"></div></div>
   </div>
 
   <!-- ===== SYSTEM ===== -->
@@ -446,11 +488,27 @@ async function renderPolicy() {
 // === INVESTMENT ===
 async function renderInvestment() {
   const d = await loadJSON('data/investment.json'); if(!d) return;
-  const di=d.investmentDaily; document.getElementById('dailyBriefing').innerHTML=di?`<p style="font-size:13px;color:var(--text-secondary)">${di.summary}</p><p style="font-size:12px;color:var(--text-muted);margin-top:4px">${di.date}</p>`:'<div class="empty-state"><div class="icon">--</div>데이터 없음</div>';
-  const wi=d.investmentWeekly; document.getElementById('weeklyReport').innerHTML=wi?`<p style="font-size:13px;color:var(--text-secondary)">${wi.summary}</p><p style="font-size:12px;color:var(--text-muted);margin-top:4px">${wi.date}</p>`:'<div class="empty-state"><div class="icon">--</div>데이터 없음</div>';
-  const pf=d.portfolio; document.getElementById('portfolioSnapshot').innerHTML=pf?`<p style="font-size:14px;margin-bottom:8px">총액: <strong>₩${pf.totalValue.toLocaleString()}</strong>${pf.needsRebalance?' <span class="badge warn">리밸런싱 필요</span>':''}</p><table class="simple-table"><thead><tr><th>자산</th><th>금액</th><th>목표</th><th>Drift</th></tr></thead><tbody>${pf.allocations.map(a=>`<tr><td>${a.asset}</td><td>₩${a.amount.toLocaleString()}</td><td>${a.target}</td><td>${a.drift}%</td></tr>`).join('')}</tbody></table>`:'<div class="empty-state"><div class="icon">--</div>데이터 없음</div>';
-  document.getElementById('macroIndicators').innerHTML='<div class="empty-state"><div class="icon">--</div>매크로 지표 수집 중</div>';
-  document.getElementById('btcMonitor').innerHTML='<div class="empty-state"><div class="icon">--</div>BTC 모니터링 준비 중</div>';
+  const di=d.investmentDaily;
+  document.getElementById('dailyBriefing').innerHTML=di&&di.summary&&di.summary.indexOf('아직')===-1?`<p style="font-size:13px;color:var(--text-secondary)">${di.summary}</p><p style="font-size:12px;color:var(--text-muted);margin-top:4px">${di.date}</p>`:'<div class="empty-state"><div class="icon">--</div>데이트리 투자 브리핑 대기 중</div>';
+  const wi=d.investmentWeekly;
+  document.getElementById('weeklyReport').innerHTML=wi&&wi.summary&&wi.summary.indexOf('아직')===-1?`<p style="font-size:13px;color:var(--text-secondary)">${wi.summary}</p><p style="font-size:12px;color:var(--text-muted);margin-top:4px">${wi.date}</p>`:'<div class="empty-state"><div class="icon">--</div>주간 보고서 대기 중</div>';
+  const pf=d.portfolio;
+  document.getElementById('portfolioSnapshot').innerHTML=pf?`<p style="font-size:14px;margin-bottom:8px">총액: <strong>₩${pf.totalValue.toLocaleString()}</strong>${pf.needsRebalance?' <span class="badge warn">리밸런싱 필요</span>':''}</p><table class="simple-table"><thead><tr><th>자산</th><th>금액</th><th>목표</th><th>Drift</th></tr></thead><tbody>${pf.allocations.map(a=>`<tr><td>${a.asset}</td><td>₩${a.amount.toLocaleString()}</td><td>${a.target}</td><td>${a.drift}%</td></tr>`).join('')}</tbody></table>`:'<div class="empty-state"><div class="icon">--</div>데이터 없음</div>';
+
+  // Real market data
+  const m = d.markets || {};
+  const ticker = document.getElementById('marketTicker');
+  if(m.btc?.price) {
+    const btcKr = (m.btc.price/10000).toFixed(0) + '만원';
+    const spx = m.sp500?.price ? m.sp500.price.toLocaleString() : '--';
+    const kospi = m.kospi?.price ? m.kospi.price.toLocaleString() : '--';
+    const nasdaq = m.nasdaq?.price ? m.nasdaq.price.toLocaleString() : '--';
+    ticker.innerHTML = `
+      <div class="ticker-item"><span class="ticker-name">BTC (KRW)</span><span class="ticker-price">${btcKr}</span><span class="ticker-date">${(m.btc.date||'').slice(0,10)}</span></div>
+      <div class="ticker-item"><span class="ticker-name">S&P 500</span><span class="ticker-price">${spx}</span><span class="ticker-date">${(m.sp500?.date||'').slice(0,10)}</span></div>
+      <div class="ticker-item"><span class="ticker-name">KOSPI</span><span class="ticker-price">${kospi}</span><span class="ticker-date">${(m.kospi?.date||'').slice(0,10)}</span></div>
+      <div class="ticker-item"><span class="ticker-name">NASDAQ</span><span class="ticker-price">${nasdaq}</span><span class="ticker-date">${(m.nasdaq?.date||'').slice(0,10)}</span></div>`;
+  }
 }
 
 // === SYSTEM ===
@@ -522,6 +580,43 @@ function openRuleDetail(idx) {
 
 function closeRuleDetail() { document.getElementById('ruleOverlay').classList.remove('open'); }
 
+// === SOONSAL BRIEFINGS ===
+async function renderSoonsal() {
+  const data = await loadJSON('data/soonsal-briefings.json');
+  const el = document.getElementById('soonsalList');
+  if (!data || !data.length) { el.innerHTML = '<div class="empty-state"><div class="icon">--</div>브리핑 데이터 없음</div>'; return; }
+
+  let html = '';
+  data.forEach((day, di) => {
+    const types = Object.keys(day.types);
+    if (!types.length) return;
+    const typeLabels = {briefing:'브리핑', crypto:'크립토', cardnews:'카드뉴스'};
+    const dateStr = day.date.slice(0,4)+'-'+day.date.slice(4,6)+'-'+day.date.slice(6,8);
+    html += `<div class="briefing-day">
+      <div class="bd-header" onclick="toggleBriefing('bd-${di}')">
+        <span>${dateStr}</span>
+        <span style="font-size:11px;color:var(--text-muted)">${types.map(t=>typeLabels[t]||t).join(', ')}</span>
+      </div>
+      <div class="bd-body" id="bd-${di}">`;
+    types.forEach(t => {
+      const b = day.types[t];
+      html += `<div class="bd-section"><h4>${esc(b.title)}</h4>`;
+      if (b.summary) html += `<p>${esc(b.summary).slice(0,300)}...</p>`;
+      if (b.markets && b.markets.length) {
+        html += `<div class="bd-markets">${b.markets.map(m=>esc(m)).join('<br>')}</div>`;
+      }
+      html += `</div>`;
+    });
+    html += `</div></div>`;
+  });
+  el.innerHTML = html;
+}
+
+function toggleBriefing(id) {
+  const body = document.getElementById(id);
+  body.classList.toggle('open');
+}
+
 // === WIKI ===
 async function renderWiki() {
   allWiki = await loadJSON('data/wiki-index.json') || [];
@@ -582,7 +677,7 @@ function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;'
 
 // === INIT ===
 async function init() {
-  await Promise.all([renderPolicy(), renderInvestment(), renderSystem(), renderRules(), renderWiki()]);
+  await Promise.all([renderPolicy(), renderInvestment(), renderSystem(), renderRules(), renderWiki(), renderSoonsal()]);
 }
 init();
 </script>
